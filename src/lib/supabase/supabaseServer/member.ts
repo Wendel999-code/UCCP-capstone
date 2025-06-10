@@ -108,3 +108,49 @@ export async function GetApplicationID(applicationId: string) {
     };
   }
 }
+
+export async function GetAllMembers(id: string) {
+  if (!id) {
+    return {
+      success: false,
+      message: "Unauthorized access",
+      data: [],
+    };
+  }
+
+  try {
+    const { data: userRole, error: userError } = await supabase
+      .from("User")
+      .select("role")
+      .eq("id", id)
+      .single();
+
+    if (userError) throw userError;
+
+    if (!userRole || userRole.role !== "admin")
+      return {
+        success: false,
+        message: "Unauthorized access",
+        data: [],
+      };
+
+    const { data, error } = await supabase
+      .from("member")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      data  ,
+    };
+  } catch (error) {
+    console.error("Error in GetAllMembers:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve members",
+      data: [],
+    };
+  }
+}

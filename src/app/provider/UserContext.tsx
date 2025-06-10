@@ -13,10 +13,12 @@ import { toast } from "react-toastify";
 
 type User = {
   role: string;
+  id: string;
 } | null;
 
 interface UserContextType {
   user: User;
+
   loading: boolean;
 }
 
@@ -42,7 +44,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     const { data: roleData, error: roleError } = await supabase
       .from("User")
-      .select("role")
+      .select("id,role")
       .eq("email", authUser.email)
       .single();
 

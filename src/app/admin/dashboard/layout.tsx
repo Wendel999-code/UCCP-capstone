@@ -11,14 +11,13 @@ export default function AdminLayout({
       {/* header */}
       <Header />
 
-      <div className="flex px-32 py-6">
+      <div className="flex px-6 py-6">
         {/* sidebar */}
         <SideBar />
 
         {/* Main content */}
-        <div>
-          <main className="flex-1 p-4 bg-white"> {children}</main>
-        </div>
+
+        <main className="flex-1 px-2 bg-white"> {children}</main>
       </div>
     </div>
   );

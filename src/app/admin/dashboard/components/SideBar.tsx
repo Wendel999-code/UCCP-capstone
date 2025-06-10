@@ -26,7 +26,7 @@ const SideBar = () => {
       </Link>
 
       <Link
-        href="/dashboard/events"
+        href="/admin/dashboard/members"
         className={cn(
           "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
           pathname === "/dashboard/events"
