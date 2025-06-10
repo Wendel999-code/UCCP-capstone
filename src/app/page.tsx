@@ -1,3 +1,5 @@
+"use client";
+
 import Header from "./landing/Header";
 import Hero from "./landing/Hero";
 import WelcomeMessage from "./landing/WelcomeMessage";

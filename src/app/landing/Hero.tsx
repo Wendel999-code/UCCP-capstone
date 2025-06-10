@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const bibleVerses = [
   {
@@ -63,9 +64,12 @@ function Hero() {
             experience God's love.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-lg">
-              Join us now
-            </Button>
+            <Link href={"/applications"}>
+              {" "}
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-lg hover:cursor-pointer">
+                Join us now
+              </Button>
+            </Link>
             <Button
               variant="outline"
               className="text-yellow-600 border-yellow-500 hover:bg-yellow-100"

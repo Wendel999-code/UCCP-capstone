@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import React from "react";
+import MainCard from "./main-card";
 
 const Welcome = () => {
   return (
@@ -35,14 +36,13 @@ const Welcome = () => {
               in him."
             </p>
             <p className="text-sm text-muted-foreground mt-1">Romans 15:13</p>
-            {/* <Button variant="outline" size="sm" className="mt-3 w-full">
-              Prayer Requests
-            </Button> */}
           </div>
         </div>
       </div>
 
-      {/* Dummy Cards Section */}
+      <MainCard />
+
+      {/* Dummy Cards Section
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((item) => (
           <div
@@ -56,7 +56,7 @@ const Welcome = () => {
             </Button>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

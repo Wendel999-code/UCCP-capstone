@@ -2,24 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BookOpen,
-  Calendar,
-  Home,
-  MessageSquare,
-  Settings,
-  Users,
-  //   Heart,
-  Bell,
-} from "lucide-react";
+import { Calendar, Home, Bell, File, UserCheck, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
-const Sidebar = () => {
+const SideBar = () => {
   const pathname = usePathname();
+
   return (
-    <nav className="hidden md:grid   items-start gap-2 py-4 w-[300px] h-[25rem] bg-white border rounded-md shadow-sm">
+    <nav className="hidden md:grid px-4   items-start gap-2 py-4 w-[300px] h-[450px]  bg-white border rounded-md shadow-sm">
       <Link
         href="/dashboard"
         className={cn(
@@ -42,8 +34,8 @@ const Sidebar = () => {
             : "text-muted-foreground"
         )}
       >
-        <Calendar className="h-5 w-5" />
-        Events
+        <Users className="h-5 w-5" />
+        Members
       </Link>
       <Link
         href="/dashboard/announcements"
@@ -54,8 +46,8 @@ const Sidebar = () => {
             : "text-muted-foreground"
         )}
       >
-        <Bell className="h-5 w-5" />
-        Announcements
+        <UserCheck className="h-5 w-5" />
+        Applications
       </Link>
       <Link
         href="/dashboard/spiritual-growth"
@@ -66,8 +58,8 @@ const Sidebar = () => {
             : "text-muted-foreground"
         )}
       >
-        <BookOpen className="h-5 w-5" />
-        Spiritual Growth
+        <File className="h-5 w-5" />
+        Documents
       </Link>
       <Link
         href="/dashboard/community"
@@ -78,8 +70,8 @@ const Sidebar = () => {
             : "text-muted-foreground"
         )}
       >
-        <Users className="h-5 w-5" />
-        Community
+        <Calendar className="h-5 w-5" />
+        Events
       </Link>
       <Link
         href="/dashboard/messages"
@@ -90,13 +82,13 @@ const Sidebar = () => {
             : "text-muted-foreground"
         )}
       >
-        <MessageSquare className="h-5 w-5" />
-        Messages
+        <Bell className="h-5 w-5" />
+        Announcements
         <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-sm font-medium text-yellow-900">
           3
         </span>
       </Link>
-      <Link
+      {/* <Link
         href="/dashboard/settings"
         className={cn(
           "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
@@ -107,9 +99,10 @@ const Sidebar = () => {
       >
         <Settings className="h-5 w-5" />
         Settings
-      </Link>
+      </Link> */}
+      <Button className="font-medium mt-3">Logout</Button>
     </nav>
   );
 };
 
-export default Sidebar;
+export default SideBar;

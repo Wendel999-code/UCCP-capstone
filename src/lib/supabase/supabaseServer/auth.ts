@@ -13,11 +13,11 @@ export async function SignUp(email: string, password: string) {
       return { success: false, message: error.message };
     }
 
-    const { error: userError } = await supabase
+    const { data, error: userError } = await supabase
       .from("User")
       .insert([
         {
-          role: "user",
+          role: "member",
           email: email,
         },
       ])
@@ -31,9 +31,10 @@ export async function SignUp(email: string, password: string) {
     return {
       success: true,
       message: "Signup successfully",
+      data,
     };
-  } catch (err) {
-    console.error("Unexpected error in signup:", err);
+  } catch (error) {
+    console.error("Unexpected error in signup:", error);
     return { success: false, message: "Unexpected error in signup" };
   }
 }
@@ -54,12 +55,24 @@ export async function Login(email: string, password: string) {
       return { success: false, message: error.message };
     }
 
+    const { data: roleData, error: roleError } = await supabase
+      .from("User")
+      .select("role")
+      .eq("email", email)
+      .single();
+
+    if (roleError) {
+      console.error("error fetching role:", roleError.message);
+      return { success: false, message: roleError.message };
+    }
+
     return {
       success: true,
       message: "Login successfully",
+      role: roleData.role,
     };
-  } catch (err) {
-    console.error("Unexpected error in Login:", err);
+  } catch (error) {
+    console.error("Unexpected error in Login:", error);
     return { success: false, message: "Unexpected error in Login" };
   }
 }

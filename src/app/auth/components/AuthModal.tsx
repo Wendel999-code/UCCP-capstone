@@ -18,6 +18,8 @@ import { EyeIcon } from "lucide-react";
 import { Login, SignUp } from "@/lib/supabase/supabaseServer/auth";
 import { toast } from "react-toastify";
 
+import { useRouter } from "next/navigation";
+
 export default function AuthModal() {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"login" | "signup">("login");
@@ -27,6 +29,8 @@ export default function AuthModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
 
   const toggleView = () => {
     setError("");
@@ -42,7 +46,16 @@ export default function AuthModal() {
 
     if (!res.success) return toast.error(res.message);
 
-    toast.success(res.message);
+    console.log("logged in role", res?.role);
+
+    if (res?.role === "admin") {
+      console.log("rolehere", res?.role);
+      toast.success(res.message);
+      router.push("/admin/dashboard");
+    } else {
+      toast.success(res.message);
+      router.push("/member/dashboard");
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -59,6 +72,7 @@ export default function AuthModal() {
     if (!res.success) return toast.error(res.message);
 
     toast.success(res.message);
+    // redirect("/member/dashboard");
   };
 
   return (

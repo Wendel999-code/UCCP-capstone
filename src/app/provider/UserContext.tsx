@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
   ReactNode,
 } from "react";
 import { toast } from "react-toastify";
@@ -25,7 +26,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch user role only when needed
   const fetchUserRole = async () => {
+    setLoading(true);
     const {
       data: { user: authUser },
       error: authError,
@@ -49,27 +52,29 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setUser(roleData);
     }
-
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUserRole();
+    let isMounted = true;
+    const safeFetch = async () => {
+      await fetchUserRole();
+    };
+    safeFetch();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(() => {
-      fetchUserRole();
+      if (isMounted) fetchUserRole();
     });
 
     return () => {
+      isMounted = false;
       authListener.subscription.unsubscribe();
     };
   }, []);
 
-  return (
-    <UserContext.Provider value={{ user, loading }}>
-      {children}
-    </UserContext.Provider>
-  );
+  const value = useMemo(() => ({ user, loading }), [user, loading]);
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => {
