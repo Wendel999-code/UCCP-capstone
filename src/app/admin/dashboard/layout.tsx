@@ -17,7 +17,7 @@ export default function AdminLayout({
 
         {/* Main content */}
 
-        <main className="flex-1 px-2 bg-white"> {children}</main>
+        <main className="flex-1 px-2 "> {children}</main>
       </div>
     </div>
   );

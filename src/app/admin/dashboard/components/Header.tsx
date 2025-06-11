@@ -1,5 +1,6 @@
+import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
-import {  Bell, Heart } from "lucide-react";
+import { Bell, Heart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -13,8 +14,9 @@ const Header = () => {
           <Heart /> <span className="text-xl text-black font-medium">UCCP</span>
         </div>
       </Link>
-      <div> </div>
+
       <div className="flex items-center gap-4">
+        <ModeToggle />
         <Button variant="ghost" className="relative bg-white text-black">
           <Bell className="h-5 w-5" />
           <span className="sr-only text-red">View notifications</span>3

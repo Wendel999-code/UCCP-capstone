@@ -9,6 +9,7 @@ import { useUser } from "../provider/UserContext";
 import { Button } from "@/components/ui/button";
 import { Logout } from "@/lib/supabase/supabaseServer/auth";
 import { toast } from "react-toastify";
+import { ModeToggle } from "@/components/ModeToogle";
 
 function Header() {
   const { user, loading } = useUser();
@@ -31,11 +32,11 @@ function Header() {
         <motion.div
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 300 }}
-          className="px-32"
+          className="md:px-74"
         >
           <Link href="/" className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-yellow-500" />
-            <span className="text-xl font-bold">NorWesCom</span>
+            <span className="text-xl font-bold">UCCP</span>
           </Link>
         </motion.div>
 
@@ -58,6 +59,7 @@ function Header() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
+            <ModeToggle />
             {loading ? (
               <LoaderCircle className="animate-spin w-6 h-6 text-yellow-500" />
             ) : user ? (

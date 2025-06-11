@@ -2,16 +2,61 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Home, Bell, File, UserCheck, Users } from "lucide-react";
+import {
+  Calendar,
+  Home,
+  Bell,
+  File,
+  UserCheck,
+  Users,
+  LogOut,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { GetPendingApplicationsCount } from "@/lib/supabase/supabaseServer/member";
+import supabase from "@/lib/supabase/supabaseClient/supabaseClient";
 
 const SideBar = () => {
   const pathname = usePathname();
 
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      const result = await GetPendingApplicationsCount();
+      if (result.success) {
+        setPendingCount(result.count);
+      }
+    };
+
+    fetchPendingCount();
+
+    // Set up real-time subscription view livecount
+    const channel = supabase
+      .channel("pending-applications")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "member",
+          filter: "activeStatus=eq.pending",
+        },
+        () => {
+          fetchPendingCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
+
   return (
-    <nav className="hidden md:grid px-4   items-start gap-2 py-4 w-[300px] h-[450px]  bg-white border rounded-md shadow-sm">
+    <nav className="hidden md:grid px-4   items-start gap-2 py-4 w-[300px] h-[450px]   border rounded-md shadow-sm">
       <Link
         href="/dashboard"
         className={cn(
@@ -38,7 +83,7 @@ const SideBar = () => {
         Members
       </Link>
       <Link
-        href="/dashboard/announcements"
+        href="/admin/dashboard/applications"
         className={cn(
           "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
           pathname === "/dashboard/announcements"
@@ -47,7 +92,12 @@ const SideBar = () => {
         )}
       >
         <UserCheck className="h-5 w-5" />
-        Applications
+        Applications{" "}
+        {pendingCount > 0 && (
+          <span className="  h-5 w-5 text-sm font-bold text-red-500">
+            {pendingCount}
+          </span>
+        )}
       </Link>
       <Link
         href="/dashboard/spiritual-growth"
@@ -100,7 +150,12 @@ const SideBar = () => {
         <Settings className="h-5 w-5" />
         Settings
       </Link> */}
-      <Button className="font-medium mt-3">Logout</Button>
+      <Button
+        variant={"outline"}
+        className="font-medium mt-3  hover:cursor-pointer text-md dark:bg-red-600 text-white-900"
+      >
+        Logout <LogOut />
+      </Button>
     </nav>
   );
 };

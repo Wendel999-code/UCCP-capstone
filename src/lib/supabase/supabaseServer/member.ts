@@ -137,13 +137,15 @@ export async function GetAllMembers(id: string) {
     const { data, error } = await supabase
       .from("member")
       .select("*")
+      //todo exlude pending members
+      //.neq("activeStatus", "pending")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
     return {
       success: true,
-      data  ,
+      data,
     };
   } catch (error) {
     console.error("Error in GetAllMembers:", error);
@@ -151,6 +153,28 @@ export async function GetAllMembers(id: string) {
       success: false,
       message: "Failed to retrieve members",
       data: [],
+    };
+  }
+}
+
+export async function GetPendingApplicationsCount() {
+  try {
+    const { count, error } = await supabase
+      .from("member")
+      .select("*", { count: "exact", head: true })
+      .eq("activeStatus", "pending");
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      count: count || 0,
+    };
+  } catch (error) {
+    console.error("Error getting pending applications count:", error);
+    return {
+      success: false,
+      count: 0,
     };
   }
 }

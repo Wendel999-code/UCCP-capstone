@@ -1,8 +1,10 @@
 "use client";
 
+import { ModeToggle } from "@/components/ModeToogle";
+import { Button } from "@/components/ui/button";
 // import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, LogOut } from "lucide-react";
 import Link from "next/link";
 
 const Nav = () => {
@@ -21,10 +23,15 @@ const Nav = () => {
         >
           <Link href="/" className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-yellow-500" />
-            <span className="text-xl font-bold">NorWesCom</span>
+            <span className="text-xl font-bold">UCCP</span>
           </Link>
         </motion.div>
-        {/* <Button>Logout</Button> */}
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <Button>
+            Logout <LogOut />{" "}
+          </Button>
+        </div>
       </div>
     </motion.header>
   );
