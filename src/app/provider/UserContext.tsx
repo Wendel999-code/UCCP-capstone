@@ -1,6 +1,6 @@
 "use client";
 
-import supabase from "@/lib/supabase/supabaseClient/supabaseClient";
+import supabase from "@/lib/supabase/client";
 import {
   createContext,
   useContext,
@@ -18,7 +18,6 @@ type User = {
 
 interface UserContextType {
   user: User;
-
   loading: boolean;
 }
 
@@ -28,33 +27,38 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user role only when needed
   const fetchUserRole = async () => {
-    setLoading(true);
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    try {
+      setLoading(true);
+      const {
+        data: { user: authUser },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    if (authError || !authUser) {
+      if (authError || !authUser) {
+        setUser(null);
+        return;
+      }
+
+      const { data: roleData, error: roleError } = await supabase
+        .from("User")
+        .select("id, role")
+        .eq("id", authUser.id)
+        .single();
+
+      if (roleError) {
+        toast.error(roleError.message);
+        setUser(null);
+      } else {
+        setUser(roleData);
+      }
+    } catch (error) {
+      console.error("Unexpected error in fetchUserRole:", error);
+      toast.error("Unexpected error while loading user.");
       setUser(null);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const { data: roleData, error: roleError } = await supabase
-      .from("User")
-      .select("id,role")
-      .eq("email", authUser.email)
-      .single();
-
-    if (roleError) {
-      toast.error(roleError.message);
-      setUser(null);
-    } else {
-      setUser(roleData);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {

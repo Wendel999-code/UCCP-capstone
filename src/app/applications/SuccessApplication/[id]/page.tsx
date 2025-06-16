@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { GetApplicationID } from "@/lib/supabase/supabaseServer/member";
+import { GetApplicationID } from "@/lib/supabase/actions/member";
 
 export default async function SuccessApplicationPage({
   params,

@@ -2,10 +2,9 @@
 
 import { useUser } from "@/app/provider/UserContext";
 import { TableSkeleton } from "@/components/TableSkeleton";
-
 import { redirect, useRouter } from "next/navigation";
-
 import React from "react";
+import AdminDashboard from "./components/AdminDashboard";
 
 const Page = () => {
   const { user, loading } = useUser();
@@ -13,13 +12,15 @@ const Page = () => {
 
   if (loading) return <TableSkeleton />;
 
-  console.log("User in admin dashboard:", user);
-
   if (!user) redirect("/");
 
-  if (user?.role !== "admin") router.push("/member/dashboard");
+  if (user?.role !== "church_admin") router.replace("/");
 
-  return <div>page</div>;
+  return (
+    <>
+      <AdminDashboard />
+    </>
+  );
 };
 
 export default Page;

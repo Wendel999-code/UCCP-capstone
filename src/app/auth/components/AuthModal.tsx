@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/dialog";
 
 import { EyeIcon } from "lucide-react";
-import { Login, SignUp } from "@/lib/supabase/supabaseServer/auth";
 import { toast } from "react-toastify";
 
 import { useRouter } from "next/navigation";
+import { Login, SignUp } from "@/lib/supabase/actions/auth";
 
 export default function AuthModal() {
   const [open, setOpen] = useState(false);
@@ -46,10 +46,7 @@ export default function AuthModal() {
 
     if (!res.success) return toast.error(res.message);
 
-    console.log("logged in role", res?.role);
-
-    if (res?.role === "admin") {
-      console.log("rolehere", res?.role);
+    if (res?.role === "church_admin") {
       toast.success(res.message);
       router.push("/admin/dashboard");
     } else {

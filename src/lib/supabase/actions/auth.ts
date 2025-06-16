@@ -1,4 +1,4 @@
-import supabase from "../supabaseClient/supabaseClient";
+import supabase from "../client";
 
 export async function SignUp(email: string, password: string) {
   if (!email || !password) {
@@ -6,14 +6,17 @@ export async function SignUp(email: string, password: string) {
   }
 
   try {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
     if (error) {
       console.error("Supabase signup error:", error.message);
       return { success: false, message: error.message };
     }
 
-    const { data, error: userError } = await supabase
+    const { data: user, error: userError } = await supabase
       .from("User")
       .insert([
         {
@@ -31,7 +34,7 @@ export async function SignUp(email: string, password: string) {
     return {
       success: true,
       message: "Signup successfully",
-      data,
+      user,
     };
   } catch (error) {
     console.error("Unexpected error in signup:", error);
@@ -45,7 +48,7 @@ export async function Login(email: string, password: string) {
   }
 
   try {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -55,21 +58,21 @@ export async function Login(email: string, password: string) {
       return { success: false, message: error.message };
     }
 
-    const { data: roleData, error: roleError } = await supabase
+    const { data: user, error: userError } = await supabase
       .from("User")
-      .select("role")
-      .eq("email", email)
+      .select("id,role")
+      .eq("id", data.user?.id)
       .single();
 
-    if (roleError) {
-      console.error("error fetching role:", roleError.message);
-      return { success: false, message: roleError.message };
+    if (userError) {
+      console.error("error fetching role:", userError.message);
+      return { success: false, message: userError.message };
     }
 
     return {
       success: true,
       message: "Login successfully",
-      role: roleData.role,
+      role: user.role,
     };
   } catch (error) {
     console.error("Unexpected error in Login:", error);

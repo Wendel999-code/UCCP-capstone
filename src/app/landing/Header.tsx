@@ -7,9 +7,9 @@ import React from "react";
 import AuthModal from "../auth/components/AuthModal";
 import { useUser } from "../provider/UserContext";
 import { Button } from "@/components/ui/button";
-import { Logout } from "@/lib/supabase/supabaseServer/auth";
 import { toast } from "react-toastify";
 import { ModeToggle } from "@/components/ModeToogle";
+import { Logout } from "@/lib/supabase/actions/auth";
 
 function Header() {
   const { user, loading } = useUser();
@@ -55,7 +55,7 @@ function Header() {
           )}
 
           <motion.div
-            whileHover={{ scale: 1.05 }}
+            className="flex  gap-3"
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
           >

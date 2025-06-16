@@ -3,10 +3,11 @@
 import * as React from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 // Extend props to accept indicatorClassName
-interface ProgressProps extends React.ComponentProps<typeof ProgressPrimitive.Root> {
+interface ProgressProps
+  extends React.ComponentProps<typeof ProgressPrimitive.Root> {
   indicatorClassName?: string;
 }
 

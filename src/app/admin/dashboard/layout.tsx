@@ -8,16 +8,10 @@ export default function AdminLayout({
 }) {
   return (
     <div className="flex flex-col">
-      {/* header */}
       <Header />
-
       <div className="flex px-6 py-6">
-        {/* sidebar */}
         <SideBar />
-
-        {/* Main content */}
-
-        <main className="flex-1 px-2 "> {children}</main>
+        <main className="flex-1 px-2 ">{children}</main>
       </div>
     </div>
   );

@@ -2,11 +2,11 @@
 
 import { useUser } from "@/app/provider/UserContext";
 import { TableSkeleton } from "@/components/TableSkeleton";
-import { GetAllMembers } from "@/lib/supabase/supabaseServer/member";
 import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import MembersTable from "./components/MembersTable";
+import { GetAllMembersByChurchId } from "@/lib/supabase/actions/member";
 
 export interface Member {
   id: string;
@@ -32,7 +32,7 @@ const MembersPage = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       if (user?.id) {
-        const res = await GetAllMembers(user.id);
+        const res = await GetAllMembersByChurchId();
         if (!res?.success)
           toast.error(res?.message || "Failed to fetch members");
 
@@ -44,7 +44,7 @@ const MembersPage = () => {
     if (!loading) {
       if (!user) {
         redirect("/");
-      } else if (user.role !== "admin") {
+      } else if (user.role !== "church_admin") {
         router.push("/member/dashboard");
       } else {
         fetchMembers();
