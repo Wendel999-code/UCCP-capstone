@@ -1,15 +1,16 @@
 "use client";
 
-import { Heart, LoaderCircle } from "lucide-react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import React from "react";
-import AuthModal from "../auth/components/AuthModal";
+
 import { useUser } from "../provider/UserContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Logout } from "@/lib/supabase/actions/auth";
+import Image from "next/image";
 
 function Header() {
   const { user, loading } = useUser();
@@ -29,24 +30,28 @@ function Header() {
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className="container flex h-16 items-center justify-between py-16">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="md:px-74"
-        >
-          <Link href="/" className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-yellow-500" />
-            <span className="text-xl font-bold">UCCP</span>
-          </Link>
-        </motion.div>
+        <Link href="/">
+          <div className="px-25">
+            <Image
+              src="/logo.jpg"
+              alt="CANA Circuit Logo"
+              width={100}
+              height={80}
+              className="rounded-full object-cover transition-transform group-hover:scale-105"
+            />
+          </div>
+        </Link>
 
         <nav className="hidden md:flex gap-8">
           {["about", "services", "events", "testimonials", "contact"].map(
             (section) => (
-              <motion.div key={section}>
+              <motion.div
+                key={section}
+                className="flex items-center justify-center"
+              >
                 <Link
                   href={`#${section}`}
-                  className="text-lg  hover:text-yellow-500 transition-colors "
+                  className="text-lg  hover:text-yellow-500 transition-colors  "
                 >
                   {section.charAt(0).toUpperCase() + section.slice(1)}
                 </Link>
@@ -56,21 +61,35 @@ function Header() {
 
           <motion.div
             className="flex  gap-3"
-            whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <ModeToggle />
             {loading ? (
-              <LoaderCircle className="animate-spin w-6 h-6 text-yellow-500" />
+              <LoaderCircle className="animate-spin" />
             ) : user ? (
-              <Button
-                onClick={handleLogout}
-                className="text-yellow-700 hover:bg-yellow-600 text-md"
-              >
-                Logout
-              </Button>
+              <>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  size="sm"
+                  className="group h-[35px] cursor-pointer bg-red-900 hover:bg-red-800"
+                >
+                  Logout
+                  <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </>
             ) : (
-              <AuthModal />
+              <Link href={"/auth/login"}>
+                {" "}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="group h-[35px] cursor-pointer bg-amber-500 hover:bg-amber-600   "
+                >
+                  Sign in
+                  <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1 " />
+                </Button>
+              </Link>
             )}
           </motion.div>
         </nav>

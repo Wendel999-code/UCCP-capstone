@@ -1,120 +1,67 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useRef, useEffect, useState } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-
-const bibleVerses = [
-  {
-    text: "“For I know the plans I have for you,” declares the Lord...",
-    reference: "Jeremiah 29:11",
-  },
-  {
-    text: "“I can do all things through Christ who strengthens me.”",
-    reference: "Philippians 4:13",
-  },
-  {
-    text: "“The Lord is my shepherd, I shall not want.”",
-    reference: "Psalm 23:1",
-  },
-  {
-    text: "“Trust in the Lord with all your heart...”",
-    reference: "Proverbs 3:5",
-  },
-];
 
 function Hero() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, {
-    once: false,
-    amount: 0.2,
-  });
-
-  const [currentVerse, setCurrentVerse] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentVerse((prev) => (prev + 1) % bibleVerses.length);
-    }, 5000); // every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className="w-full py-16 bg-background">
-      <div
-        className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12"
-        ref={sectionRef}
-      >
-        {/* Left Column: Message and Buttons */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-          className="flex-1 space-y-12 max-w-xl md:pl-46"
-        >
-          <h1 className="text-2xl md:text-6xl font-bold leading-tight tracking-tight">
-            Welcome to{" "}
-            <span className="text-yellow-500">Lester Lou's Church</span>
-          </h1>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            To spread love, hope, and faith throughout our community and beyond.
-            We believe in creating a welcoming environment where everyone can
-            experience God's love.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link href={"/applications"}>
-              {" "}
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-lg hover:cursor-pointer">
-                Join us now
-              </Button>
-            </Link>
+      <div className="container mx-auto px-6 flex flex-col items-center gap-12 text-center">
+        {/* Title & Description */}
+        <div className="flex flex-col justify-center items-center space-y-6">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+              <span className="text-red-900">CANA</span>{" "}
+              <span className="text-amber-500">Circuit</span>
+            </h1>
+            <p className="text-xl text-red-600 font-semibold italic">
+              "Turning Water Into Wine"
+            </p>
+            <p className="max-w-[600px] text-gray-700 md:text-lg">
+              Join us in our spiritual journey as we transform lives through
+              faith, fellowship, and the power of God's word. Experience the
+              miracle of transformation in your own life.
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center">
+            <Button
+              size="lg"
+              className="bg-red-900 hover:bg-red-800 text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Join Our Circuit
+            </Button>
             <Button
               variant="outline"
-              className="text-yellow-600 border-yellow-500 hover:bg-yellow-100"
+              size="lg"
+              className="border-2 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300"
             >
               Learn More
             </Button>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Right Column: Image with Verse Overlay */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={
-            isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }
-          }
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative w-[500px] h-[400px] md:w-[700px] md:h-[500px] rounded-lg overflow-hidden shadow-lg"
-        >
-          <Image
-            src="https://cdn.pixabay.com/photo/2013/07/13/10/20/mystery-157015_960_720.png"
-            alt="Church Building"
-            fill
-            className="object-cover"
-            priority
-          />
-
-          {/* Bible Verse Overlay */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentVerse}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 1 }}
-              className="absolute bottom-4 left-4 right-4 bg-white/70 backdrop-blur-md p-4 rounded-md shadow-md text-center"
+        {/* Location Tags */}
+        <div className="flex flex-wrap gap-2 justify-center pt-8">
+          {[
+            "Palanit",
+            "San Juan",
+            "Salvacion",
+            "Alegria",
+            "San Isidro",
+            "Victoria",
+            "Allen",
+            "Lipata",
+            "Cabacungan",
+          ].map((location) => (
+            <span
+              key={location}
+              className="px-3 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-full border border-red-200 hover:bg-red-200 transition-colors duration-200"
             >
-              <p className="text-md md:text-base italic text-gray-900">
-                {bibleVerses[currentVerse].text}
-              </p>
-              <p className="mt-2 text-sm font-medium text-yellow-800">
-                — {bibleVerses[currentVerse].reference}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+              {location}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );
