@@ -1,7 +1,8 @@
 "use client";
 
 import { useUser } from "@/app/provider/UserContext";
-import { TableSkeleton } from "@/components/TableSkeleton";
+import LogoLoader from "@/components/LogoLoader";
+
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -23,7 +24,7 @@ export default function AdminAuthGuard({
     }
   }, [user, loading, router]);
 
-  if (loading || !user) return <TableSkeleton />;
+  if (loading || !user) return <LogoLoader />;
 
   return <>{children}</>;
 }

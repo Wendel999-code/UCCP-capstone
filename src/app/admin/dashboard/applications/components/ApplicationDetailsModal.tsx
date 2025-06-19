@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/app/lib/utils";
 import React, { useEffect, useState } from "react";
 import { GetApplicationID } from "@/lib/supabase/actions/member";
+import { Loader2 } from "lucide-react";
 
 type MemberDetails = {
   firstName: string;
@@ -32,23 +33,27 @@ type MemberDetails = {
 
 export default function ApplicationDetailsModal({
   memberID,
+  onApprove,
+  loading,
 }: {
   memberID: string;
+  onApprove: () => void;
+  loading: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
   const [member, setMember] = useState<MemberDetails | null>(null);
 
   useEffect(() => {
     if (!open) return;
 
     const fetchMember = async () => {
-      setLoading(true);
+      setIsFetching(true);
       const res = await GetApplicationID(memberID);
       if (res?.success) {
         setMember(res.data);
       }
-      setLoading(false);
+      setIsFetching(false);
     };
 
     fetchMember();
@@ -63,10 +68,10 @@ export default function ApplicationDetailsModal({
   }) => (
     <div>
       <Label className="text-xs text-gray-600">{label}</Label>
-      {loading ? (
+      {isFetching ? (
         <Skeleton className="h-9 mt-1 rounded-md" />
       ) : (
-        <Input readOnly value={String(value)} />
+        <Input readOnly value={String(value) ?? ""} />
       )}
     </div>
   );
@@ -89,18 +94,18 @@ export default function ApplicationDetailsModal({
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          <RenderField label="First Name" value={member?.firstName} />
-          <RenderField label="Last Name" value={member?.lastName} />
-          <RenderField label="Age" value={member?.age} />
-          <RenderField label="Gender" value={member?.gender} />
-          <RenderField label="Category" value={member?.category} />
+          <RenderField label="First Name" value={member?.firstName ?? ""} />
+          <RenderField label="Last Name" value={member?.lastName ?? ""} />
+          <RenderField label="Age" value={member?.age ?? ""} />
+          <RenderField label="Gender" value={member?.gender ?? ""} />
+          <RenderField label="Category" value={member?.category ?? ""} />
 
           <div className="sm:col-span-2">
             <Label className="text-xs text-gray-600">Address</Label>
             {loading ? (
               <Skeleton className="h-9 mt-1 rounded-md" />
             ) : (
-              <Input readOnly value={member?.address} />
+              <Input readOnly value={member?.address ?? ""} />
             )}
           </div>
 
@@ -119,7 +124,7 @@ export default function ApplicationDetailsModal({
                       : "text-red-600 border-red-600"
                   )}
                 >
-                  {member?.activeStatus}
+                  {member?.activeStatus ?? ""}
                 </Badge>
               )}
             </div>
@@ -127,15 +132,26 @@ export default function ApplicationDetailsModal({
 
           <RenderField
             label="Has Children"
-            value={member?.hasChildren ? "Yes" : "No"}
+            value={member?.hasChildren ?? "" ? "Yes" : "No"}
           />
 
           <div className="sm:col-span-2">
-            <RenderField label="Circuit" value={member?.Church?.brgy} />
+            <RenderField label="Circuit" value={member?.Church?.brgy ?? ""} />
           </div>
         </div>
-        <Button className="w-full text-medium text-black cursor-pointer hover:bg-amber-700">
-          Approve application
+        <Button
+          onClick={onApprove}
+          disabled={loading}
+          className="w-full text-medium text-black cursor-pointer hover:bg-amber-700"
+        >
+          {loading ? (
+            <span className="flex items-center gap-1">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Approving...
+            </span>
+          ) : (
+            "Approve application"
+          )}
         </Button>
       </DialogContent>
     </Dialog>

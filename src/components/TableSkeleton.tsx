@@ -1,9 +1,7 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -11,60 +9,33 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function TableSkeleton() {
-
-  const rows = Array.from({ length: 7 });
+  const rows = Array.from({ length: 6 });
 
   return (
-  <div className="flex flex-col items-center justify-center w-full h-full p-4">
-      <Table>
-      <TableCaption>
-        <Skeleton className="h-[24px] w-[50px]" /> 
-      </TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[400px]">
-            <Skeleton className="h-40 w-300 rounded-2xl" />
-          </TableHead>
-          <TableHead>
-            <Skeleton className="h-4 w-20" />
-          </TableHead>
-          <TableHead>
-            <Skeleton className="h-4 w-20" />
-          </TableHead>
-          <TableHead className="text-right">
-            <Skeleton className="h-4 w-20 ml-auto" />
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {rows.map((_, i) => (
-          <TableRow key={i}>
-            <TableCell className="font-medium">
-              <Skeleton className="h-4 w-24" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-20" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-20" />
-            </TableCell>
-            <TableCell className="text-right">
-              <Skeleton className="h-4 w-16 ml-auto" />
-            </TableCell>
+    <div className="w-full rounded-md border overflow-auto bg-white dark:bg-black">
+      <Table className="min-w-[800px] text-sm">
+        <TableHeader className="bg-muted dark:bg-neutral-900">
+          <TableRow>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <TableHead key={i} className="px-4 py-2">
+                <Skeleton className="h-3 w-16 rounded" />
+              </TableHead>
+            ))}
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>
-            <Skeleton className="h-4 w-16" />
-          </TableCell>
-          <TableCell className="text-right">
-            <Skeleton className="h-4 w-24 ml-auto" />
-          </TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
-  </div>
+        </TableHeader>
+
+        <TableBody>
+          {rows.map((_, rowIndex) => (
+            <TableRow key={rowIndex} className="hover:bg-muted/50">
+              {Array.from({ length: 8 }).map((_, cellIndex) => (
+                <TableCell key={cellIndex} className="px-4 py-2">
+                  <Skeleton className="h-4 w-24 rounded" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

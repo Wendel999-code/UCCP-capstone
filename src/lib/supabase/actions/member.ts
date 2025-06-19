@@ -133,7 +133,7 @@ export async function GetAllMembersByChurchId() {
       .select("*")
       .eq("church_id", churchAdmin.church_id) // dapat makuha la an same church both admin and member
       .neq("activeStatus", "pending")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: true });
 
     if (error) throw error;
 
@@ -263,7 +263,6 @@ export async function ApproveMembership(memberID: string) {
     return {
       success: true,
       message: "Membership approved successfully",
-      data: updatedMember,
     };
   } catch (error) {
     console.error("Error approving membership:", error);

@@ -9,7 +9,7 @@ import { TableSkeleton } from "@/components/TableSkeleton";
 const Dashboard = () => {
   const { user, loading } = useUser();
 
-  if (loading) return <TableSkeleton />;
+  if (loading) return <div>loadinggg....</div>
 
   console.log("User in Dashboard:", user);
 

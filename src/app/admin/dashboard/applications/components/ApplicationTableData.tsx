@@ -1,6 +1,5 @@
 "use client";
 import ApplicationAction from "./ApplicationAction";
-import { Member } from "../../members/page";
 import {
   useReactTable,
   getCoreRowModel,
@@ -14,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
+import { Member } from "@/global/type";
 
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {

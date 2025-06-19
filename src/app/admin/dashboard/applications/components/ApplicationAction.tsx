@@ -19,31 +19,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ApproveMembership } from "@/lib/supabase/actions/member";
 import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import { toast } from "react-toastify";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
+import { useApproveMember } from "@/app/hooks/useMember";
 
 const ApplicationAction = ({ memberID }: { memberID: string }) => {
-  const [loading, setLoading] = React.useState(false);
+  const { mutate: approveMember, isPending } = useApproveMember();
 
-  const handleApproveMember = async () => {
-    try {
-      setLoading(true);
-      const res = await ApproveMembership(memberID);
-
-      if (!res.success) {
-        toast.error(res.message || "Failed to approve member.");
-        return;
-      }
-      toast.success("Member approved successfully!");
-    } catch (error) {
-      console.error("Error approving member:", error);
-      toast.error("Failed to approve member. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const handleApprove = () => {
+    approveMember(memberID, {
+      onSuccess: () => toast.success("Member approved!"),
+      onError: (error) => toast.error(error.message),
+    });
   };
 
   const handleDeleteMember = async () => {
@@ -63,7 +52,11 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <ApplicationDetailsModal memberID={memberID} />
+        <ApplicationDetailsModal
+          memberID={memberID}
+          onApprove={handleApprove}
+          loading={isPending}
+        />
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -89,9 +82,9 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="text-black font-medium"
-                onClick={handleApproveMember}
+                onClick={handleApprove}
               >
-                {loading ? "Approving..." : "Confirm"}
+                {isPending ? "Approving..." : "Confirm"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

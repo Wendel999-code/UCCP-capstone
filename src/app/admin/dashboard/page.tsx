@@ -10,7 +10,7 @@ const Page = () => {
   const { user, loading } = useUser();
   const router = useRouter();
 
-  if (loading) return <TableSkeleton />;
+  if (loading) return <div>loading...</div>;
 
   if (!user) redirect("/");
 

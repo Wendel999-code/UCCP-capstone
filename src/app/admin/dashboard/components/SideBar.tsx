@@ -14,48 +14,21 @@ import {
 
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { GetPendingApplicationsCount } from "@/lib/supabase/actions/member";
-import { ManageChurchById } from "@/lib/supabase/actions/church";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
 import supabase from "@/lib/supabase/client";
 import { Logout } from "@/lib/supabase/actions/auth";
+import { motion } from "framer-motion";
+import { useSidebarData } from "@/app/hooks/useSideBar";
 
 const SideBar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [pendingCount, setPendingCount] = useState(0);
 
-  const [brgy, setBrgy] = useState("");
-
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, refetch } = useSidebarData();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [churchRes, countRes] = await Promise.all([
-          ManageChurchById(),
-          GetPendingApplicationsCount(),
-        ]);
-
-        if (churchRes?.success) {
-          setBrgy(churchRes?.brgy);
-        }
-
-        if (countRes?.success) {
-          setPendingCount(countRes.count);
-        }
-      } catch (error) {
-        console.error("Error fetching sidebar data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
     const channel = supabase
       .channel("pending-applications")
       .on(
@@ -67,7 +40,7 @@ const SideBar = () => {
           filter: "activeStatus=eq.pending",
         },
         () => {
-          fetchData();
+          refetch();
         }
       )
       .subscribe();
@@ -75,7 +48,7 @@ const SideBar = () => {
     return () => {
       channel.unsubscribe();
     };
-  }, []);
+  }, [refetch]);
 
   const handleLogout = async () => {
     try {
@@ -92,12 +65,17 @@ const SideBar = () => {
   };
 
   return (
-    <nav className="hidden md:grid px-3 items-start gap-2 py-3 w-[200px] h-[420px] border rounded-md shadow-sm">
+    <motion.nav
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="hidden md:grid px-3 items-start gap-2 py-3 w-[200px] h-[420px] border rounded-md shadow-sm"
+    >
       <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
-        {loading ? (
+        {isLoading ? (
           <Skeleton className="rounded-2xl text-center w-[180px] h-[24px]" />
         ) : (
-          brgy
+          data?.brgy
         )}
       </h1>
 
@@ -116,9 +94,9 @@ const SideBar = () => {
           href: "/admin/dashboard/applications",
           label: "Applications",
           icon: <UserCheck className="h-4 w-4" />,
-          extra: pendingCount > 0 && (
+          extra: (data?.pendingCount ?? 0) > 0 && (
             <span className="ml-auto h-5 w-5 text-xs font-bold text-red-500">
-              {pendingCount}
+              {data?.pendingCount}
             </span>
           ),
         },
@@ -168,7 +146,7 @@ const SideBar = () => {
         Logout
         <LogOut className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
       </Button>
-    </nav>
+    </motion.nav>
   );
 };
 

@@ -1,33 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { GetPendingApplication } from "@/lib/supabase/actions/member";
+import React from "react";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import ApplicationTable from "./components/ApplicationTable";
-import { Member } from "../members/page";
-import { toast } from "react-toastify";
+import { usePendingMembers } from "@/app/hooks/useMember";
 
 const Page = () => {
-  const [pendingMembers, setPendingMembers] = useState<Member[]>([]);
-  const [fetching, setFetching] = useState(true);
+  const { data, isLoading, isError, error } = usePendingMembers();
 
-  useEffect(() => {
-    const fetchPending = async () => {
-      const res = await GetPendingApplication();
-      if (!res?.success) {
-        toast.error(res?.message || "Failed to fetch pending members");
-      } else {
-        setPendingMembers(res.data);
-      }
-      setFetching(false);
-    };
+  if (isLoading) return <TableSkeleton />;
+  if (isError) return <p className="text-red-500">{error.message}</p>;
 
-    fetchPending();
-  }, []);
-
-  if (fetching) return <TableSkeleton />;
-
-  return <ApplicationTable pendingMember={pendingMembers} />;
+  return <ApplicationTable pendingMember={data || []} />;
 };
 
 export default Page;
