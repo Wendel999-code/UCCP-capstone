@@ -48,94 +48,107 @@ export default function ApplicationTable({
 
   return (
     <>
-      <div className="space-y-6 w-full ">
+      <div className="space-y-2 w-full ">
         {/* Header */}
 
         {/* Filters and Actions */}
         <Card className="dark:bg-black">
           <CardHeader>
-            <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center justify-between space-x-2">
               <div>
                 {" "}
-                <CardTitle className="text-2xl">
+                <CardTitle className="text-xl">
                   Applied for membership
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-gray-600">
                   A comprehensive list of all pending members
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between space-x-2 py-4">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between flex-wrap gap-2 py-2">
+              <div className="flex items-center flex-wrap gap-2">
+                {/* Search Input */}
                 <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-2 top-[6px] h-3 w-3 text-muted-foreground" />
                   <Input
-                    placeholder="Search members..."
+                    placeholder="Search..."
                     value={
                       (table
                         .getColumn("firstName")
                         ?.getFilterValue() as string) ?? ""
                     }
-                    onChange={(event) =>
+                    onChange={(e) =>
                       table
                         .getColumn("firstName")
-                        ?.setFilterValue(event.target.value)
+                        ?.setFilterValue(e.target.value)
                     }
-                    className="pl-8 max-w-sm"
+                    className="pl-6 w-[120px] h-7 text-[11px] text-muted-foreground"
                   />
                 </div>
+
+                {/* Category Filter */}
                 <Select
                   value={
                     (table.getColumn("category")?.getFilterValue() as string) ??
                     ""
                   }
-                  onValueChange={(value) =>
+                  onValueChange={(val) =>
                     table
                       .getColumn("category")
-                      ?.setFilterValue(value === "all" ? "" : value)
+                      ?.setFilterValue(val === "all" ? "" : val)
                   }
                 >
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-[110px] h-7 text-xs">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="UCM">UCM</SelectItem>
-                    <SelectItem value="CWA">CWA</SelectItem>
-                    <SelectItem value="CYAF">CYAF</SelectItem>
-                    <SelectItem value="CYF">CYF</SelectItem>
-                    <SelectItem value="CHILDREN">CHILDREN</SelectItem>
+                    {["all", "UCM", "CWA", "CYAF", "CYF", "CHILDREN"].map(
+                      (val) => (
+                        <SelectItem
+                          key={val}
+                          className="text-[11px]"
+                          value={val}
+                        >
+                          {val === "all" ? "All" : val}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center space-x-2">
+
+              {/* Column Toggle */}
+              <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="ml-auto">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Columns <ChevronDown className="ml-2 h-4 w-4" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                    >
+                      <Filter className="mr-1 h-3 w-3" />
+                      Columns
+                      <ChevronDown className="ml-1 h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     {table
                       .getAllColumns()
                       .filter((column) => column.getCanHide())
-                      .map((column) => {
-                        return (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            className="capitalize"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                              column.toggleVisibility(!!value)
-                            }
-                          >
-                            {column.id}
-                          </DropdownMenuCheckboxItem>
-                        );
-                      })}
+                      .map((column) => (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize text-xs"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(val) =>
+                            column.toggleVisibility(!!val)
+                          }
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

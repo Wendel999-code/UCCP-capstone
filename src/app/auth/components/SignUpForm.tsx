@@ -1,16 +1,59 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { FormEvent, useState } from "react";
+import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { SignUp } from "@/lib/supabase/actions/auth";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmPassword] = useState("");
+
+  const router = useRouter();
+
+  const handleSignUp = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      toast.error("Please fill out all fields.");
+      return;
+    }
+
+    if (password !== confirmpassword) {
+      toast.error("Password don't matched.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await SignUp(email, password);
+
+      if (!res.success) {
+        console.error("Sign up failed:", res.message);
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+
+      router.push("/");
+    } catch (error) {
+      console.error("Sign up error:", error);
+      toast.error("Sign up failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-amber-50">
@@ -27,10 +70,10 @@ export default function SignupForm() {
               <span className="font-medium text-xs">Back to Home</span>
             </Link>
 
-            <h2 className="text-3xl font-bold text-red-900">
+            <h2 className="text-3xl font-bold text-red-900 text-center">
               Create an Account
             </h2>
-            <p className="text-amber-600 text-lg italic">
+            <p className="text-amber-600 text-lg italic md:text-center">
               "Turning Water into Wine"
             </p>
           </div>
@@ -44,9 +87,11 @@ export default function SignupForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                className="focus-visible:ring-amber-500"
+                className="focus-visible:ring-amber-500 text-black"
               />
             </div>
 
@@ -61,7 +106,9 @@ export default function SignupForm() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
-                  className="pr-10 focus-visible:ring-amber-500"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10 focus-visible:ring-amber-500 text-black"
                 />
                 <button
                   type="button"
@@ -83,8 +130,10 @@ export default function SignupForm() {
                   id="confirmPassword"
                   type={showConfirm ? "text" : "password"}
                   placeholder="••••••••"
+                  value={confirmpassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="pr-10 focus-visible:ring-amber-500"
+                  className="pr-10 focus-visible:ring-amber-500 text-black"
                 />
                 <button
                   type="button"
@@ -96,13 +145,20 @@ export default function SignupForm() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <Button
-              type="submit"
+              disabled={loading}
+              onClick={handleSignUp}
               className="w-full bg-red-900 text-white hover:bg-red-800 text-lg font-semibold"
               size="lg"
             >
-              Sign Up
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <Loader className="animate-spin w-5 h-5" />
+                  <span>Signing Up...</span>
+                </div>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
 
             {/* Link to login */}
@@ -112,7 +168,7 @@ export default function SignupForm() {
                 href="/auth/login"
                 className="text-amber-600 hover:underline font-semibold"
               >
-                Sign in here
+                Sign In here
               </Link>
             </p>
           </form>

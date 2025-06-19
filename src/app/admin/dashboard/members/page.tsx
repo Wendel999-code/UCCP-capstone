@@ -26,39 +26,37 @@ const MembersPage = () => {
   const router = useRouter();
 
   const [members, setMembers] = useState<Member[]>([]);
-
   const [fetchingMembers, setFetchingMembers] = useState(true);
 
   useEffect(() => {
-    const fetchMembers = async () => {
-      if (user?.id) {
-        const res = await GetAllMembersByChurchId();
-        if (!res?.success)
-          toast.error(res?.message || "Failed to fetch members");
+    if (loading) return;
 
-        setMembers(res?.data);
+    if (!user) {
+      redirect("/");
+    }
+
+    if (user.role !== "church_admin") {
+      router.push("/member/dashboard");
+      return;
+    }
+
+    const fetchMembers = async () => {
+      const res = await GetAllMembersByChurchId();
+      if (!res?.success) {
+        toast.error(res?.message || "Failed to fetch members");
         setFetchingMembers(false);
+        return;
       }
+      setMembers(res.data);
+      setFetchingMembers(false);
     };
 
-    if (!loading) {
-      if (!user) {
-        redirect("/");
-      } else if (user.role !== "church_admin") {
-        router.push("/member/dashboard");
-      } else {
-        fetchMembers();
-      }
-    }
+    fetchMembers();
   }, [user, loading, router]);
 
   if (loading || fetchingMembers) return <TableSkeleton />;
 
-  return (
-    <>
-      <MembersTable members={members} />
-    </>
-  );
+  return <MembersTable members={members} />;
 };
 
 export default MembersPage;

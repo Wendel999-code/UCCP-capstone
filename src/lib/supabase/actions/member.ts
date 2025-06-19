@@ -93,8 +93,9 @@ export async function GetApplicationID(applicationId: string) {
   try {
     const { data, error } = await supabase
       .from("Member")
-      .select("id,firstName")
+      .select("*, Church:church_id(brgy)")
       .eq("id", applicationId)
+      .eq("activeStatus", "pending")
       .single();
 
     if (error) throw error;
@@ -251,7 +252,7 @@ export async function ApproveMembership(memberID: string) {
       .from("Member")
       .update({ activeStatus: "active" })
       .eq("id", memberID)
-      .eq("church_id", churchAdmin.church_id) // Ensure the member belongs to the same church
+      .eq("church_id", churchAdmin.church_id)
       .select()
       .single();
 

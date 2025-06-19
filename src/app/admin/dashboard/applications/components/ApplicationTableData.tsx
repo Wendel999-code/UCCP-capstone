@@ -130,22 +130,22 @@ export function ApplicationTableData({
         );
       },
     },
-    {
-      accessorKey: "address",
-      header: "Address",
-      // Add maxWidth to make column wider
-      maxSize: 300,
-      cell: ({ row }) => {
-        const address = row.getValue("address") as string;
-        return (
-          <div className="min-w-[200px] max-w-[300px] whitespace-normal break-words text-sm">
-            {address
-              ? address.charAt(0).toUpperCase() + address.slice(1)
-              : "Unknown"}
-          </div>
-        );
-      },
-    },
+    // {
+    //   accessorKey: "address",
+    //   header: "Address",
+    //   // Add maxWidth to make column wider
+    //   maxSize: 300,
+    //   cell: ({ row }) => {
+    //     const address = row.getValue("address") as string;
+    //     return (
+    //       <div className="min-w-[200px] max-w-[300px] whitespace-normal break-words text-sm">
+    //         {address
+    //           ? address.charAt(0).toUpperCase() + address.slice(1)
+    //           : "Unknown"}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "created_at",
       header: ({ column }) => {

@@ -23,6 +23,7 @@ import { ApproveMembership } from "@/lib/supabase/actions/member";
 import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import { toast } from "react-toastify";
+import ApplicationDetailsModal from "./ApplicationDetailsModal";
 
 const ApplicationAction = ({ memberID }: { memberID: string }) => {
   const [loading, setLoading] = React.useState(false);
@@ -62,9 +63,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <Button variant={"outline"} className="text-yellow-900 border-none">
-          View applications
-        </Button>
+        <ApplicationDetailsModal memberID={memberID} />
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -81,14 +80,17 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Approve this member?</AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-700">
+              <AlertDialogDescription className="text-gray-600">
                 This will mark the application as approved and grant access to
                 the member.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleApproveMember}>
+              <AlertDialogAction
+                className="text-black font-medium"
+                onClick={handleApproveMember}
+              >
                 {loading ? "Approving..." : "Confirm"}
               </AlertDialogAction>
             </AlertDialogFooter>

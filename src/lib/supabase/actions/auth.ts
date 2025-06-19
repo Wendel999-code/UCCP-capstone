@@ -16,25 +16,9 @@ export async function SignUp(email: string, password: string) {
       return { success: false, message: error.message };
     }
 
-    const { data: user, error: userError } = await supabase
-      .from("User")
-      .insert([
-        {
-          role: "member",
-          email: email,
-        },
-      ])
-      .select();
-
-    if (userError) {
-      console.error("Error inserting into User table:", userError.message);
-      return { success: false, message: "Error saving user data" };
-    }
-
     return {
       success: true,
-      message: "Signup successfully",
-      user,
+      message: "Account created. Please log in.",
     };
   } catch (error) {
     console.error("Unexpected error in signup:", error);
@@ -48,35 +32,59 @@ export async function Login(email: string, password: string) {
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      console.error("Supabase Login error:", error.message);
-      return { success: false, message: error.message };
+    if (authError || !authData?.user) {
+      console.error("Supabase login error:", authError?.message);
+      return {
+        success: false,
+        message: authError?.message || "Login failed",
+      };
     }
 
-    const { data: user, error: userError } = await supabase
+    const { data: existingUser, error: fetchError } = await supabase
       .from("User")
-      .select("id,role")
-      .eq("id", data.user?.id)
+      .select("role")
+      .eq("id", authData.user.id)
       .single();
 
-    if (userError) {
-      console.error("error fetching role:", userError.message);
-      return { success: false, message: userError.message };
+    if (fetchError && fetchError.code === "PGRST116") {
+      const { error: insertError } = await supabase
+        .from("User")
+        .insert({ email, role: "member" });
+
+      if (insertError) {
+        console.error("Insert error:", insertError.message);
+        return { success: false, message: insertError.message };
+      }
+
+      return {
+        success: true,
+        message: "Login successfully",
+        role: "member",
+      };
+    }
+
+    if (fetchError) {
+      console.error("Fetch error:", fetchError.message);
+      return { success: false, message: fetchError.message };
     }
 
     return {
       success: true,
       message: "Login successfully",
-      role: user.role,
+      role: existingUser?.role,
     };
   } catch (error) {
-    console.error("Unexpected error in Login:", error);
-    return { success: false, message: "Unexpected error in Login" };
+    console.error("Unexpected error during login:", error);
+    return {
+      success: false,
+      message: "Unexpected error during login. Please try again.",
+    };
   }
 }
 

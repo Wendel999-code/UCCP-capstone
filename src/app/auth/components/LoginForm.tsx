@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FormEvent, useState } from "react";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +24,9 @@ export default function LoginForm() {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Please fill out all fields.");
+      return;
     }
+    setLoading(true);
 
     try {
       const res = await Login(email, password);
@@ -32,13 +35,19 @@ export default function LoginForm() {
         console.error("Login failed:", res.message);
         toast.error(res.message);
         return;
-      } else {
-        toast.success("Login successful!");
-        router.replace("/");
       }
+
+      if (res?.role === "church_admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/member/dashboard");
+      }
+      toast.success(res.message);
     } catch (error) {
       console.error("Login error:", error);
-      // Handle error (e.g., show a notification)
+      toast.error("Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,10 +55,10 @@ export default function LoginForm() {
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-amber-50">
       {/* Left: Form */}
       <div className="flex ">
-        <div className="w-full md:w-1/2 px-8 py-16 space-y-6   ">
+        <div className="w-full md:w-1/2 px-8 py-16 space-y-6 shadow-xl rounded-md   ">
           <Link
             href="/"
-            className="flex items-center  gap-2 text-red-900 hover:underline mb-5"
+            className="flex items-center  gap-1 text-red-900 hover:underline mb-12"
           >
             <ArrowLeft size={18} />
             <span className="font-medium text-xs">Back to Home</span>
@@ -58,7 +67,7 @@ export default function LoginForm() {
             <h2 className="text-3xl  font-bold text-red-900">
               Welcome to Cana Circuit
             </h2>
-            <p className="text-amber-600 text-lg mt-2 italic">
+            <p className="text-amber-600 text-lg mt-2 italic md:text-center">
               "Turning Water into Wine"
             </p>
           </div>
@@ -105,21 +114,29 @@ export default function LoginForm() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <Button
+              disabled={loading}
               onClick={handleLogin}
               className="w-full bg-red-900 text-white hover:bg-red-800 text-lg font-semibold"
               size="lg"
             >
-              Sign In
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <Loader className="animate-spin w-5 h-5" />
+                  <span>Signing In...</span>
+                </div>
+              ) : (
+                "Sign In"
+              )}
             </Button>
+
             <p className="text-center text-sm text-red-900">
               Don’t have an account?{" "}
               <Link
                 href="/auth/signup"
                 className="text-amber-600 hover:underline font-semibold"
               >
-                Sign up here
+                Sign Up here
               </Link>
             </p>
           </form>

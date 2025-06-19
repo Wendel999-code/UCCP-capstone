@@ -92,106 +92,83 @@ const SideBar = () => {
   };
 
   return (
-    <>
-      <nav className="hidden md:grid px-4   items-start gap-2 py-4 w-[300px] h-[450px]   border rounded-md shadow-sm">
-        <h1 className="text-2xl font-bold text-center text-amber-900 dark:text-yellow-400 ">
-          {loading ? (
-            <Skeleton className="rounded-2xl text-center w-[200px] h-[30px]" />
-          ) : (
-            brgy
-          )}{" "}
-        </h1>
-        <Link
-          href="/admin/dashboard"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/admin/dashboard"
-              ? "bg-yellow-100 text-yellow-900"
-              : "text-muted-foreground"
-          )}
-        >
-          <Home className="h-5 w-5" />
-          Dashboard
-        </Link>
+    <nav className="hidden md:grid px-3 items-start gap-2 py-3 w-[200px] h-[420px] border rounded-md shadow-sm">
+      <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
+        {loading ? (
+          <Skeleton className="rounded-2xl text-center w-[180px] h-[24px]" />
+        ) : (
+          brgy
+        )}
+      </h1>
 
-        <Link
-          href="/admin/dashboard/members"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/admin/dashboard/members"
-              ? "bg-yellow-100 text-yellow-900"
-              : "text-muted-foreground"
-          )}
-        >
-          <Users className="h-5 w-5" />
-          Members
-        </Link>
-        <Link
-          href="/admin/dashboard/applications"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/admin/dashboard/applications"
-              ? "bg-yellow-100 text-yellow-900"
-              : "text-muted-foreground"
-          )}
-        >
-          <UserCheck className="h-5 w-5" />
-          Applications{" "}
-          {pendingCount > 0 && (
-            <span className="  h-5 w-5 text-sm font-bold text-red-500">
+      {[
+        {
+          href: "/admin/dashboard",
+          label: "Dashboard",
+          icon: <Home className="h-4 w-4" />,
+        },
+        {
+          href: "/admin/dashboard/members",
+          label: "Members",
+          icon: <Users className="h-4 w-4" />,
+        },
+        {
+          href: "/admin/dashboard/applications",
+          label: "Applications",
+          icon: <UserCheck className="h-4 w-4" />,
+          extra: pendingCount > 0 && (
+            <span className="ml-auto h-5 w-5 text-xs font-bold text-red-500">
               {pendingCount}
             </span>
-          )}
-        </Link>
+          ),
+        },
+        {
+          href: "/admin/dashboard/documents",
+          label: "Documents",
+          icon: <File className="h-4 w-4" />,
+        },
+        {
+          href: "/admin/dashboard/events",
+          label: "Events",
+          icon: <Calendar className="h-4 w-4" />,
+        },
+        {
+          href: "/admin/dashboard/announcements",
+          label: "Announcements",
+          icon: <Bell className="h-4 w-4" />,
+          extra: (
+            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
+              3
+            </span>
+          ),
+        },
+      ].map(({ href, label, icon, extra }) => (
         <Link
-          href="/admin/dashboard/documents"
+          key={href}
+          href={href}
           className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/dashboard/documents"
+            "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-yellow-100 hover:text-yellow-900",
+            pathname === href
               ? "bg-yellow-100 text-yellow-900"
               : "text-muted-foreground"
           )}
         >
-          <File className="h-5 w-5" />
-          Documents
+          {icon}
+          {label}
+          {extra}
         </Link>
-        <Link
-          href="/admin/dashboard/events"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/admin/dashboard/events"
-              ? "bg-yellow-100 text-yellow-900"
-              : "text-muted-foreground"
-          )}
-        >
-          <Calendar className="h-5 w-5" />
-          Events
-        </Link>
-        <Link
-          href="/admin/dashboard/announcements"
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-            pathname === "/admin/dashboard/announcements"
-              ? "bg-yellow-100 text-yellow-900"
-              : "text-muted-foreground"
-          )}
-        >
-          <Bell className="h-5 w-5" />
-          Announcements
-          <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-sm font-medium text-yellow-900">
-            3
-          </span>
-        </Link>
+      ))}
 
-        <Button
-          onClick={handleLogout}
-          variant={"outline"}
-          className="font-medium mt-3  hover:cursor-pointer text-md dark:bg-red-600 text-white-900"
-        >
-          Logout <LogOut />
-        </Button>
-      </nav>
-    </>
+      <Button
+        onClick={handleLogout}
+        variant="outline"
+        size="sm"
+        className="group h-7 px-3 mt-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+      >
+        Logout
+        <LogOut className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
+      </Button>
+    </nav>
   );
 };
 

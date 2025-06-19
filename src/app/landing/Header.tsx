@@ -18,20 +18,19 @@ function Header() {
   const handleLogout = async () => {
     const res = await Logout();
 
-    if (!res.success) return toast.success(res.message);
-    toast.success(res.message);
+    toast[res.success ? "success" : "error"](res.message);
   };
 
   return (
     <motion.header
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur  supports-[backdrop-filter]:bg-background/60"
     >
       <div className="container flex h-16 items-center justify-between py-16">
         <Link href="/">
-          <div className="px-25">
+          <div className="px-4 md:px-16">
             <Image
               src="/logo.jpg"
               alt="CANA Circuit Logo"
@@ -51,7 +50,7 @@ function Header() {
               >
                 <Link
                   href={`#${section}`}
-                  className="text-lg  hover:text-yellow-500 transition-colors  "
+                  className="text-md  hover:text-yellow-500 transition-colors  "
                 >
                   {section.charAt(0).toUpperCase() + section.slice(1)}
                 </Link>
@@ -72,7 +71,7 @@ function Header() {
                   onClick={handleLogout}
                   variant="outline"
                   size="sm"
-                  className="group h-[35px] cursor-pointer bg-red-900 hover:bg-red-800"
+                  className="group h-[30px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
                 >
                   Logout
                   <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" />
@@ -84,10 +83,10 @@ function Header() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="group h-[35px] cursor-pointer bg-amber-500 hover:bg-amber-600   "
+                  className="group h-[30px] cursor-pointer dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600   "
                 >
                   Sign in
-                  <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1 " />
+                  <ArrowRight className="ml-2 h-2 w-2 transition-transform group-hover:translate-x-1 " />
                 </Button>
               </Link>
             )}

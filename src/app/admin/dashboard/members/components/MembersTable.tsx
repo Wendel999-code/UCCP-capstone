@@ -44,185 +44,197 @@ export default function MembersTable({ members }: { members: Member[] }) {
   const { table, columns } = TablesData({ members });
 
   return (
-    <>
-      <div className="space-y-6 w-full ">
-        {/* Header */}
-
-        {/* Filters and Actions */}
-        <Card className="dark:bg-black">
-          <CardHeader>
-            <div className="flex items-center justify-between space-x-4">
-              <div>
-                {" "}
-                <CardTitle className="text-2xl">Member Directory</CardTitle>
-                <CardDescription>
-                  A comprehensive list of all church members
-                </CardDescription>
-              </div>
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Member
-              </Button>
+    <div className="space-y-2 w-full">
+      <Card className="dark:bg-black">
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <CardTitle className="text-lg">Member Directory</CardTitle>
+              <CardDescription className="text-xs text-gray-500">
+                A comprehensive list of all church members
+              </CardDescription>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between space-x-2 py-4">
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search members..."
-                    value={
-                      (table
-                        .getColumn("firstName")
-                        ?.getFilterValue() as string) ?? ""
-                    }
-                    onChange={(event) =>
-                      table
-                        .getColumn("firstName")
-                        ?.setFilterValue(event.target.value)
-                    }
-                    className="pl-8 max-w-sm"
-                  />
-                </div>
-                <Select
-                  value={
-                    (table.getColumn("category")?.getFilterValue() as string) ??
-                    ""
-                  }
-                  onValueChange={(value) =>
-                    table
-                      .getColumn("category")
-                      ?.setFilterValue(value === "all" ? "" : value)
-                  }
-                >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="UCM">UCM</SelectItem>
-                    <SelectItem value="CWA">CWA</SelectItem>
-                    <SelectItem value="CYAF">CYAF</SelectItem>
-                    <SelectItem value="CYF">CYF</SelectItem>
-                    <SelectItem value="CHILDREN">CHILDREN</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select
+            <Button
+              size={"sm"}
+              className="h-7 px-3 text-[12px] cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black "
+            >
+              <Plus className="mr-1 h-3 w-3" />
+              Add Member
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-2">
+          {/* Filters */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-2 top-[8px] h-3 w-3 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
                   value={
                     (table
-                      .getColumn("activeStatus")
+                      .getColumn("firstName")
                       ?.getFilterValue() as string) ?? ""
                   }
-                  onValueChange={(value) =>
-                    table
-                      .getColumn("activeStatus")
-                      ?.setFilterValue(value === "all" ? "" : value)
+                  onChange={(e) =>
+                    table.getColumn("firstName")?.setFilterValue(e.target.value)
                   }
-                >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
+                  className="pl-6 w-[110px] h-7 text-[11px] text-muted-foreground"
+                />
               </div>
-              <div className="flex items-center space-x-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="ml-auto">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Columns <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {table
-                      .getAllColumns()
-                      .filter((column) => column.getCanHide())
-                      .map((column) => {
-                        return (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            className="capitalize"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                              column.toggleVisibility(!!value)
-                            }
-                          >
-                            {column.id}
-                          </DropdownMenuCheckboxItem>
-                        );
-                      })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button variant="outline">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-            </div>
 
-            {/* Table */}
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <TableHead key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TableHead>
-                        );
-                      })}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
-                        No results.
-                      </TableCell>
-                    </TableRow>
+              {/* Category Filter */}
+              <Select
+                value={
+                  (table.getColumn("category")?.getFilterValue() as string) ??
+                  ""
+                }
+                onValueChange={(val) =>
+                  table
+                    .getColumn("category")
+                    ?.setFilterValue(val === "all" ? "" : val)
+                }
+              >
+                <SelectTrigger className="w-[110px] h-7 text-xs">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {["all", "UCM", "CWA", "CYAF", "CYF", "CHILDREN"].map(
+                    (val) => (
+                      <SelectItem key={val} className="text-[10px]" value={val}>
+                        {val === "all" ? "All" : val}
+                      </SelectItem>
+                    )
                   )}
-                </TableBody>
-              </Table>
+                </SelectContent>
+              </Select>
+
+              {/* Status Filter */}
+              <Select
+                value={
+                  (table
+                    .getColumn("activeStatus")
+                    ?.getFilterValue() as string) ?? ""
+                }
+                onValueChange={(val) =>
+                  table
+                    .getColumn("activeStatus")
+                    ?.setFilterValue(val === "all" ? "" : val)
+                }
+              >
+                <SelectTrigger className="w-[100px] h-7 text-xs">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {["all", "active", "pending", "inactive"].map((val) => (
+                    <SelectItem key={val} className="text-[10px]" value={val}>
+                      {val.charAt(0).toUpperCase() + val.slice(1)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Pagination */}
-            <Pagination table={table} />
-          </CardContent>
-        </Card>
-      </div>
-    </>
+            {/* Column Toggle + Export */}
+            <div className="flex items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="h-7 px-2 text-xs">
+                    <Filter className="mr-1 h-2.5 w-2.5" />
+                    Columns
+                    <ChevronDown className="ml-1 h-2.5 w-2.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize text-xs"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(val) =>
+                          column.toggleVisibility(!!val)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button variant="outline" className="h-7 px-2 text-xs">
+                <Download className="mr-1 h-2.5 w-2.5" />
+                Export
+              </Button>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="rounded-md border overflow-auto bg-white dark:bg-black">
+            <Table className="min-w-[800px] text-sm">
+              <TableHeader className="sticky top-0 z-10 bg-muted dark:bg-neutral-900 shadow-sm">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead
+                        key={header.id}
+                        className="px-4 py-2 font-medium text-muted-foreground uppercase tracking-wide text-[11px]"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="hover:bg-muted/50 transition-colors"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="px-4 py-2 align-middle"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center text-muted-foreground text-sm"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Pagination */}
+          <Pagination table={table} />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

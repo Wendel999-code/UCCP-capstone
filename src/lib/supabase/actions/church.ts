@@ -44,9 +44,6 @@ export async function ManageChurchById() {
 
     if (churchError) throw churchError;
 
-    console.log("Church data:", data);
-    console.log("Current User:", churchAdmin?.church_id);
-
     return {
       success: true,
       brgy: data.brgy,

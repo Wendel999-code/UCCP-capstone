@@ -2,7 +2,7 @@
 
 import Header from "./landing/Header";
 import Hero from "./landing/Hero";
-import WelcomeMessage from "./landing/WelcomeMessage";
+// import WelcomeMessage from "./landing/WelcomeMessage";
 import About from "./landing/About";
 import Services from "./landing/Services";
 import Event from "./landing/Event";
@@ -22,7 +22,7 @@ export default function Home() {
         <Hero />
 
         {/* Welcome Message */}
-        <WelcomeMessage />
+        {/* <WelcomeMessage /> */}
 
         {/* About Section */}
         <About />

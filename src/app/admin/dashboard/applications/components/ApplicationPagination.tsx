@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { Table } from "@tanstack/react-table";
 import { Member } from "../../members/page";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
   return (
@@ -37,22 +38,24 @@ const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-1">
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="h-7 px-2"
         >
-          Previous
+          <ChevronLeft className="h-3 w-3" />
         </Button>
-        <Button className={table.getCanNextPage() ? "" : "opacity-50 cursor-not-allowed"}
+        <Button
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="h-7 px-2"
         >
-          Next
+          <ChevronRight className="h-3 w-3" />
         </Button>
       </div>
     </div>
