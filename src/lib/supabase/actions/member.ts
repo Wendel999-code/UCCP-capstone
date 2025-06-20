@@ -1,17 +1,20 @@
+import { Member } from "@/global/type";
+
+import { getChurchAdmin } from "./dal";
 import supabase from "../client";
 
-interface MembershipData {
-  firstName: string;
-  lastName: string;
-  age: number;
-  address: string;
-  gender: string;
-  hasChildren: boolean;
-  churchId: string;
-}
-
-export async function ApplyForMembership(data: MembershipData) {
-  const { firstName, lastName, age, address, gender, hasChildren, churchId } =
+export async function ApplyForMembership(
+  data: Omit<
+    Member,
+    | "id"
+    | "created_at"
+    | "Church"
+    | "baptism_status"
+    | "activeStatus"
+    | "category"
+  >
+) {
+  const { firstName, lastName, age, address, gender, hasChildren, church_id } =
     data;
 
   const requiredFields = {
@@ -20,7 +23,7 @@ export async function ApplyForMembership(data: MembershipData) {
     age,
     address,
     gender,
-    churchId,
+    church_id,
   };
 
   const missingFields = Object.entries(requiredFields)
@@ -56,7 +59,7 @@ export async function ApplyForMembership(data: MembershipData) {
 
   try {
     const { data: newMember, error } = await supabase
-      .from("Member")
+      .from("member")
       .insert([
         {
           firstName,
@@ -64,13 +67,13 @@ export async function ApplyForMembership(data: MembershipData) {
           age,
           address,
           gender,
+          church_id,
+          category,
           activeStatus: "pending",
-          category: category,
           hasChildren: hasChildren ?? false,
-          church_id: churchId,
         },
       ])
-      .select()
+      .select("id")
       .single();
 
     if (error) throw error;
@@ -92,7 +95,7 @@ export async function ApplyForMembership(data: MembershipData) {
 export async function GetApplicationID(applicationId: string) {
   try {
     const { data, error } = await supabase
-      .from("Member")
+      .from("member")
       .select("*, Church:church_id(brgy)")
       .eq("id", applicationId)
       .eq("activeStatus", "pending")
@@ -116,22 +119,12 @@ export async function GetApplicationID(applicationId: string) {
 // TODO GET ALL MEMBERS ONLY FOR SUPER ADMIN
 export async function GetAllMembersByChurchId() {
   try {
-    const { data: currentUser, error: userError } =
-      await supabase.auth.getUser();
-    if (userError || !currentUser) throw userError || new Error("Unauthorized");
-
-    const { data: churchAdmin, error: adminError } = await supabase
-      .from("User")
-      .select("role, church_id")
-      .eq("id", currentUser.user.id)
-      .single();
-    if (adminError || churchAdmin?.role !== "church_admin")
-      throw adminError || new Error("Unauthorized access");
+    const admin = await getChurchAdmin();
 
     const { data, error } = await supabase
-      .from("Member")
+      .from("member")
       .select("*")
-      .eq("church_id", churchAdmin.church_id) // dapat makuha la an same church both admin and member
+      .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
       .neq("activeStatus", "pending")
       .order("created_at", { ascending: true });
 
@@ -153,25 +146,13 @@ export async function GetAllMembersByChurchId() {
 
 export async function GetPendingApplicationsCount() {
   try {
-    const { data: currentUser, error: userError } =
-      await supabase.auth.getUser();
-
-    if (userError || !currentUser) throw userError || new Error("Unauthorized");
-
-    const { data: churchAdmin, error: adminError } = await supabase
-      .from("User")
-      .select("role, church_id")
-      .eq("id", currentUser.user.id)
-      .single();
-
-    if (adminError || churchAdmin?.role !== "church_admin")
-      throw adminError || new Error("Unauthorized access");
+    const admin = await getChurchAdmin();
 
     const { count, error: countError } = await supabase
-      .from("Member")
+      .from("member")
       .select("*", { count: "exact", head: true })
       .eq("activeStatus", "pending")
-      .eq("church_id", churchAdmin.church_id);
+      .eq("church_id", admin.church_id);
 
     if (countError) throw countError;
 
@@ -190,24 +171,14 @@ export async function GetPendingApplicationsCount() {
 
 export async function GetPendingApplication() {
   try {
-    const { data: currentUser, error: userError } =
-      await supabase.auth.getUser();
-    if (userError || !currentUser) throw userError || new Error("Unauthorized");
-
-    const { data: churchAdmin, error: adminError } = await supabase
-      .from("User")
-      .select("role, church_id")
-      .eq("id", currentUser.user.id)
-      .single();
-    if (adminError || churchAdmin?.role !== "church_admin")
-      throw adminError || new Error("Unauthorized access");
+    const admin = await getChurchAdmin();
 
     const { data, error } = await supabase
-      .from("Member")
+      .from("member")
       .select("*")
       .eq("activeStatus", "pending")
-      .eq("church_id", churchAdmin.church_id) // dapat makuha la an same church both admin and member
-      .order("created_at", { ascending: false });
+      .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
+      .order("created_at", { ascending: true });
 
     if (error) throw error;
 
@@ -234,25 +205,13 @@ export async function ApproveMembership(memberID: string) {
   }
 
   try {
-    const { data: currentUser, error: userError } =
-      await supabase.auth.getUser();
-
-    if (userError || !currentUser) throw userError || new Error("Unauthorized");
-
-    const { data: churchAdmin, error: adminError } = await supabase
-      .from("User")
-      .select("role, church_id")
-      .eq("id", currentUser.user.id)
-      .single();
-
-    if (adminError || churchAdmin?.role !== "church_admin")
-      throw adminError || new Error("Unauthorized access");
+    const admin = await getChurchAdmin();
 
     const { data: updatedMember, error } = await supabase
-      .from("Member")
-      .update({ activeStatus: "active" })
+      .from("member")
+      .update({ activeStatus: "active", baptism_status: "Baptized" })
       .eq("id", memberID)
-      .eq("church_id", churchAdmin.church_id)
+      .eq("church_id", admin.church_id)
       .select()
       .single();
 

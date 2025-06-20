@@ -18,7 +18,7 @@ export default async function SuccessApplicationPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 to-yellow-200">
-      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center border border-yellow-300">
+      <div className="bg-amber-50 shadow-lg rounded-2xl p-8 max-w-md w-full text-center border border-yellow-300">
         <div className="flex justify-center mb-4">
           <CheckCircle className="h-16 w-16 text-yellow-500" />
         </div>

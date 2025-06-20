@@ -1,8 +1,9 @@
 import supabase from "../client";
+import { getChurchAdmin } from "./dal";
 
 export async function GetAllChurches() {
   try {
-    const { data, error } = await supabase.from("Church").select("*");
+    const { data, error } = await supabase.from("Church").select("id,brgy");
 
     if (error) throw error;
 
@@ -22,24 +23,11 @@ export async function GetAllChurches() {
 
 export async function ManageChurchById() {
   try {
-    const { data: currentUser, error: userError } =
-      await supabase.auth.getUser();
-
-    if (userError || !currentUser) throw userError || new Error("Unauthorized");
-
-    const { data: churchAdmin, error: adminError } = await supabase
-      .from("User")
-      .select("role, church_id")
-      .eq("id", currentUser.user.id)
-      .single();
-
-    if (adminError || churchAdmin?.role !== "church_admin")
-      throw adminError || new Error("Unauthorized access");
-
+    const admin = await getChurchAdmin();
     const { data, error: churchError } = await supabase
       .from("Church")
       .select("brgy")
-      .eq("id", churchAdmin?.church_id)
+      .eq("id", admin?.church_id)
       .single();
 
     if (churchError) throw churchError;

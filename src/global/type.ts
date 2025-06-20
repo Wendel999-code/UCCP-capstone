@@ -8,6 +8,9 @@ export interface Member {
   hasChildren: boolean;
   gender: string;
   activeStatus: string;
+  church_id: string;
+  baptism_status?: "Baptized" | "Not Baptized";
+
   Church?: {
     brgy: string;
   };
