@@ -62,7 +62,7 @@ export function TablesData({ members }: { members: Member[] }) {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 "
+            className="text-[12px] "
           >
             Firstname
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -71,7 +71,9 @@ export function TablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         return (
-          <div className="font-medium ml-3">{row.getValue("firstName")}</div>
+          <p className="font-medium ml-3 text-[10px] ">
+            {row.getValue("firstName")}
+          </p>
         );
       },
     },
@@ -82,7 +84,7 @@ export function TablesData({ members }: { members: Member[] }) {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
+            className="text-[12px] px-2"
           >
             Lastname
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -90,7 +92,9 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase ml-3 ">{row.getValue("lastName")}</div>
+        <p className="lowercase ml-3 text-[10px] ">
+          {row.getValue("lastName")}
+        </p>
       ),
     },
     {
@@ -100,28 +104,44 @@ export function TablesData({ members }: { members: Member[] }) {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
+            className="text-[12px] px-2"
           >
             Age
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div className="ml-3">{row.getValue("age")}</div>,
+      cell: ({ row }) => (
+        <p className="ml-3 text-[10px]">{row.getValue("age")}</p>
+      ),
     },
     {
       accessorKey: "gender",
-      header: "gender",
-      cell: ({ row }) => <div>{row.getValue("gender")}</div>,
+      header: ({ column }) => {
+        return (
+          <span
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-[12px] cursor-pointer"
+          >
+            Gender
+          </span>
+        );
+      },
+      cell: ({ row }) => (
+        <p className="text-[10px]">{row.getValue("gender")}</p>
+      ),
     },
+
     {
       accessorKey: "category",
       header: "Category",
       cell: ({ row }) => {
         const category = row.getValue("category") as string;
         return (
-          <p className={getCategoryColor(category)}>
-            {category?.toUpperCase() || "N/A"}
+          <p className={`${getCategoryColor(category)} text-[10px]`}>
+            {category
+              ? category.charAt(0).toUpperCase() + category.slice(1)
+              : "N/A"}
           </p>
         );
       },
@@ -132,7 +152,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const status = row.getValue("activeStatus") as string;
         return (
-          <p className={getStatusColor(status)}>
+          <p className={`${getStatusColor(status)} text-[10px]`}>
             {status
               ? status.charAt(0).toUpperCase() + status.slice(1)
               : "Unknown"}
@@ -141,7 +161,7 @@ export function TablesData({ members }: { members: Member[] }) {
       },
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "baptism_status",
       header: ({ column }) => {
         return (
           <Button
@@ -149,14 +169,14 @@ export function TablesData({ members }: { members: Member[] }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="h-8 px-2"
           >
-            Join Date
+            Baptism
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => {
-        const date = new Date(row.getValue("created_at"));
-        return <div>{date.toLocaleDateString()}</div>;
+        const baptism = row.getValue("baptism_status") as string;
+        return <p className="text-[10px]"> {baptism}</p>;
       },
     },
 

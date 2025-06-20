@@ -99,155 +99,168 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-500 text-[12px]"
-                >
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 text-gray-700 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
-                  placeholder="John"
-                />
+            <fieldset
+              disabled={loading}
+              className="space-y-6 opacity-100 disabled:opacity-50"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="mt-1 text-gray-700 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="John"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    placeholder="Doe"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-500 text-[12px]"
-                >
-                  Last Name
-                </label>
-                <input
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
+              {/* Age and Gender */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="age"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Age
+                  </label>
+                  <input
+                    id="age"
+                    type="number"
+                    value={age}
+                    onChange={(e) =>
+                      setAge(
+                        e.target.value === "" ? "" : Number(e.target.value)
+                      )
+                    }
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    placeholder="0"
+                  />
+                </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="age"
-                  className="block text-sm font-medium text-gray-500 text-[12px]"
-                >
-                  Age
-                </label>
-                <input
-                  id="age"
-                  type="number"
-                  value={age}
-                  onChange={(e) =>
-                    setAge(e.target.value === "" ? "" : Number(e.target.value))
-                  }
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
-                  placeholder="0"
-                />
+                <div>
+                  <label
+                    htmlFor="gender"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Gender
+                  </label>
+                  <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                      <SelectValue placeholder="Select Gender" />
+                    </SelectTrigger>
+                    <SelectContent className="z-50">
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
+              {/* Checkbox */}
+              <div>
+                <label className="block text-sm font-medium text-gray-500 text-[12px] mb-1">
+                  Do you have children?
+                </label>
+                <div className="flex items-center gap-2 border">
+                  <Checkbox
+                    className="border border-gray-700"
+                    id="hasChildren"
+                    checked={hasChildren}
+                    onCheckedChange={(checked) =>
+                      setHasChildren(Boolean(checked))
+                    }
+                  />
+                  <label htmlFor="hasChildren" className="text-sm">
+                    Yes
+                  </label>
+                </div>
+              </div>
+
+              {/* Church Selection */}
               <div>
                 <label
-                  htmlFor="gender"
+                  htmlFor="church"
                   className="block text-sm font-medium text-gray-500 text-[12px]"
                 >
-                  Gender
+                  Select Circuit
                 </label>
-                <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
-                    <SelectValue placeholder="Select Gender" />
+                <Select
+                  value={church_id}
+                  onValueChange={(val) => setChurchId(val)}
+                >
+                  <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                    <SelectValue placeholder="Choose your church" />
                   </SelectTrigger>
-                  <SelectContent className="z-50">
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
+                  <SelectContent className="z-50 max-h-64 overflow-y-auto">
+                    {churches.length > 0 ? (
+                      churches.map((church) => (
+                        <SelectItem key={church.id} value={church.id}>
+                          {church.brgy}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="p-2 text-sm text-gray-500">
+                        No churches found
+                      </div>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-500 text-[12px] mb-1">
-                Do you have children?
-              </label>
-              <div className="flex items-center gap-2 border ">
-                <Checkbox
-                  className="border border-gray-700"
-                  id="hasChildren"
-                  checked={hasChildren}
-                  onCheckedChange={(checked) =>
-                    setHasChildren(Boolean(checked))
-                  }
-                />
-                <label htmlFor="hasChildren" className="text-sm">
-                  Yes
+              {/* Address */}
+              <div>
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-500 text-[12px]"
+                >
+                  Address
                 </label>
+                <textarea
+                  id="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="mt-1 block w-full min-h-[100px] rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                  placeholder="Brgy, Municipality, Province, State "
+                />
               </div>
-            </div>
 
-            <div>
-              <label
-                htmlFor="church"
-                className="block text-sm font-medium text-gray-500 text-[12px]"
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-red-900 font-semibold"
               >
-                Select Circuit
-              </label>
-              <Select
-                value={church_id}
-                onValueChange={(val) => setChurchId(val)}
-              >
-                <SelectTrigger className="mt-1  rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
-                  <SelectValue placeholder="Choose your church" />
-                </SelectTrigger>
-                <SelectContent className="z-50 max-h-64 overflow-y-auto">
-                  {churches.length > 0 ? (
-                    churches.map((church) => (
-                      <SelectItem key={church.id} value={church.id}>
-                        {church.brgy}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <div className="p-2 text-sm text-gray-500">
-                      No churches found
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
+                {loading ? "Submitting..." : "Submit Application"}
+              </Button>
 
-            <div>
-              <label
-                htmlFor="address"
-                className="block text-sm font-medium text-gray-500 text-[12px]"
-              >
-                Address
-              </label>
-              <textarea
-                id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="mt-1 block w-full min-h-[100px] rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
-                placeholder="Brgy, Municipality, Province, State "
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-red-900 font-semibold"
-            >
-              {loading ? "Submitting..." : "Submit Application"}
-            </Button>
-
-            {message && (
-              <p className="text-center text-sm text-red-500 mt-2">{message}</p>
-            )}
+              {message && (
+                <p className="text-center text-sm text-red-500 mt-2">
+                  {message}
+                </p>
+              )}
+            </fieldset>
           </form>
         </div>
       </div>

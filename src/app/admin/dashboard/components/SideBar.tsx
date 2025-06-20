@@ -69,7 +69,7 @@ const SideBar = () => {
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="hidden md:grid px-3 items-start gap-2 py-3 w-[200px] h-[420px] border rounded-md shadow-sm"
+      className="hidden sticky top-20 md:grid px-3 items-start gap-2 py-3 w-[200px] h-[420px] border rounded-md shadow-sm"
     >
       <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
         {isLoading ? (
