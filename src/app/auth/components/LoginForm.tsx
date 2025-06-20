@@ -85,7 +85,7 @@ export default function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="focus-visible:ring-amber-500"
+                className="focus-visible:ring-amber-500 text-gray-700"
               />
             </div>
 
@@ -102,7 +102,7 @@ export default function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pr-10 focus-visible:ring-amber-500"
+                  className="pr-10 focus-visible:ring-amber-500 text-gray-700"
                 />
                 <button
                   type="button"
