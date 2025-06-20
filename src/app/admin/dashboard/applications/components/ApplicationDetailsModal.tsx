@@ -13,23 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/app/lib/utils";
-import React, { useEffect, useState } from "react";
-import { GetApplicationID } from "@/lib/supabase/actions/member";
+import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-
-type MemberDetails = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  gender: string;
-  category: string;
-  address: string;
-  activeStatus: string;
-  hasChildren: boolean;
-  Church: {
-    brgy: string;
-  };
-};
+import { useApplicationDetails } from "@/app/hooks/useMember";
+import { useQueryClient } from "@tanstack/react-query";
+import { GetApplicationID } from "@/lib/supabase/actions/member";
 
 export default function ApplicationDetailsModal({
   memberID,
@@ -41,23 +29,24 @@ export default function ApplicationDetailsModal({
   loading: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
-  const [member, setMember] = useState<MemberDetails | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
+  const queryClient = useQueryClient();
 
-    const fetchMember = async () => {
-      setIsFetching(true);
-      const res = await GetApplicationID(memberID);
-      if (res?.success) {
-        setMember(res.data);
-      }
-      setIsFetching(false);
-    };
+  const handlePrefetch = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["application-details", memberID],
+      queryFn: async () => {
+        const res = await GetApplicationID(memberID);
+        if (!res.success) throw new Error(res.message);
+        return res.data;
+      },
+    });
+  };
 
-    fetchMember();
-  }, [open, memberID]);
+  const { data: member, isLoading: isFetching } = useApplicationDetails(
+    memberID,
+    open
+  );
 
   const RenderField = ({
     label,
@@ -80,8 +69,9 @@ export default function ApplicationDetailsModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          onMouseEnter={handlePrefetch}
           variant="outline"
-          className="text-yellow-900 border-none w-full text-left"
+          className="text-amber-500 border-none w-full text-left cursor-pointer"
         >
           View applications
         </Button>

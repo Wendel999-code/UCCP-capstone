@@ -1,18 +1,19 @@
 "use client";
 
-// import { useUser } from "@/app/provider/UserContext";
+import { useUser } from "@/app/provider/UserContext";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
 import { Logout } from "@/lib/supabase/actions/auth";
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Header = () => {
-  // const { user, loading } = useUser();
+  const { user, loading } = useUser();
 
   const handleLogout = async () => {
     const res = await Logout();
@@ -43,30 +44,22 @@ const Header = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <ModeToggle />
-            {/* {loading ? (
-              <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" />
+
+            {loading ? (
+              <Skeleton className="h-5 w-5 " />
             ) : user ? (
               <Button
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="group   text-xs cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+                className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
               >
                 Logout
-                <ArrowRight className="ml-2 h-2 w-2 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
               </Button>
             ) : (
               ""
-            )} */}
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-            >
-              Logout
-              <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
-            </Button>
+            )}
           </motion.div>
         </nav>
       </div>

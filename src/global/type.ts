@@ -8,5 +8,8 @@ export interface Member {
   hasChildren: boolean;
   gender: string;
   activeStatus: string;
+  Church?: {
+    brgy: string;
+  };
   created_at: string;
 }

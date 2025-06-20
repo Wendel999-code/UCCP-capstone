@@ -15,16 +15,14 @@ export default function AdminAuthGuard({
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.replace("/");
-      } else if (user.role !== "church_admin") {
-        router.replace("/");
-      }
+    if (loading) return;
+
+    if (!user || user.role !== "church_admin") {
+      router.replace("/");
     }
   }, [user, loading, router]);
 
-  if (loading || !user) return <LogoLoader />;
+  if (loading) return <LogoLoader />;
 
   return <>{children}</>;
 }

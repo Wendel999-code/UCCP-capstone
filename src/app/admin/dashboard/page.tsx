@@ -1,20 +1,14 @@
 "use client";
 
 import { useUser } from "@/app/provider/UserContext";
-import { TableSkeleton } from "@/components/TableSkeleton";
-import { redirect, useRouter } from "next/navigation";
 import React from "react";
 import AdminDashboard from "./components/AdminDashboard";
+import { TableSkeleton } from "@/components/TableSkeleton";
 
 const Page = () => {
-  const { user, loading } = useUser();
-  const router = useRouter();
+  const { loading } = useUser();
 
-  if (loading) return <div>loading...</div>;
-
-  if (!user) redirect("/");
-
-  if (user?.role !== "church_admin") router.replace("/");
+  if (loading) return <TableSkeleton />;
 
   return (
     <>

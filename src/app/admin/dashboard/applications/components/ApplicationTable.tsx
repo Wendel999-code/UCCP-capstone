@@ -35,9 +35,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Member } from "../../members/page";
 import { ApplicationTableData } from "./ApplicationTableData";
 import ApplicationPagination from "./ApplicationPagination";
+import { Member } from "@/global/type";
 
 export default function ApplicationTable({
   pendingMember,

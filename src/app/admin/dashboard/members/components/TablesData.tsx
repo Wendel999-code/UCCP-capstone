@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Member } from "../page";
 import MemberAction from "./MemberAction";
 import {
   useReactTable,
@@ -15,6 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { Member } from "@/global/type";
 
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {

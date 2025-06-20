@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { ChevronRight } from "lucide-react";
 import React from "react";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 
 function WelcomeMessage() {
   return ( <h1>he</h1>

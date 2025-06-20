@@ -2,6 +2,7 @@ import { Member } from "@/global/type";
 import {
   ApproveMembership,
   GetAllMembersByChurchId,
+  GetApplicationID,
   GetPendingApplication,
 } from "@/lib/supabase/actions/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -41,4 +42,16 @@ export const useGetAllmemberByChurchId = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+  });
+
+export const useApplicationDetails = (memberID: string, open: boolean) =>
+  useQuery<Member>({
+    queryKey: ["application-details", memberID],
+    queryFn: async () => {
+      const res = await GetApplicationID(memberID);
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+    enabled: open,
+    refetchOnWindowFocus: false,
   });

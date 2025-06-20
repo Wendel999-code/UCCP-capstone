@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { Table } from "@tanstack/react-table";
-import { Member } from "../page";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Member } from "@/global/type";
 
 const Pagination = ({ table }: { table: Table<Member> }) => {
   return (
@@ -52,7 +52,7 @@ const Pagination = ({ table }: { table: Table<Member> }) => {
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="h-7 px-2"
+          className="h-4 px-2"
         >
           <ChevronLeft className="h-3 w-3" />
         </Button>
@@ -61,7 +61,7 @@ const Pagination = ({ table }: { table: Table<Member> }) => {
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="h-7 px-2"
+          className="h-4 px-2"
         >
           <ChevronRight className="h-3 w-3" />
         </Button>

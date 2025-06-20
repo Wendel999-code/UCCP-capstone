@@ -8,18 +8,18 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { Table } from "@tanstack/react-table";
-import { Member } from "../../members/page";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Member } from "@/global/type";
 
 const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
   return (
     <div className="flex items-center justify-between space-x-2 py-4">
-      <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex-1 text-[10px] text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center space-x-2">
-        <p className="text-sm font-medium">Rows per page</p>
+        <p className="text-[10px] font-medium">Rows per page</p>
         <Select
           value={`${table.getState().pagination.pageSize}`}
           onValueChange={(value) => {

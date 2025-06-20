@@ -35,10 +35,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Member } from "../page";
 
 import { TablesData } from "./TablesData";
 import Pagination from "./Pagination";
+import { Member } from "@/global/type";
 
 export default function MembersTable({ members }: { members: Member[] }) {
   const { table, columns } = TablesData({ members });
