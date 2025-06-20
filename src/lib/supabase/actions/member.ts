@@ -231,3 +231,39 @@ export async function ApproveMembership(memberID: string) {
     };
   }
 }
+
+export async function DeleteMember(memberID: string) {
+  if (!memberID) {
+    return {
+      success: false,
+      message: "Member ID is required",
+    };
+  }
+
+  try {
+    const admin = await getChurchAdmin();
+
+    const { data: deletedMember, error } = await supabase
+      .from("member")
+      .delete()
+      .eq("id", memberID)
+      .eq("church_id", admin.church_id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    console.log("deleted member:", deletedMember);
+
+    return {
+      success: true,
+      message: "Member deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting member :", error);
+    return {
+      success: false,
+      message: "Failed to delete member",
+    };
+  }
+}

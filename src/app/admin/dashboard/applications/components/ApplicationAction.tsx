@@ -19,14 +19,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { MoreHorizontal } from "lucide-react";
+import { Loader, MoreHorizontal } from "lucide-react";
 import React from "react";
 import { toast } from "react-toastify";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
-import { useApproveMember } from "@/app/hooks/useMember";
+import { useApproveMember, useDeleteMember } from "@/app/hooks/useMember";
 
 const ApplicationAction = ({ memberID }: { memberID: string }) => {
   const { mutate: approveMember, isPending } = useApproveMember();
+
+  const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
 
   const handleApprove = () => {
     approveMember(memberID, {
@@ -35,9 +37,11 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
     });
   };
 
-  const handleDeleteMember = async () => {
-    toast.info("Delete member logic not implemented yet.");
-    // TODO: Add delete logic here
+  const handleDeleteApplication = async () => {
+    deleteMember(memberID, {
+      onSuccess: () => toast.success("Application deleted successfully"),
+      onError: (error) => toast.error(error.message),
+    });
   };
 
   return (
@@ -100,7 +104,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
                 variant={"outline"}
                 className="text-red-600 border-none cursor-pointer"
               >
-                Delete member
+                Delete application
               </Button>
             </div>
           </AlertDialogTrigger>
@@ -108,14 +112,27 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action will permanently delete this member. This cannot be
-                undone.
+                This action will permanently delete this application. This
+                cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteMember}>
-                Delete
+              <AlertDialogCancel disabled={isDeleting}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 text-white"
+                disabled={isDeleting}
+                onClick={handleDeleteApplication}
+              >
+                {isDeleting ? (
+                  <>
+                    {" "}
+                    <Loader className="animate-spin " /> "Deleting..."{" "}
+                  </>
+                ) : (
+                  "Delete"
+                )}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

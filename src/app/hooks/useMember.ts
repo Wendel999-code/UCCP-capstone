@@ -1,6 +1,7 @@
 import { Member } from "@/global/type";
 import {
   ApproveMembership,
+  DeleteMember,
   GetAllMembersByChurchId,
   GetApplicationID,
   GetPendingApplication,
@@ -55,3 +56,18 @@ export const useApplicationDetails = (memberID: string, open: boolean) =>
     enabled: open,
     refetchOnWindowFocus: false,
   });
+
+export const useDeleteMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (memberID: string) => {
+      const res = await DeleteMember(memberID);
+      if (!res.success) throw new Error(res.message);
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
+    },
+  });
+};

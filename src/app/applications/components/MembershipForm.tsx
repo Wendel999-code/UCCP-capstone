@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft, Heart, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -252,7 +252,15 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                 disabled={loading}
                 className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-red-900 font-semibold"
               >
-                {loading ? "Submitting..." : "Submit Application"}
+                {loading ? (
+                  <>
+                    {" "}
+                    <Loader className="animate-spin" />
+                    Submitting...{" "}
+                  </>
+                ) : (
+                  "Submit Application"
+                )}
               </Button>
 
               {message && (
