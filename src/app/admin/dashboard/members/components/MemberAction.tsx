@@ -23,25 +23,39 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { toast } from "react-toastify";
+import { ViewMemberModal } from "./ViewMemberModal";
+import { GetMemberByID } from "@/lib/supabase/actions/member";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MemberAction = ({ memberID }: { memberID: string }) => {
-  const [open, setOpen] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const [openViewMember, setOpenViewMember] = useState(false);
+
   const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(memberID);
-    toast.success("Member ID copied to clipboard!");
+  const queryClient = useQueryClient();
+
+  const handlePrefetch = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["member-details", memberID],
+      queryFn: async () => {
+        const res = await GetMemberByID(memberID);
+        if (!res.success) throw new Error(res.message);
+        return res.data;
+      },
+    });
   };
 
   const handleDeleteConfirmed = () => {
     deleteMember(memberID, {
       onSuccess: () => {
         toast.success("Member deleted successfully");
-        setOpen(false);
+        setOpenDeleteDialog(false);
       },
       onError: (error) => {
         toast.error(error.message);
-        setOpen(false);
+        setOpenDeleteDialog(false);
       },
     });
   };
@@ -57,17 +71,22 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleCopy}>
-            Copy member ID
-          </DropdownMenuItem>
+
           <DropdownMenuSeparator />
-          <DropdownMenuItem>View member</DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => setOpenViewMember(true)}
+            onMouseEnter={handlePrefetch}
+          >
+            View member
+          </DropdownMenuItem>
+
           <DropdownMenuItem>Edit details</DropdownMenuItem>
           <DropdownMenuItem>Send message</DropdownMenuItem>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            onClick={() => setOpen(true)}
+            onClick={() => setOpenDeleteDialog(true)}
             className="text-red-500 hover:bg-red-600 hover:text-white"
           >
             Delete member
@@ -75,7 +94,7 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -105,6 +124,12 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ViewMemberModal
+        open={openViewMember}
+        setOpen={setOpenViewMember}
+        memberID={memberID}
+      />
     </>
   );
 };

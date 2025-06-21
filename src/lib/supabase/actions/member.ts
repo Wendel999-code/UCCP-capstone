@@ -94,10 +94,13 @@ export async function ApplyForMembership(
 
 export async function GetApplicationID(applicationId: string) {
   try {
+    const admin = await getChurchAdmin();
+
     const { data, error } = await supabase
       .from("member")
       .select("*, Church:church_id(brgy)")
       .eq("id", applicationId)
+      .eq("church_id", admin.church_id)
       .eq("activeStatus", "pending")
       .single();
 
@@ -264,6 +267,33 @@ export async function DeleteMember(memberID: string) {
     return {
       success: false,
       message: "Failed to delete member",
+    };
+  }
+}
+
+export async function GetMemberByID(applicationId: string) {
+  try {
+    const admin = await getChurchAdmin();
+
+    const { data, error } = await supabase
+      .from("member")
+      .select("*, Church:church_id(brgy)")
+      .eq("id", applicationId)
+      .eq("church_id", admin.church_id)
+      .eq("activeStatus", "active")
+      .single();
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    console.error("Error in getting member by id:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve member details",
     };
   }
 }

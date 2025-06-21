@@ -32,7 +32,7 @@ function Header() {
         <Link href="/">
           <div className="px-4 md:px-16">
             <Image
-              src="https://wgklgbcnebdnuyeteglg.supabase.co/storage/v1/object/sign/cana/logo.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85YTAyZDdkYS1kZGE5LTQ1OGItYmNlMS1lMmEzYTRiMThjYzYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjYW5hL2xvZ28uanBnIiwiaWF0IjoxNzUwNDE4NDA1LCJleHAiOjE3ODE5NTQ0MDV9.gowizwM399JFHRsNy16HCts0ugHvHk3dqL7ivCJ8OG0"
+              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
               alt="CANA Circuit Logo"
               width={100}
               height={80}

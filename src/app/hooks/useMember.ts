@@ -4,6 +4,7 @@ import {
   DeleteMember,
   GetAllMembersByChurchId,
   GetApplicationID,
+  GetMemberByID,
   GetPendingApplication,
 } from "@/lib/supabase/actions/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -71,3 +72,15 @@ export const useDeleteMember = () => {
     },
   });
 };
+
+export const useMemberDetails = (memberID: string, open: boolean) =>
+  useQuery<Member>({
+    queryKey: ["member-details", memberID],
+    queryFn: async () => {
+      const res = await GetMemberByID(memberID);
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+    enabled: open,
+    refetchOnWindowFocus: false,
+  });
