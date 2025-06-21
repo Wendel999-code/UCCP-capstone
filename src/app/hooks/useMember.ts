@@ -69,6 +69,7 @@ export const useDeleteMember = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
+      queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
     },
   });
 };

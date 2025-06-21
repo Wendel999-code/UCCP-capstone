@@ -1,15 +1,16 @@
 "use client";
 
-import supabase from "@/lib/supabase/client";
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
   useMemo,
+  useEffect,
   ReactNode,
 } from "react";
-import { toast } from "react-toastify";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import supabase from "@/lib/supabase/client";
+import { fetchCurrentUser } from "@/lib/supabase/actions/auth";
 
 type User = {
   role: string;
@@ -19,66 +20,38 @@ type User = {
 interface UserContextType {
   user: User;
   loading: boolean;
+  refetch: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const fetchUserRole = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { user: authUser },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !authUser) {
-        setUser(null);
-        return;
-      }
-
-      const { data: roleData, error: roleError } = await supabase
-        .from("User")
-        .select("id, role")
-        .eq("id", authUser.id)
-        .single();
-
-      if (roleError) {
-        toast.error(roleError.message);
-        setUser(null);
-      } else {
-        setUser(roleData);
-      }
-    } catch (error) {
-      console.error("Unexpected error in fetchUserRole:", error);
-      toast.error("Unexpected error while loading user.");
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: user,
+    isLoading: loading,
+    refetch,
+  } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: fetchCurrentUser,
+    staleTime: 60 * 60 * 1000,
+  });
 
   useEffect(() => {
-    let isMounted = true;
-    const safeFetch = async () => {
-      await fetchUserRole();
-    };
-    safeFetch();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(() => {
-      if (isMounted) fetchUserRole();
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     });
 
     return () => {
-      isMounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [queryClient]);
 
-  const value = useMemo(() => ({ user, loading }), [user, loading]);
+  const value = useMemo(
+    () => ({ user: user ?? null, loading, refetch }),
+    [user, loading, refetch]
+  );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

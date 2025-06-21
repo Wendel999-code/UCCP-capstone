@@ -181,6 +181,15 @@ export function TablesData({ members }: { members: Member[] }) {
     },
 
     {
+      accessorKey: "circuit",
+      header: "circuit",
+      cell: ({ row }) => {
+        const circuit = row.original.Church?.brgy as string;
+        return <p className="text-[10px]"> {circuit}</p>;
+      },
+    },
+
+    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {

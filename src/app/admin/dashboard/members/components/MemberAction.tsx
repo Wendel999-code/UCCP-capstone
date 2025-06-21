@@ -82,7 +82,7 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem>Edit details</DropdownMenuItem>
-          <DropdownMenuItem>Send message</DropdownMenuItem>
+          {/* <DropdownMenuItem>Send message</DropdownMenuItem> */}
           <DropdownMenuSeparator />
 
           <DropdownMenuItem

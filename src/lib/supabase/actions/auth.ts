@@ -104,3 +104,30 @@ export async function Logout() {
     return { success: false, message: "Unexpected error in Logout" };
   }
 }
+
+export const fetchCurrentUser = async () => {
+  try {
+    const {
+      data: { user: authUser },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !authUser) {
+      return null;
+    }
+
+    const { data: roleData, error: roleError } = await supabase
+      .from("User")
+      .select("id, role")
+      .eq("id", authUser.id)
+      .single();
+
+    if (roleError) throw new Error(roleError.message);
+
+    return roleData;
+    
+  } catch (error) {
+    console.log("Failed to fetch current user.", error);
+    return null;
+  }
+};

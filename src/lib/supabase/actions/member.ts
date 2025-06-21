@@ -126,7 +126,7 @@ export async function GetAllMembersByChurchId() {
 
     const { data, error } = await supabase
       .from("member")
-      .select("*")
+      .select("*, Church:church_id(brgy)")
       .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
       .neq("activeStatus", "pending")
       .order("created_at", { ascending: true });

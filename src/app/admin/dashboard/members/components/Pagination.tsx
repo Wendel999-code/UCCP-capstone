@@ -14,10 +14,11 @@ import { Member } from "@/global/type";
 const Pagination = ({ table }: { table: Table<Member> }) => {
   return (
     <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
-      {/* <div className="flex-1 text-[12px] text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div> */}
+      <div className="flex-1 text-[12px] text-muted-foreground">
+        <div className="flex-1 text-[12px] text-muted-foreground">
+          Total members: {table.getPrePaginationRowModel().rows.length}
+        </div>
+      </div>
 
       {/* Rows per page */}
       <div className="flex items-center gap-2">

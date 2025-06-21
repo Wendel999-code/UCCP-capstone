@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useUser } from "../provider/UserContext";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,21 @@ import { toast } from "react-toastify";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Logout } from "@/lib/supabase/actions/auth";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Header() {
   const { user, loading } = useUser();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const isOnDashboard = window.location.pathname === "/admin/dashboard";
+    if (!loading && user?.role === "church_admin" && !isOnDashboard) {
+      router.replace("/admin/dashboard");
+      return;
+    }
+  }, [user, router, loading]);
 
   const handleLogout = async () => {
     const res = await Logout();
@@ -64,7 +76,7 @@ function Header() {
           >
             <ModeToggle />
             {loading ? (
-              <LoaderCircle className="animate-spin" />
+              <Skeleton className="h-5 w-12 rounded-md" />
             ) : user ? (
               <>
                 <Button

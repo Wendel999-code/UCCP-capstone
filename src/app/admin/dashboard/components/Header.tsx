@@ -28,7 +28,7 @@ const Header = () => {
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex h-18 items-center px-4 justify-between ">
-        <Link href="/" className="shrink-0">
+        <Link href="/admin/dashboard" className="shrink-0">
           <Image
             src="/logo.jpg"
             alt="CANA Circuit Logo"

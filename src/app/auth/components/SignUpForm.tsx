@@ -10,6 +10,8 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { SignUp } from "@/lib/supabase/actions/auth";
 import { useRouter } from "next/navigation";
+import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
+import LogoLoader from "@/components/LogoLoader";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,8 +20,13 @@ export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
-
   const router = useRouter();
+
+  const { loading: userLoading, user } = useRedirectIfAuthenticated();
+
+  if (userLoading || user) {
+    return <LogoLoader />;
+  }
 
   const handleSignUp = async (e: FormEvent) => {
     e.preventDefault();

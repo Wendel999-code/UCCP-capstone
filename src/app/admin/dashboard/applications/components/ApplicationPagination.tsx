@@ -14,10 +14,10 @@ import { Member } from "@/global/type";
 const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
   return (
     <div className="flex items-center justify-between space-x-2 py-4">
-      <div className="flex-1 text-[10px] text-muted-foreground">
+      {/* <div className="flex-1 text-[10px] text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
+      </div> */}
       <div className="flex items-center space-x-2">
         <p className="text-[10px] font-medium">Rows per page</p>
         <Select
