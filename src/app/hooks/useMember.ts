@@ -3,6 +3,7 @@ import {
   ApproveMembership,
   DeleteMember,
   GetAllMembersByChurchId,
+  GetAllMembersBySuperAdmin,
   GetApplicationID,
   GetMemberByID,
   GetPendingApplication,
@@ -32,6 +33,7 @@ export const useApproveMember = () => {
       queryClient.invalidateQueries({ queryKey: ["pending-members"] });
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
+      queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
     },
   });
 };
@@ -70,6 +72,7 @@ export const useDeleteMember = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
+      queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
     },
   });
 };
@@ -84,4 +87,14 @@ export const useMemberDetails = (memberID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+  });
+
+export const useGetAllmemberBySuperAdmin = () =>
+  useQuery<Member[]>({
+    queryKey: ["membersBySuperAdmin"],
+    queryFn: async () => {
+      const res = await GetAllMembersBySuperAdmin();
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
   });

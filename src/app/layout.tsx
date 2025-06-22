@@ -39,7 +39,7 @@ export default function RootLayout({
           >
             <UserProvider>{children}</UserProvider>
           </ThemeProvider>
-          <ToastContainer autoClose={2000} />
+          <ToastContainer autoClose={1000} />
         </ReactQueryProvider>
       </body>
     </html>

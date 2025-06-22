@@ -10,7 +10,7 @@ import Link from "next/link";
 import { Login } from "@/lib/supabase/actions/auth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { UserRole } from "@/constant";
+import { roleRedirectMap, UserRole } from "@/constant";
 import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
 import LogoLoader from "@/components/LogoLoader";
 
@@ -47,13 +47,8 @@ export default function LoginForm() {
         return;
       }
 
-      const roleRedirectMap: Record<UserRole, string> = {
-        church_admin: "/admin/dashboard",
-        member: "/member/dashboard",
-        super_admin: "/superAdmin",
-      };
-
       const redirectPath = roleRedirectMap[res.role as UserRole];
+      
       if (redirectPath) {
         router.replace(redirectPath);
       } else {

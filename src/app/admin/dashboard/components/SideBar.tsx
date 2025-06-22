@@ -139,12 +139,11 @@ const SideBar = () => {
 
       <Button
         onClick={handleLogout}
-        variant="outline"
         size="sm"
-        className="group h-7 px-3 mt-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+        className="mt-auto mr-2 h-9 text-sm font-semibold bg-red-900 text-white hover:bg-red-500 cursor-pointer"
       >
         Logout
-        <LogOut className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
+        <LogOut className="ml-2 h-4 w-4" />
       </Button>
     </motion.nav>
   );

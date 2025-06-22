@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import MemberAction from "./MemberAction";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Member } from "@/global/type";
+import SuperAdminAction from "./SuperAdminAction";
 
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {
@@ -46,7 +47,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export function TablesData({ members }: { members: Member[] }) {
+export function SuperAdminTablesData({ members }: { members: Member[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -71,7 +72,7 @@ export function TablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         return (
-          <p className="font-medium ml-3 text-[10px] ">
+          <p className="font-bold ml-3 text-[10px] ">
             {row.getValue("firstName")}
           </p>
         );
@@ -92,7 +93,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="lowercase ml-3 text-[10px] ">
+        <p className="lowercase font-bold ml-3 text-[10px] ">
           {row.getValue("lastName")}
         </p>
       ),
@@ -112,7 +113,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="ml-3 text-[10px]">{row.getValue("age")}</p>
+        <p className="ml-3 font-bold text-[10px]">{row.getValue("age")}</p>
       ),
     },
     {
@@ -128,7 +129,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="text-[10px]">{row.getValue("gender")}</p>
+        <p className="text-[10px] font-bold">{row.getValue("gender")}</p>
       ),
     },
 
@@ -138,7 +139,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const category = row.getValue("category") as string;
         return (
-          <p className={`${getCategoryColor(category)} text-[10px]`}>
+          <p className={`${getCategoryColor(category)} text-[10px] font-bold`}>
             {category
               ? category.charAt(0).toUpperCase() + category.slice(1)
               : "N/A"}
@@ -152,7 +153,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const status = row.getValue("activeStatus") as string;
         return (
-          <p className={`${getStatusColor(status)} text-[10px]`}>
+          <p className={`${getStatusColor(status)} text-[10px] font-bold`}>
             {status
               ? status.charAt(0).toUpperCase() + status.slice(1)
               : "Unknown"}
@@ -176,17 +177,30 @@ export function TablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         const baptism = row.getValue("baptism_status") as string;
-        return <p className="text-[10px]"> {baptism}</p>;
+        return <p className="text-[10px] font-bold"> {baptism}</p>;
       },
     },
 
     {
-      accessorKey: "circuit",
-      header: "circuit",
-      cell: ({ row }) => {
-        const circuit = row.original.Church?.brgy as string;
-        return <p className="text-[10px] text-amber-500"> {circuit}</p>;
-      },
+      accessorFn: (row) => row.Church?.brgy ?? "",
+      id: "circuit",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 px-2"
+        >
+          Circuit
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <p className="capitalize text-[10px] font-bold text-amber-500">
+          {row.original.Church?.brgy}
+        </p>
+      ),
+      enableSorting: true,
+      enableHiding: true,
     },
 
     {
@@ -195,7 +209,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const member = row.original;
 
-        return <MemberAction memberID={member.id} />;
+        return <SuperAdminAction memberID={member.id} />;
       },
     },
   ];

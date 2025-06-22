@@ -1,6 +1,6 @@
 import { Member } from "@/global/type";
 
-import { getChurchAdmin } from "./dal";
+import { getChurchAdmin, SuperAdmin } from "./dal";
 import supabase from "../client";
 
 export async function ApplyForMembership(
@@ -119,7 +119,6 @@ export async function GetApplicationID(applicationId: string) {
   }
 }
 
-// TODO GET ALL MEMBERS ONLY FOR SUPER ADMIN
 export async function GetAllMembersByChurchId() {
   try {
     const admin = await getChurchAdmin();
@@ -178,7 +177,7 @@ export async function GetPendingApplication() {
 
     const { data, error } = await supabase
       .from("member")
-      .select("*")
+      .select("*, Church:church_id(brgy)")
       .eq("activeStatus", "pending")
       .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
       .order("created_at", { ascending: true });
@@ -294,6 +293,32 @@ export async function GetMemberByID(applicationId: string) {
     return {
       success: false,
       message: "Failed to retrieve member details",
+    };
+  }
+}
+
+export async function GetAllMembersBySuperAdmin() {
+  try {
+    await SuperAdmin();
+
+    const { data, error } = await supabase
+      .from("member")
+      .select("*, Church:church_id(brgy)")
+      .neq("activeStatus", "pending")
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    console.error("Error in GetAllMembers:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve members",
+      data: [],
     };
   }
 }
