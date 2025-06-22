@@ -36,12 +36,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 import Pagination from "./SuperAdminPagination";
 import { Member } from "@/global/type";
 import { SuperAdminTablesData } from "./SuperAdminTablesData";
 
-export default function SuperAdminMembersTable({ members }: { members: Member[] }) {
+export default function SuperAdminMembersTable({
+  members,
+}: {
+  members: Member[];
+}) {
   const { table, columns } = SuperAdminTablesData({ members });
 
   return (
@@ -82,12 +85,12 @@ export default function SuperAdminMembersTable({ members }: { members: Member[] 
                   onChange={(e) =>
                     table.getColumn("firstName")?.setFilterValue(e.target.value)
                   }
-                  className="pl-6 w-[110px] h-7 text-[11px] text-muted-foreground"
+                  className="pl-6 w-[110px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 
               {/* Category Filter */}
-              <Select
+              <Select 
                 value={
                   (table.getColumn("category")?.getFilterValue() as string) ??
                   ""
@@ -104,7 +107,11 @@ export default function SuperAdminMembersTable({ members }: { members: Member[] 
                 <SelectContent>
                   {["all", "UCM", "CWA", "CYAF", "CYF", "CHILDREN"].map(
                     (val) => (
-                      <SelectItem key={val} className="text-[10px]" value={val}>
+                      <SelectItem
+                        key={val}
+                        className="text-[10px] "
+                        value={val}
+                      >
                         {val === "all" ? "All" : val}
                       </SelectItem>
                     )
@@ -132,6 +139,28 @@ export default function SuperAdminMembersTable({ members }: { members: Member[] 
                   {["all", "active", "pending", "inactive"].map((val) => (
                     <SelectItem key={val} className="text-[10px]" value={val}>
                       {val.charAt(0).toUpperCase() + val.slice(1)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={
+                  (table.getColumn("circuit")?.getFilterValue() as string) ?? ""
+                }
+                onValueChange={(val) =>
+                  table
+                    .getColumn("circuit")
+                    ?.setFilterValue(val === "all" ? "" : val)
+                }
+              >
+                <SelectTrigger className="w-[110px] h-7 text-xs">
+                  <SelectValue placeholder="Circuit" />
+                </SelectTrigger>
+                <SelectContent>
+                  {["all", "Palanit", "San Juan"].map((val) => (
+                    <SelectItem key={val} className="text-[10px]" value={val}>
+                      {val === "all" ? "All" : val}
                     </SelectItem>
                   ))}
                 </SelectContent>

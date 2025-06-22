@@ -51,7 +51,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
             <div>
               <CardTitle className="text-lg">Member Directory</CardTitle>
               <CardDescription className="text-xs text-gray-500">
-                A comprehensive list of all church members
+                A comprehensive list of church members
               </CardDescription>
             </div>
             <Button
@@ -70,7 +70,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
             <div className="flex flex-wrap items-center gap-2">
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-2 top-[8px] h-3 w-3 text-muted-foreground" />
+                <Search className="absolute left-2 top-[8px] h-5 w-3 text-muted-foreground" />
                 <Input
                   placeholder="Search..."
                   value={
@@ -81,7 +81,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
                   onChange={(e) =>
                     table.getColumn("firstName")?.setFilterValue(e.target.value)
                   }
-                  className="pl-6 w-[110px] h-7 text-[11px] text-muted-foreground"
+                  className="pl-6 w-[110px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 

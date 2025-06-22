@@ -71,7 +71,7 @@ export default function ApplicationTable({
               <div className="flex items-center flex-wrap gap-2">
                 {/* Search Input */}
                 <div className="relative">
-                  <Search className="absolute left-2 top-[6px] h-3 w-3 text-muted-foreground" />
+                  <Search className="absolute left-2 top-[6px] h-5 w-3 text-muted-foreground" />
                   <Input
                     placeholder="Search..."
                     value={
@@ -84,7 +84,7 @@ export default function ApplicationTable({
                         .getColumn("firstName")
                         ?.setFilterValue(e.target.value)
                     }
-                    className="pl-6 w-[120px] h-7 text-[11px] text-muted-foreground"
+                    className="pl-6 w-[120px] h-[36px] text-[11px] text-muted-foreground"
                   />
                 </div>
 

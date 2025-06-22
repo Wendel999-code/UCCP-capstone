@@ -60,12 +60,15 @@ function Hero() {
               </Button>
             </Link>
 
-            <Button
-              variant="outline"
-              className="border cursor-pointer border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white px-6 py-2.5 text-base font-medium transition-all duration-200"
-            >
-              Learn More
-            </Button>
+            <Link href={"#about"}>
+              {" "}
+              <Button
+                variant="outline"
+                className="border cursor-pointer border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white px-6 py-2.5 text-base font-medium transition-all duration-200"
+              >
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
 

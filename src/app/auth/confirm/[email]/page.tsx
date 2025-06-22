@@ -115,7 +115,7 @@ export default function VerifyOtpForm() {
         <div className="hidden md:flex items-center justify-center w-1/2 p-8">
           <div className="relative w-full max-w-md">
             <Image
-              src="/logo.jpg"
+              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
               alt="Cana Circuit Logo"
               width={400}
               height={500}

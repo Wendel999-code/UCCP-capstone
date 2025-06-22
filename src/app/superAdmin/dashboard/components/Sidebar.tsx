@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { Logout } from "@/lib/supabase/actions/auth";
 import { motion } from "framer-motion";
 
-const SideBar = () => {
+const SuperAdminSideBar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -104,4 +104,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default SuperAdminSideBar;
