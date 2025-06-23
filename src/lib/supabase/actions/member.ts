@@ -245,13 +245,12 @@ export async function DeleteMember(memberID: string) {
   try {
     const admin = await getChurchAdmin();
 
-    const { data: deletedMember, error } = await supabase
-      .from("member")
-      .delete()
-      .eq("id", memberID)
-      .eq("church_id", admin.church_id)
-      .select()
-      .single();
+    let query = supabase.from("member").delete().eq("id", memberID);
+
+    if (admin.role === "church_admin") {
+      query = query.eq("church_id", admin.church_id);
+    }
+    const { data: deletedMember, error } = await query.single();
 
     if (error) throw error;
 
@@ -270,17 +269,21 @@ export async function DeleteMember(memberID: string) {
   }
 }
 
-export async function GetMemberByID(applicationId: string) {
+export async function GetMemberByID(MemberID: string) {
   try {
     const admin = await getChurchAdmin();
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("member")
       .select("*, Church:church_id(brgy)")
-      .eq("id", applicationId)
-      .eq("church_id", admin.church_id)
-      .eq("activeStatus", "active")
-      .single();
+      .eq("id", MemberID)
+      .eq("activeStatus", "active");
+
+    if (admin.role === "church_admin") {
+      query = query.eq("church_id", admin.church_id);
+    }
+
+    const { data, error } = await query.single();
 
     if (error) throw error;
 

@@ -14,7 +14,12 @@ const eslintConfig = [
 
   {
     rules: {
-      "react/no-unescaped-entities": "off", // Disable warning for unescaped entities like apostrophes
+      "react/no-unescaped-entities": "off",
+      "no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
     },
   },
 ];

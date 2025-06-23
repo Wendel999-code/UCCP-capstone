@@ -30,7 +30,7 @@ const Header = () => {
       <div className=" flex h-18 items-center px-4 justify-between ">
         <Link href="/admin/dashboard" className="shrink-0">
           <Image
-           src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+            src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
             alt="CANA Circuit Logo"
             width={72}
             height={56}

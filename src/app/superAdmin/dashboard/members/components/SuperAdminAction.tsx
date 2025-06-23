@@ -23,14 +23,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { toast } from "react-toastify";
-// import { ViewMemberModal } from "./ViewMemberModal";
+
 import { GetMemberByID } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
+import { ViewMemberModal } from "@/app/admin/dashboard/members/components/ViewMemberModal";
 
 const SuperAdminAction = ({ memberID }: { memberID: string }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  // const [openViewMember, setOpenViewMember] = useState(false);
+  const [openViewMember, setOpenViewMember] = useState(false);
 
   const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
 
@@ -75,7 +76,7 @@ const SuperAdminAction = ({ memberID }: { memberID: string }) => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            // onClick={() => setOpenViewMember(true)}
+            onClick={() => setOpenViewMember(true)}
             onMouseEnter={handlePrefetch}
           >
             View member
@@ -115,7 +116,7 @@ const SuperAdminAction = ({ memberID }: { memberID: string }) => {
               {isDeleting ? (
                 <>
                   {" "}
-                  <Loader className="animate-spin " /> "Deleting..."{" "}
+                  <Loader className="animate-spin " /> Deleting...{" "}
                 </>
               ) : (
                 "Delete"
@@ -125,11 +126,11 @@ const SuperAdminAction = ({ memberID }: { memberID: string }) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* <ViewMemberModal
+      <ViewMemberModal
         open={openViewMember}
         setOpen={setOpenViewMember}
         memberID={memberID}
-      /> */}
+      />
     </>
   );
 };

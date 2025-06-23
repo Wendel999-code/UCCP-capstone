@@ -10,9 +10,18 @@ export interface Member {
   activeStatus: string;
   church_id: string;
   baptism_status?: "Baptized" | "Not Baptized";
-
   Church?: {
     brgy: string;
   };
   created_at: string;
+}
+
+export interface CertificateRequest {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  date_of_birth: string;
+  circuit: string;
+  status: "Pending" | "Declined" | "Completed";
 }

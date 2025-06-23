@@ -90,7 +90,7 @@ export default function SuperAdminMembersTable({
               </div>
 
               {/* Category Filter */}
-              <Select 
+              <Select
                 value={
                   (table.getColumn("category")?.getFilterValue() as string) ??
                   ""
@@ -196,7 +196,10 @@ export default function SuperAdminMembersTable({
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button variant="outline" className="h-7 px-2 text-xs">
+              <Button
+                variant={"outline"}
+                className="h-7 px-2 text-xs hover:bg-amber-500 cursor-pointer "
+              >
                 <Download className="mr-1 h-2.5 w-2.5" />
                 Export
               </Button>

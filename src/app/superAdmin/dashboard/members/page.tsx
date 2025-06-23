@@ -6,9 +6,9 @@ import React from "react";
 import SuperAdminMembersTable from "./components/SuperAdminMembersTable";
 
 const Members = () => {
-  const { data, isFetching } = useGetAllmemberBySuperAdmin();
+  const { data, isLoading } = useGetAllmemberBySuperAdmin();
 
-  if (isFetching) return <TableSkeleton />;
+  if (isLoading) return <TableSkeleton />;
 
   return (
     <>

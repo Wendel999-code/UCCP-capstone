@@ -1,15 +1,14 @@
 "use client";
 
-import React from "react";
-import Welcome from "./components/welcome";
 import { useUser } from "@/app/provider/UserContext";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { redirect } from "next/navigation";
-// import { TableSkeleton } from "@/components/TableSkeleton";
+import Welcome from "./components/welcome";
 
 const Dashboard = () => {
   const { user, loading } = useUser();
 
-  if (loading) return <div>loadinggg....</div>;
+  if (loading) return <TableSkeleton />;
 
   console.log("User in Dashboard:", user);
 

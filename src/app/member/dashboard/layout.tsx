@@ -8,15 +8,10 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex flex-col ">
-      {/* header */}
       <Nav />
-      <div className="flex px-32 py-6">
-        {/* Sidebar */}
-
+      <div className="flex p-4 w-full">
         <Sidebar />
-
-        {/* Main content */}
-        <main className="flex-1 p-4 bg-white">{children}</main>
+        <main className="flex-1 px-2">{children}</main>
       </div>
     </div>
   );

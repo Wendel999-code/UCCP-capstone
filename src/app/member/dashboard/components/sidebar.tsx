@@ -1,115 +1,119 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  BookOpen,
-  Calendar,
-  Home,
-  MessageSquare,
-  Settings,
-  Users,
-  //   Heart,
-  Bell,
-} from "lucide-react";
-
 import { cn } from "@/app/lib/utils";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Logout } from "@/lib/supabase/actions/auth";
+import { motion } from "framer-motion";
+import { Bell, Calendar, File, Home, Loader, LogOut } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-const Sidebar = () => {
+const SideBar = () => {
   const pathname = usePathname();
-  return (
-    <nav className="hidden md:grid   items-start gap-2 py-4 w-[300px] h-[25rem] bg-white border rounded-md shadow-sm">
-      <Link
-        href="/dashboard"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
-      >
-        <Home className="h-5 w-5" />
-        Dashboard
-      </Link>
+  const router = useRouter();
 
-      <Link
-        href="/dashboard/events"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/events"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      const res = await Logout();
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+      router.replace("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <motion.nav
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="hidden sticky top-20 md:grid px-4 py-5 w-56 h-fit max-h-[85vh] overflow-y-auto bg-white dark:bg-muted border rounded-xl shadow-md space-y-6"
+    >
+      <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
+        Member
+      </h1>
+
+      <ul className="space-y-1">
+        {[
+          {
+            href: "/member/dashboard",
+            label: "Dashboard",
+            icon: <Home className="h-4 w-4" />,
+          },
+
+          {
+            href: "/member/dashboard/request",
+            label: "Certificates",
+            icon: <File className="h-4 w-4" />,
+          },
+          {
+            href: "/admin/dashboard/events",
+            label: "Events",
+            icon: <Calendar className="h-4 w-4" />,
+          },
+          {
+            href: "/admin/dashboard/announcements",
+            label: "Announcements",
+            icon: <Bell className="h-4 w-4" />,
+            extra: (
+              <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
+                3
+              </span>
+            ),
+          },
+        ].map(({ href, label, icon, extra }) => {
+          const isActive = pathname === href;
+          return (
+            <li key={href}>
+              <Link
+                href={href}
+                className={cn(
+                  "flex items-center justify-between w-full rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
+                    : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  {icon}
+                  {label}
+                </div>
+                {extra}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+
+      <Button
+        disabled={loading}
+        onClick={handleLogout}
+        size="sm"
+        className="mt-auto disabled:cursor-not-allowed h-9 text-sm font-semibold bg-red-900 text-white hover:bg-red-500 cursor-pointer"
       >
-        <Calendar className="h-5 w-5" />
-        Events
-      </Link>
-      <Link
-        href="/dashboard/announcements"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/announcements"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
+        {loading ? (
+          <Loader className="animate-spin" />
+        ) : (
+          <>
+            {" "}
+            <span>Logout</span>
+            <LogOut className="ml-2 h-4 w-4" />
+          </>
         )}
-      >
-        <Bell className="h-5 w-5" />
-        Announcements
-      </Link>
-      <Link
-        href="/dashboard/spiritual-growth"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/spiritual-growth"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
-      >
-        <BookOpen className="h-5 w-5" />
-        Spiritual Growth
-      </Link>
-      <Link
-        href="/dashboard/community"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/community"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
-      >
-        <Users className="h-5 w-5" />
-        Community
-      </Link>
-      <Link
-        href="/dashboard/messages"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/messages"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
-      >
-        <MessageSquare className="h-5 w-5" />
-        Messages
-        <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-sm font-medium text-yellow-900">
-          3
-        </span>
-      </Link>
-      <Link
-        href="/dashboard/settings"
-        className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium hover:bg-yellow-100 hover:text-yellow-900",
-          pathname === "/dashboard/settings"
-            ? "bg-yellow-100 text-yellow-900"
-            : "text-muted-foreground"
-        )}
-      >
-        <Settings className="h-5 w-5" />
-        Settings
-      </Link>
-    </nav>
+      </Button>
+    </motion.nav>
   );
 };
 
-export default Sidebar;
+export default SideBar;

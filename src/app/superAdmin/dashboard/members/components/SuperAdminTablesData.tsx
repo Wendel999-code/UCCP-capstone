@@ -65,16 +65,14 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="text-[12px] "
           >
-            Firstname
+            FIRSTNAME
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => {
         return (
-          <p className="font-bold ml-3 text-[10px] ">
-            {row.getValue("firstName")}
-          </p>
+          <p className=" ml-3 text-[14px]  ">{row.getValue("firstName")}</p>
         );
       },
     },
@@ -87,13 +85,13 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="text-[12px] px-2"
           >
-            Lastname
+            LASTNAME
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <p className="lowercase font-bold ml-3 text-[10px] ">
+        <p className="lowercase text-[14px]  ml-3 ">
           {row.getValue("lastName")}
         </p>
       ),
@@ -107,13 +105,13 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="text-[12px] px-2"
           >
-            Age
+            AGE
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <p className="ml-3 font-bold text-[10px]">{row.getValue("age")}</p>
+        <p className="ml-3 text-[14px] ">{row.getValue("age")}</p>
       ),
     },
     {
@@ -124,12 +122,12 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="text-[12px] cursor-pointer"
           >
-            Gender
+            GENDER
           </span>
         );
       },
       cell: ({ row }) => (
-        <p className="text-[10px] font-bold">{row.getValue("gender")}</p>
+        <p className="text-[14px] ">{row.getValue("gender")}</p>
       ),
     },
 
@@ -139,7 +137,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const category = row.getValue("category") as string;
         return (
-          <p className={`${getCategoryColor(category)} text-[10px] font-bold`}>
+          <p className={`${getCategoryColor(category)} text-[14px] `}>
             {category
               ? category.charAt(0).toUpperCase() + category.slice(1)
               : "N/A"}
@@ -153,7 +151,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const status = row.getValue("activeStatus") as string;
         return (
-          <p className={`${getStatusColor(status)} text-[10px] font-bold`}>
+          <p className={`${getStatusColor(status)} text-[14px] `}>
             {status
               ? status.charAt(0).toUpperCase() + status.slice(1)
               : "Unknown"}
@@ -177,7 +175,16 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         const baptism = row.getValue("baptism_status") as string;
-        return <p className="text-[10px] font-bold"> {baptism}</p>;
+        return (
+          <p
+            className={`text-[14px] ${
+              baptism === "Baptized" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {" "}
+            {baptism}
+          </p>
+        );
       },
     },
 
@@ -195,7 +202,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
         </Button>
       ),
       cell: ({ row }) => (
-        <p className="capitalize text-[10px] font-bold text-amber-500">
+        <p className="capitalize text-[14px]  text-amber-500">
           {row.original.Church?.brgy}
         </p>
       ),

@@ -15,7 +15,11 @@ export async function getChurchAdmin() {
       .eq("id", currentUser.user.id)
       .single();
 
-    if (adminError || churchAdmin?.role !== "church_admin") {
+    if (
+      adminError ||
+      (churchAdmin?.role !== "church_admin" &&
+        churchAdmin?.role !== "super_admin")
+    ) {
       throw adminError || new Error("Unauthorized access");
     }
 

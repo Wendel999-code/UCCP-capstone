@@ -20,51 +20,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-type BaptismCertificate = {
-  id: string;
-  fullName: string;
-  dateOfBirth: string;
-  baptismDate: string;
-  requestedDate: string;
-  status: "Pending" | "Approved" | "Completed";
-};
-
-const dummyData: BaptismCertificate[] = [
-  {
-    id: "1",
-    fullName: "Juan Dela Cruz",
-    dateOfBirth: "2000-05-14",
-    baptismDate: "2001-06-15",
-    requestedDate: "2024-06-20",
-    status: "Pending",
-  },
-  {
-    id: "2",
-    fullName: "Maria Santos",
-    dateOfBirth: "1995-08-22",
-    baptismDate: "1996-09-05",
-    requestedDate: "2024-06-18",
-    status: "Approved",
-  },
-  {
-    id: "3",
-    fullName: "Pedro Gomez",
-    dateOfBirth: "2002-03-10",
-    baptismDate: "2003-04-12",
-    requestedDate: "2024-06-10",
-    status: "Completed",
-  },
-];
-
 export default function BaptismCertificateTable() {
+  
   const [selected, setSelected] = React.useState<BaptismCertificate | null>(
     null
   );
 
   const columns: ColumnDef<BaptismCertificate>[] = [
-    { accessorKey: "fullName", header: "Full Name" },
+    { accessorKey: "Firstname", header: "Firstname" },
+    { accessorKey: "Lastname", header: "Lastname" },
     { accessorKey: "dateOfBirth", header: "Date of Birth" },
-    { accessorKey: "baptismDate", header: "Baptism Date" },
     { accessorKey: "requestedDate", header: "Requested On" },
     { accessorKey: "status", header: "Status" },
     {
@@ -92,8 +57,8 @@ export default function BaptismCertificateTable() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">
-            Baptism Certificate Requests
+          <CardTitle className="text-md ">
+            Baptismal Certificate Requests
           </CardTitle>
         </CardHeader>
         <CardContent>

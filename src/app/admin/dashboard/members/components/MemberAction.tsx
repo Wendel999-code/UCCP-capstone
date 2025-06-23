@@ -115,7 +115,7 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
               {isDeleting ? (
                 <>
                   {" "}
-                  <Loader className="animate-spin " /> "Deleting..."{" "}
+                  <Loader className="animate-spin " /> Deleting...{" "}
                 </>
               ) : (
                 "Delete"
