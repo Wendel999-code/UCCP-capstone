@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -21,12 +21,15 @@ import {
 export const description = "A bar chart with a label";
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { circuit: "Palanit", members: 186 },
+  { circuit: "San Juan", members: 305 },
+  { circuit: "Salvacion", members: 237 },
+  { circuit: "Alegria", members: 73 },
+  { circuit: "San Isidro", members: 209 },
+  { circuit: "Victoria", members: 294 },
+  { circuit: "Allen", members: 614 },
+  { circuit: "Lipata", members: 214 },
+  { circuit: "Cabacungan", members: 114 },
 ];
 
 const chartConfig = {
@@ -40,47 +43,42 @@ export function Analytics() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Analytics</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Member Distribution by Circuit</CardTitle>
+        <CardDescription>
+          Overview of all church circuits under your management.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
-            accessibilityLayer
             data={chartData}
-            margin={{
-              top: 20,
-            }}
+            margin={{ top: 20, right: 20, bottom: 0, left: 10 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="circuit"
               tickLine={false}
-              tickMargin={2}
+              tickMargin={4}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
+            <Bar
+              dataKey={"members"}
+              fill="var(--color-desktop)"
+              radius={8}
+            ></Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Member's Joined <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Showing the total of members joined in Cana Circuit
         </div>
       </CardFooter>
     </Card>

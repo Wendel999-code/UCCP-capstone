@@ -108,8 +108,8 @@ const SideBar = () => {
             ),
           },
           {
-            href: "/admin/dashboard/documents",
-            label: "Documents",
+            href: "/admin/dashboard/certificates",
+            label: "Certificates",
             icon: <File className="h-4 w-4" />,
           },
           {
