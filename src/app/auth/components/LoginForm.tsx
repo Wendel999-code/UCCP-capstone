@@ -1,18 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { FormEvent, useState } from "react";
-import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Login } from "@/lib/supabase/actions/auth";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { roleRedirectMap, UserRole } from "@/constant";
 import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
 import LogoLoader from "@/components/LogoLoader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { roleRedirectMap, UserRole } from "@/constant";
+import { Login } from "@/lib/supabase/actions/auth";
+import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +48,7 @@ export default function LoginForm() {
       }
 
       const redirectPath = roleRedirectMap[res.role as UserRole];
-      
+
       if (redirectPath) {
         router.replace(redirectPath);
       } else {
@@ -159,7 +159,7 @@ export default function LoginForm() {
         <div className="hidden md:flex items-center justify-center w-1/2 p-8">
           <div className="relative w-full  max-w-md">
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+              src={"/logo.jpg"}
               alt="Cana Circuit Logo"
               width={400}
               height={500}

@@ -1,17 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { FormEvent, useState } from "react";
-import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { toast } from "react-toastify";
-import { SignUp } from "@/lib/supabase/actions/auth";
-import { useRouter } from "next/navigation";
 import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
 import LogoLoader from "@/components/LogoLoader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SignUp } from "@/lib/supabase/actions/auth";
+import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -185,7 +185,7 @@ export default function SignupForm() {
         <div className="hidden md:flex items-center justify-center w-1/2 p-8">
           <div className="relative w-full max-w-md">
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+              src={"/logo.jpg"}
               alt="Cana Circuit Logo"
               width={400}
               height={500}

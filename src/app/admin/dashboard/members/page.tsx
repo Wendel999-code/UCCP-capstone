@@ -1,9 +1,9 @@
 "use client";
 
+import { useGetAllmemberByChurchId } from "@/app/hooks/useMember";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import { toast } from "react-toastify";
 import MembersTable from "./components/MembersTable";
-import { useGetAllmemberByChurchId } from "@/app/hooks/useMember";
 
 const MembersPage = () => {
   const {

@@ -1,10 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Calendar, Clock } from "lucide-react";
 import Image from "next/image";
-import React from "react";
-import { motion } from "framer-motion";
 
 function Event() {
   return (

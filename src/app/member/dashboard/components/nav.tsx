@@ -3,14 +3,13 @@
 import { useUser } from "@/app/provider/UserContext";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Logout } from "@/lib/supabase/actions/auth";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { toast } from "react-toastify";
-import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const Nav = () => {
   const { user, loading } = useUser();
@@ -30,7 +29,7 @@ const Nav = () => {
       <div className=" flex h-18 items-center px-4 justify-between ">
         <Link href="/admin/dashboard" className="shrink-0">
           <Image
-            src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+            src={"/logo.jpg"}
             alt="CANA Circuit Logo"
             width={72}
             height={56}

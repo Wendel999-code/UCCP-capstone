@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
+import { useRef } from "react";
 
 const imageUrls = [
   "https://cdn.pixabay.com/photo/2021/12/15/07/29/saint-isaac-cathedral-6871954_640.jpg",

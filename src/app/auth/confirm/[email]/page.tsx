@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import supabase from "@/lib/supabase/client";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import supabase from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function VerifyOtpForm() {
@@ -115,7 +115,7 @@ export default function VerifyOtpForm() {
         <div className="hidden md:flex items-center justify-center w-1/2 p-8">
           <div className="relative w-full max-w-md">
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+              src={"/logo.jpg"}
               alt="Cana Circuit Logo"
               width={400}
               height={500}

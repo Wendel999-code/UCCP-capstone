@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import { ModeToggle } from "@/components/ModeToogle";
-import { Logout } from "@/lib/supabase/actions/auth";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Logout } from "@/lib/supabase/actions/auth";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "react-toastify";
 import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 
 function Header() {
@@ -31,7 +31,7 @@ function Header() {
         <Link href="/">
           <div className="px-4 md:px-16">
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_LOGO!}
+              src={"/logo.jpg"}
               alt="CANA Circuit Logo"
               width={100}
               height={80}
