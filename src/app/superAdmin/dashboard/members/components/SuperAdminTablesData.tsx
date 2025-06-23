@@ -2,19 +2,19 @@
 
 import React from "react";
 
+import { Button } from "@/components/ui/button";
+import { Member } from "@/global/type";
 import {
-  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  useReactTable,
   type ColumnDef,
-  type SortingState,
   type ColumnFiltersState,
+  type SortingState,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { Member } from "@/global/type";
 import SuperAdminAction from "./SuperAdminAction";
 
 const getCategoryColor = (category: string) => {

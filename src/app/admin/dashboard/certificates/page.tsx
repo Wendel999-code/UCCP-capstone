@@ -1,4 +1,3 @@
-import React from "react";
 import BaptismCertificateTable from "./components/BaptismCertificateTable";
 
 function Certicates() {

@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { useDeleteMember } from "@/app/hooks/useMember";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,22 +20,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
 import { Loader, MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { ViewMemberModal } from "@/app/admin/dashboard/members/components/ViewMemberModal";
 import { GetMemberByID } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
-import { ViewMemberModal } from "@/app/admin/dashboard/members/components/ViewMemberModal";
 
 const SuperAdminAction = ({ memberID }: { memberID: string }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

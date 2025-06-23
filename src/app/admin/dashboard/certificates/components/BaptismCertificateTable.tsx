@@ -1,12 +1,7 @@
 "use client";
 
-import * as React from "react";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -15,18 +10,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import * as React from "react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { CertificateRequest } from "@/global/type";
 
 export default function BaptismCertificateTable() {
-  
-  const [selected, setSelected] = React.useState<BaptismCertificate | null>(
+  const dummyData: CertificateRequest[] = [];
+  const [selected, setSelected] = React.useState<CertificateRequest | null>(
     null
   );
 
-  const columns: ColumnDef<BaptismCertificate>[] = [
+  const columns: ColumnDef<CertificateRequest>[] = [
     { accessorKey: "Firstname", header: "Firstname" },
     { accessorKey: "Lastname", header: "Lastname" },
     { accessorKey: "dateOfBirth", header: "Date of Birth" },
@@ -112,16 +113,11 @@ export default function BaptismCertificateTable() {
             <div className="w-full border-4 border-yellow-600 p-10 text-center bg-white text-black rounded-md space-y-2">
               <h2 className="text-lg font-bold">CERTIFICATE OF BAPTISM</h2>
               <p>This certifies that</p>
-              <h1 className="text-2xl font-bold underline">
-                {selected.fullName}
-              </h1>
+              <h1 className="text-2xl font-bold underline">wendel</h1>
               <p>
                 was baptized by immersion in the name of the Lord Jesus Christ
                 on
-                <strong>
-                  {" "}
-                  {new Date(selected.baptismDate).toDateString()}
-                </strong>
+                <strong>june</strong>
               </p>
               <p>
                 <br />
