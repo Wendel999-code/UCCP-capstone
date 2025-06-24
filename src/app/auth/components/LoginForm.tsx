@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { roleRedirectMap, UserRole } from "@/constant";
 import { Login } from "@/lib/supabase/actions/auth";
-import { ArrowLeft, Eye, EyeOff, Loader } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -65,17 +65,19 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-amber-50">
+    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center ">
       {/* Left: Form */}
       <div className="flex ">
-        <div className="w-full md:w-1/2 px-8 py-16 space-y-6 shadow-xl rounded-md   ">
-          <Link
+        <div className="w-full border md:w-1/2 px-8 py-16 space-y-6 shadow-xl rounded-md   ">
+          {/* <Link
             href="/"
             className="flex items-center  gap-1 text-red-900 hover:underline mb-12"
           >
             <ArrowLeft size={18} />
-            <span className="font-medium text-xs">Back to Home</span>
-          </Link>
+            <span className="font-medium text-xs dark:text-gray-600">
+              Back to Home
+            </span>
+          </Link> */}
           <div className="text-center md:text-left">
             <h2 className="text-3xl  font-bold text-red-900">
               Welcome to Cana Circuit
@@ -98,7 +100,7 @@ export default function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="focus-visible:ring-amber-500 text-gray-700"
+                className="focus-visible:ring-amber-500 text-black dark:text-white"
               />
             </div>
 
@@ -115,7 +117,7 @@ export default function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pr-10 focus-visible:ring-amber-500 text-gray-700"
+                  className="pr-10 focus-visible:ring-amber-500 text-black dark:text-white"
                 />
                 <button
                   type="button"
@@ -158,13 +160,15 @@ export default function LoginForm() {
         {/* Right: Logo */}
         <div className="hidden md:flex items-center justify-center w-1/2 p-8">
           <div className="relative w-full  max-w-md">
-            <Image
-              src={"/logo.jpg"}
-              alt="Cana Circuit Logo"
-              width={400}
-              height={500}
-              className="object-contain rounded-full shadow-xl "
-            />
+            <Link href={"/"}>
+              <Image
+                src={"/logo.jpg"}
+                alt="Cana Circuit Logo"
+                width={400}
+                height={500}
+                className="object-contain rounded-full shadow-xl "
+              />
+            </Link>
           </div>
         </div>
       </div>

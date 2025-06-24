@@ -45,6 +45,8 @@ export function ViewMemberModal({
     open
   );
 
+  console.log("member", member);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-lg w-full bg-amber-50 dark:bg-zinc-900 rounded-xl">
@@ -101,9 +103,15 @@ export function ViewMemberModal({
                 label="Baptism Status"
                 value={member.baptism_status ?? "Not Baptized"}
               />
+
               <RenderField
-                label="Joined Date"
-                value={new Date(member.created_at).toLocaleDateString()}
+                label="Date of Acceptance"
+                value={member.baptism_date ?? "N/A"}
+              />
+
+              <RenderField
+                label="Officiant"
+                value={member.officiant ?? "N/A"}
               />
             </>
           ) : (

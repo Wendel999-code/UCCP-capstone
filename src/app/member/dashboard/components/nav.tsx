@@ -27,13 +27,13 @@ const Nav = () => {
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex h-18 items-center px-4 justify-between ">
-        <Link href="/admin/dashboard" className="shrink-0">
+        <Link href="/admin/dashboard" className="flex items-center">
           <Image
-            src={"/logo.jpg"}
+            src="/uccp.jpg"
             alt="CANA Circuit Logo"
-            width={72}
-            height={56}
-            className="rounded-full object-cover mx-18  transition-transform hover:scale-105"
+            width={80}
+            height={48}
+            className="h-16 dark:rounded-t-full  dark:rounded-b-none ml-20 w-auto object-contain rounded-lg transition-transform duration-300 hover:scale-105"
           />
         </Link>
 

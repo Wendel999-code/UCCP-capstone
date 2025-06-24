@@ -1,14 +1,14 @@
 "use client";
 
+import { Bell, Calendar, Home, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Home, Bell, Users, LogOut } from "lucide-react";
 
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import { Logout } from "@/lib/supabase/actions/auth";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const SuperAdminSideBar = () => {
   const router = useRouter();

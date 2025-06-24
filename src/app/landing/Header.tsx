@@ -31,11 +31,11 @@ function Header() {
         <Link href="/">
           <div className="px-4 md:px-16">
             <Image
-              src={"/logo.jpg"}
+              src={"/uccp.jpg"}
               alt="CANA Circuit Logo"
-              width={100}
+              width={70}
               height={80}
-              className="rounded-full object-cover transition-transform group-hover:scale-105"
+              className="rounded-md w-auto h-20 dark:border-t-full object-cover transition-transform group-hover:scale-105"
             />
           </div>
         </Link>

@@ -331,9 +331,19 @@ export async function GetMemberByID(MemberID: string) {
 
     if (error) throw error;
 
+    const { data: baptism_record, error: baptismError } = await supabase
+      .from("baptismal_record")
+      .select("baptism_date , officiant")
+      .eq("member_id", MemberID)
+      .maybeSingle();
+
+    if (baptismError) throw baptismError;
+
+    console.log("Member details:", baptism_record);
+
     return {
       success: true,
-      data,
+      data: { ...data, ...baptism_record },
     };
   } catch (error) {
     console.error("Error in getting member by id:", error);

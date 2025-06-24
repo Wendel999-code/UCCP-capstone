@@ -4,13 +4,6 @@ import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 
-const imageUrls = [
-  "https://cdn.pixabay.com/photo/2021/12/15/07/29/saint-isaac-cathedral-6871954_640.jpg",
-  "https://cdn.pixabay.com/photo/2020/10/13/18/33/architecture-5652562_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2022/05/23/18/30/church-7216926_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2017/11/07/18/42/religion-2927802_640.jpg",
-];
-
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -29,7 +22,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 },
+    transition: { duration: 0.3 },
   },
 };
 
@@ -44,7 +37,7 @@ function About() {
     <section id="about" className="py-12 md:px-46" ref={sectionRef}>
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-          {/* Left Column: */}
+          {/* Left Column */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -75,39 +68,16 @@ function About() {
               doors are always open to those seeking connection, purpose, and
               spiritual growth.
             </motion.p>
-            {/* <motion.div variants={itemVariants} className="flex pt-4">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                Our History
-              </Button>
-            </motion.div> */}
           </motion.div>
 
-          {/* Right Column: */}
-          <div className="grid grid-cols-2 gap-4">
-            {imageUrls.map((url, index) => (
-              <motion.div
-                key={index}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: { duration: 0.5, delay: index * 0.3 },
-                  },
-                }}
-                className="relative w-full h-48 md:h-56 lg:h-52 rounded-lg overflow-hidden shadow-md"
-              >
-                <Image
-                  src={url}
-                  alt={`Church image ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                />
-              </motion.div>
-            ))}
+          {/* Right Column: Image */}
+          <div className="relative w-full h-80  lg:h-full">
+            <Image
+              src="/uccp.jpg"
+              alt="uccp"
+              fill
+              className="object-contain rounded-xl  w-auto h-[400px] shadow-md"
+            />
           </div>
         </div>
       </div>

@@ -1,9 +1,8 @@
 "use client";
 
 import { useUser } from "@/app/provider/UserContext";
-import React from "react";
-import AdminDashboard from "./components/AdminDashboard";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import AdminDashboard from "./components/AdminDashboard";
 
 const Page = () => {
   const { loading } = useUser();
