@@ -47,12 +47,12 @@ export async function ApplyForMembership(
     UCM: "UCM",
   };
 
-  if (age < 15) {
+  if (age < 17) {
     category = Category.CHILDREN;
   } else if (age < 25) {
-    category = Category.CYAF;
-  } else if (age < 60 && hasChildren) {
     category = Category.CYF;
+  } else if (age < 60) {
+    category = Category.CYAF;
   } else if (age >= 60) {
     category = gender === "female" ? Category.CWA : Category.UCM;
   }
@@ -81,7 +81,7 @@ export async function ApplyForMembership(
     return {
       success: true,
       message: "Application submitted successfully",
-      data: newMember.id,
+      id: newMember.id,
     };
   } catch (error) {
     console.error("Error in ApplyForMembership:", error);
@@ -92,7 +92,6 @@ export async function ApplyForMembership(
   }
 }
 
-//TODO APPLICATION ID FOR NEW MEMBER
 export async function GetApplicationID(applicationId: string) {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
@@ -116,6 +115,30 @@ export async function GetApplicationID(applicationId: string) {
     return {
       success: false,
       message: "Failed to retrieve application",
+    };
+  }
+}
+
+export async function GetNewMemberID(applicationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("member")
+      .select("id")
+      .eq("id", applicationId)
+      .eq("activeStatus", "pending")
+      .single();
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    console.error("Error in  GetNewMemberID:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve new member ID",
     };
   }
 }
@@ -219,7 +242,7 @@ export async function ApproveMembership(
       .update({ activeStatus: "active", baptism_status: "Baptized" })
       .eq("id", memberID)
       .eq("church_id", churchAdmin.church_id)
-      .select("id")
+      .select("id, firstName, lastName")
       .single();
 
     if (error) throw error;
@@ -228,6 +251,7 @@ export async function ApproveMembership(
       .from("baptismal_record")
       .insert([
         {
+          fullName: `${updatedMember.lastName} ${updatedMember.firstName}`,
           member_id: updatedMember.id,
           baptism_date: acceptanceOfDate,
           officiant,

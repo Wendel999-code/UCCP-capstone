@@ -1,19 +1,18 @@
 import { Heart, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className=" mt-12 py-12">
       <div className="container px-4 md:px-6">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Heart className="h-6 w-6 text-yellow-500" />
-              <span className="text-xl font-bold">Grace Church</span>
+              <span className="text-xl font-bold">CANA Circuit</span>
             </div>
             <p className="text-gray-400 text-sm">
-              A place of worship, community, and spiritual growth since 1985.
+              A place of worship, community, and spiritual growth since 1000.
             </p>
           </div>
           <div>
@@ -96,23 +95,23 @@ function Footer() {
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-yellow-500" />
                 <span className="text-gray-400">
-                  123 Faith Avenue, Hopeville, CA 90210
+                  San Juan Day San Jose San Joaquin San Rafael
                 </span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-yellow-500" />
-                <span className="text-gray-400">(555) 123-4567</span>
+                <span className="text-gray-400">(63) 95555555</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-yellow-500" />
-                <span className="text-gray-400">info@gracechurch.org</span>
+                <span className="text-gray-400">pogi@gmail.com</span>
               </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>
-            &copy; {new Date().getFullYear()} Grace Church. All rights reserved.
+            &copy; {new Date().getFullYear()} CANA Circuit. All rights reserved.
           </p>
         </div>
       </div>

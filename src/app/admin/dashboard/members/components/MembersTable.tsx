@@ -1,26 +1,11 @@
 "use client";
 
-import * as React from "react";
 import { flexRender } from "@tanstack/react-table";
-import { ChevronDown, Plus, Search, Filter, Download } from "lucide-react";
+import { ChevronDown, Download, Filter, Plus, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Card,
   CardContent,
@@ -29,16 +14,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-import { TablesData } from "./TablesData";
-import Pagination from "./Pagination";
 import { Member } from "@/global/type";
+import Pagination from "./Pagination";
+import { TablesData } from "./TablesData";
 
 export default function MembersTable({ members }: { members: Member[] }) {
   const { table, columns } = TablesData({ members });

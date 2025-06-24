@@ -1,20 +1,20 @@
 "use client";
 
-import React from "react";
-import MemberAction from "./MemberAction";
+import { Button } from "@/components/ui/button";
+import { Member } from "@/global/type";
 import {
-  useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  useReactTable,
   type ColumnDef,
-  type SortingState,
   type ColumnFiltersState,
+  type SortingState,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { Member } from "@/global/type";
+import React from "react";
+import MemberAction from "./MemberAction";
 
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {
@@ -71,9 +71,7 @@ export function TablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         return (
-          <p className="font-medium ml-3 text-[10px] ">
-            {row.getValue("firstName")}
-          </p>
+          <p className=" ml-3 text-[14px] ">{row.getValue("firstName")}</p>
         );
       },
     },
@@ -92,7 +90,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="lowercase ml-3 text-[10px] ">
+        <p className="lowercase ml-3 text-[14px] ">
           {row.getValue("lastName")}
         </p>
       ),
@@ -112,7 +110,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="ml-3 text-[10px]">{row.getValue("age")}</p>
+        <p className="ml-3 text-[14px]">{row.getValue("age")}</p>
       ),
     },
     {
@@ -128,7 +126,7 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
       cell: ({ row }) => (
-        <p className="text-[10px]">{row.getValue("gender")}</p>
+        <p className="text-[14px]">{row.getValue("gender")}</p>
       ),
     },
 
@@ -138,7 +136,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const category = row.getValue("category") as string;
         return (
-          <p className={`${getCategoryColor(category)} text-[10px]`}>
+          <p className={`${getCategoryColor(category)} text-[14px]`}>
             {category
               ? category.charAt(0).toUpperCase() + category.slice(1)
               : "N/A"}
@@ -152,7 +150,7 @@ export function TablesData({ members }: { members: Member[] }) {
       cell: ({ row }) => {
         const status = row.getValue("activeStatus") as string;
         return (
-          <p className={`${getStatusColor(status)} text-[10px]`}>
+          <p className={`${getStatusColor(status)} text-[14px]`}>
             {status
               ? status.charAt(0).toUpperCase() + status.slice(1)
               : "Unknown"}
@@ -176,7 +174,7 @@ export function TablesData({ members }: { members: Member[] }) {
       },
       cell: ({ row }) => {
         const baptism = row.getValue("baptism_status") as string;
-        return <p className="text-[10px]"> {baptism}</p>;
+        return <p className="text-[14px]"> {baptism}</p>;
       },
     },
 
@@ -185,7 +183,7 @@ export function TablesData({ members }: { members: Member[] }) {
       header: "circuit",
       cell: ({ row }) => {
         const circuit = row.original.Church?.brgy as string;
-        return <p className="text-[10px] text-amber-500"> {circuit}</p>;
+        return <p className="text-[14px] text-amber-500"> {circuit}</p>;
       },
     },
 

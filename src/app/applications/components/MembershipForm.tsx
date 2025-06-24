@@ -1,8 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Heart, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -13,8 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ApplyForMembership } from "@/lib/supabase/actions/member";
-import { toast } from "react-toastify";
+import { ArrowLeft, Heart, Loader } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 type churchType = {
   id: string;
@@ -60,7 +60,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
       }
 
       toast.success("Application submitted successfully!");
-      router.push(`/applications/SuccessApplication/${result.data}`);
+      router.push(`/applications/SuccessApplication/${result.id}`);
     } catch (error) {
       toast.error("An error occurred while submitting your application");
       console.error("Submission error:", error);
@@ -70,7 +70,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4 py-12">
       <div className="max-w-2xl w-full space-y-8">
         <div className="rounded-lg border bg-white p-8 shadow-md">
           <div className="mb-6">

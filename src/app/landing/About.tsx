@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
@@ -76,11 +75,11 @@ function About() {
               doors are always open to those seeking connection, purpose, and
               spiritual growth.
             </motion.p>
-            <motion.div variants={itemVariants} className="flex pt-4">
+            {/* <motion.div variants={itemVariants} className="flex pt-4">
               <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
                 Our History
               </Button>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
           {/* Right Column: */}
