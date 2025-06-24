@@ -23,7 +23,8 @@ export async function GetAllChurches() {
 
 export async function ManageChurchById() {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
+
     const { data, error: churchError } = await supabase
       .from("Church")
       .select("brgy")

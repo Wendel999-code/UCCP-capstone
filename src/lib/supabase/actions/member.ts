@@ -1,7 +1,7 @@
 import { Member } from "@/global/type";
 
-import { getChurchAdmin, SuperAdmin } from "./dal";
 import supabase from "../client";
+import { getChurchAdmin, SuperAdmin } from "./dal";
 
 export async function ApplyForMembership(
   data: Omit<
@@ -92,9 +92,10 @@ export async function ApplyForMembership(
   }
 }
 
+//TODO APPLICATION ID FOR NEW MEMBER
 export async function GetApplicationID(applicationId: string) {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     const { data, error } = await supabase
       .from("member")
@@ -121,7 +122,7 @@ export async function GetApplicationID(applicationId: string) {
 
 export async function GetAllMembersByChurchId() {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     const { data, error } = await supabase
       .from("member")
@@ -148,7 +149,7 @@ export async function GetAllMembersByChurchId() {
 
 export async function GetPendingApplicationsCount() {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     const { count, error: countError } = await supabase
       .from("member")
@@ -173,7 +174,7 @@ export async function GetPendingApplicationsCount() {
 
 export async function GetPendingApplication() {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     const { data, error } = await supabase
       .from("member")
@@ -198,28 +199,47 @@ export async function GetPendingApplication() {
   }
 }
 
-export async function ApproveMembership(memberID: string) {
-  if (!memberID) {
+export async function ApproveMembership(
+  memberID: string,
+  acceptanceOfDate: string,
+  officiant: string
+) {
+  if (!memberID || !acceptanceOfDate || !officiant) {
     return {
       success: false,
-      message: "Member ID is required",
+      message: " All fields is required",
     };
   }
 
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin, church } = await getChurchAdmin();
 
     const { data: updatedMember, error } = await supabase
       .from("member")
       .update({ activeStatus: "active", baptism_status: "Baptized" })
       .eq("id", memberID)
-      .eq("church_id", admin.church_id)
-      .select()
+      .eq("church_id", churchAdmin.church_id)
+      .select("id")
       .single();
 
     if (error) throw error;
 
-    console.log("Membership approved:", updatedMember);
+    const { data, error: baptismError } = await supabase
+      .from("baptismal_record")
+      .insert([
+        {
+          member_id: updatedMember.id,
+          baptism_date: acceptanceOfDate,
+          officiant,
+          circuit: church.brgy,
+        },
+      ])
+      .select()
+      .single();
+
+    if (baptismError) throw baptismError;
+
+    console.log("Membership approved:", updatedMember, data);
 
     return {
       success: true,
@@ -243,7 +263,7 @@ export async function DeleteMember(memberID: string) {
   }
 
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     let query = supabase.from("member").delete().eq("id", memberID);
 
@@ -271,7 +291,7 @@ export async function DeleteMember(memberID: string) {
 
 export async function GetMemberByID(MemberID: string) {
   try {
-    const admin = await getChurchAdmin();
+    const { churchAdmin: admin } = await getChurchAdmin();
 
     let query = supabase
       .from("member")

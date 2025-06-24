@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
+import { usePendingMembers } from "@/app/hooks/useMember";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import ApplicationTable from "./components/ApplicationTable";
-import { usePendingMembers } from "@/app/hooks/useMember";
 
 const Page = () => {
   const { data, isLoading, isError, error } = usePendingMembers();

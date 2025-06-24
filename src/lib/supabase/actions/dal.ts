@@ -23,7 +23,15 @@ export async function getChurchAdmin() {
       throw adminError || new Error("Unauthorized access");
     }
 
-    return churchAdmin;
+    const { data: church, error: churchError } = await supabase
+      .from("Church")
+      .select("brgy")
+      .eq("id", churchAdmin?.church_id)
+      .single();
+
+    if (churchError) throw churchError;
+
+    return { churchAdmin, church };
   } catch (error) {
     console.log("error in fetching church admin", error);
     throw error;

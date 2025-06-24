@@ -1,13 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useDeleteMember } from "@/app/hooks/useMember";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,23 +12,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Loader, MoreHorizontal } from "lucide-react";
-import React from "react";
 import { toast } from "react-toastify";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
-import { useApproveMember, useDeleteMember } from "@/app/hooks/useMember";
 
 const ApplicationAction = ({ memberID }: { memberID: string }) => {
-  const { mutate: approveMember, isPending } = useApproveMember();
-
   const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
-
-  const handleApprove = () => {
-    approveMember(memberID, {
-      onSuccess: () => toast.success("Member approved!"),
-      onError: (error) => toast.error(error.message),
-    });
-  };
 
   const handleDeleteApplication = async () => {
     deleteMember(memberID, {
@@ -56,13 +46,9 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <ApplicationDetailsModal
-          memberID={memberID}
-          onApprove={handleApprove}
-          loading={isPending}
-        />
+        <ApplicationDetailsModal memberID={memberID} />
 
-        <AlertDialog>
+        {/* <AlertDialog>
           <AlertDialogTrigger asChild>
             <div>
               {" "}
@@ -92,7 +78,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog> */}
 
         <DropdownMenuSeparator />
 

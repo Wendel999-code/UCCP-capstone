@@ -1,4 +1,4 @@
-import { Member } from "@/global/type";
+import { ApproveMemberInput, Member } from "@/global/type";
 import {
   ApproveMembership,
   DeleteMember,
@@ -24,11 +24,16 @@ export const useApproveMember = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (memberId: string) => {
-      const res = await ApproveMembership(memberId);
+    mutationFn: async ({
+      memberID,
+      acceptanceDate,
+      officiant,
+    }: ApproveMemberInput) => {
+      const res = await ApproveMembership(memberID, acceptanceDate, officiant);
       if (!res.success) throw new Error(res.message);
       return res;
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pending-members"] });
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });

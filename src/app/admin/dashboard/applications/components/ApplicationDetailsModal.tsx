@@ -1,5 +1,9 @@
 "use client";
 
+import { useApplicationDetails, useApproveMember } from "@/app/hooks/useMember";
+import { cn } from "@/app/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,33 +11,46 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/app/lib/utils";
-import React, { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { useApplicationDetails } from "@/app/hooks/useMember";
-import { useQueryClient } from "@tanstack/react-query";
 import { GetApplicationID } from "@/lib/supabase/actions/member";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ApplicationDetailsModal({
   memberID,
-  onApprove,
-  loading,
 }: {
   memberID: string;
-  onApprove: () => void;
-  loading: boolean;
 }) {
   const [open, setOpen] = useState(false);
+
+  const [acceptanceDate, setAcceptanceDate] = useState("");
+  const [officiant, setOfficiant] = useState("");
 
   const { data: member, isLoading: isFetching } = useApplicationDetails(
     memberID,
     open
   );
+
+  const { mutate: approveMember, isPending } = useApproveMember();
+
+  const handleApprove = () => {
+    if (!memberID || !acceptanceDate || !officiant) {
+      toast.error("All fields is required");
+      return;
+    }
+
+    approveMember(
+      { memberID, acceptanceDate, officiant },
+      {
+        onSuccess: () => toast.success("Member approved!"),
+        onError: (error) => toast.error(error.message),
+      }
+    );
+  };
 
   const queryClient = useQueryClient();
 
@@ -92,7 +109,7 @@ export default function ApplicationDetailsModal({
 
           <div className="sm:col-span-2">
             <Label className="text-xs text-gray-600">Address</Label>
-            {loading ? (
+            {isFetching ? (
               <Skeleton className="h-9 mt-1 rounded-md" />
             ) : (
               <Input readOnly value={member?.address ?? ""} />
@@ -102,7 +119,7 @@ export default function ApplicationDetailsModal({
           <div>
             <Label className="text-xs text-gray-600">Status</Label>
             <div className="mt-1">
-              {loading ? (
+              {isFetching ? (
                 <Skeleton className="h-9 rounded-md" />
               ) : (
                 <Badge
@@ -121,20 +138,46 @@ export default function ApplicationDetailsModal({
           </div>
 
           <RenderField
-            label="Has Children"
-            value={member?.hasChildren ?? "" ? "Yes" : "No"}
+            label="Have Children"
+            value={member?.hasChildren ? "Yes" : "No"}
           />
 
           <div className="sm:col-span-2">
             <RenderField label="Circuit" value={member?.Church?.brgy ?? ""} />
           </div>
+
+          {/* Acceptance Date (Required) */}
+          <div className="sm:col-span-2">
+            <Label className="text-xs text-gray-600">
+              Date of Acceptance <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              type="date"
+              value={acceptanceDate}
+              onChange={(e) => setAcceptanceDate(e.target.value)}
+            />
+          </div>
+
+          {/* Officiant (Required) */}
+          <div className="sm:col-span-2">
+            <Label className="text-xs text-gray-600">
+              Officiant <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              placeholder="Fr. Jose"
+              value={officiant}
+              onChange={(e) => setOfficiant(e.target.value)}
+            />
+          </div>
         </div>
+
+        {/* Approve Button */}
         <Button
-          onClick={onApprove}
-          disabled={loading}
-          className="w-full text-medium text-black cursor-pointer hover:bg-amber-700"
+          onClick={handleApprove}
+          disabled={isPending}
+          className="w-full mt-4 text-medium text-black cursor-pointer hover:bg-amber-700"
         >
-          {loading ? (
+          {isPending ? (
             <span className="flex items-center gap-1">
               <Loader2 className="h-3 w-3 animate-spin" />
               Approving...

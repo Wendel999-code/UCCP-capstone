@@ -25,3 +25,19 @@ export interface CertificateRequest {
   circuit: string;
   status: "Pending" | "Declined" | "Completed";
 }
+
+
+export type ChurchAdmin = {
+  role: string;
+  church_id: string;
+  Church: {
+    brgy: string;
+  };
+};
+
+
+export type ApproveMemberInput = {
+  memberID: string;
+  acceptanceDate: string;
+  officiant: string;
+};
