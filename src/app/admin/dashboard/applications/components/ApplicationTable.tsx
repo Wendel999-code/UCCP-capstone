@@ -1,26 +1,11 @@
 "use client";
 
-import * as React from "react";
 import { flexRender } from "@tanstack/react-table";
-import { ChevronDown, Search, Filter } from "lucide-react";
+import { ChevronDown, Filter, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Card,
   CardContent,
@@ -29,15 +14,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ApplicationTableData } from "./ApplicationTableData";
-import ApplicationPagination from "./ApplicationPagination";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Member } from "@/global/type";
+import ApplicationPagination from "./ApplicationPagination";
+import { ApplicationTableData } from "./ApplicationTableData";
 
 export default function ApplicationTable({
   pendingMember,

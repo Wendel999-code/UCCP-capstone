@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Member } from "@/global/type";
+import { CertificateRequest } from "@/global/type";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -13,29 +13,12 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
-import ApplicationAction from "./ApplicationAction";
+import CertificateAction from "./CertificateAction";
 
-const getCategoryColor = (category: string) => {
-  switch (category?.toUpperCase()) {
-    case "UCM":
-      return " text-purple-800 px-2 py-1 rounded-md font-medium w-auto";
-    case "CWA":
-      return "text-pink-800 px-2 py-1 rounded-md font-medium w-auto";
-    case "CYAF":
-      return "text-blue-800 px-2 py-1 rounded-md font-medium w-auto";
-    case "CYF":
-      return " text-green-800 px-2 py-1 rounded-md font-medium w-auto";
-    case "CHILDREN":
-      return " text-yellow-800 px-2 py-1 rounded-md font-medium w-auto";
-    default:
-      return "text-gray-800 px-2 py-1 rounded-md font-medium w-auto";
-  }
-};
-
-export function ApplicationTableData({
-  pendingMember,
+export function CertificateTableData({
+  certificates,
 }: {
-  pendingMember: Member[];
+  certificates: CertificateRequest[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -44,7 +27,7 @@ export function ApplicationTableData({
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const columns: ColumnDef<Member>[] = [
+  const columns: ColumnDef<CertificateRequest>[] = [
     {
       accessorKey: "firstName",
       header: ({ column }) => {
@@ -84,7 +67,7 @@ export function ApplicationTableData({
       ),
     },
     {
-      accessorKey: "age",
+      accessorKey: "date_of_birth",
       header: ({ column }) => {
         return (
           <Button
@@ -92,35 +75,26 @@ export function ApplicationTableData({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="h-8 px-2"
           >
-            Age
+            Date of Birth
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <p className="ml-3">{row.getValue("age")}</p>,
+      cell: ({ row }) => (
+        <p className="ml-3">{row.getValue("date_of_birth")}</p>
+      ),
     },
     {
-      accessorKey: "gender",
-      header: "gender",
-      cell: ({ row }) => <div>{row.getValue("gender")}</div>,
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
     },
+
     {
-      accessorKey: "category",
-      header: "Category",
-      cell: ({ row }) => {
-        const category = row.getValue("category") as string;
-        return (
-          <p className={getCategoryColor(category)}>
-            {category?.toUpperCase() || "N/A"}
-          </p>
-        );
-      },
-    },
-    {
-      accessorKey: "activeStatus",
+      accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("activeStatus") as string;
+        const status = row.getValue("status") as string;
         return (
           <p className="text-red-600">
             {status
@@ -131,10 +105,10 @@ export function ApplicationTableData({
       },
     },
     {
-      accessorKey: "circuit",
+      accessorKey: "brgy",
       header: "circuit",
       cell: ({ row }) => {
-        const circuit = row.original.Church?.brgy as string;
+        const circuit = row.original.Church?.brgy;
         return <p className="text-amber-500"> {circuit}</p>;
       },
     },
@@ -148,7 +122,7 @@ export function ApplicationTableData({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="h-8 px-2"
           >
-            Applied Date
+            Date Requested
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -165,13 +139,13 @@ export function ApplicationTableData({
       cell: ({ row }) => {
         const member = row.original;
 
-        return <ApplicationAction memberID={member.id} />;
+        return <CertificateAction memberID={member.id} />;
       },
     },
   ];
 
   const table = useReactTable({
-    data: pendingMember,
+    data: certificates,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

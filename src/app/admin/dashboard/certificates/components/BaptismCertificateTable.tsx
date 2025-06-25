@@ -1,7 +1,25 @@
 "use client";
 
+import { flexRender } from "@tanstack/react-table";
+import { ChevronDown, Filter, Search } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -10,134 +28,150 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import * as React from "react";
-
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { CertificateRequest } from "@/global/type";
+import CertificatePagination from "./CertificatePagination";
+import { CertificateTableData } from "./CertificateTableData";
 
-export default function BaptismCertificateTable() {
-  const dummyData: CertificateRequest[] = [];
-  const [selected, setSelected] = React.useState<CertificateRequest | null>(
-    null
-  );
-
-  const columns: ColumnDef<CertificateRequest>[] = [
-    { accessorKey: "Firstname", header: "Firstname" },
-    { accessorKey: "Lastname", header: "Lastname" },
-    { accessorKey: "dateOfBirth", header: "Date of Birth" },
-    { accessorKey: "requestedDate", header: "Requested On" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "status", header: "Status" },
-    {
-      id: "actions",
-      header: "Action",
-      cell: ({ row }) => (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setSelected(row.original)}
-        >
-          Preview
-        </Button>
-      ),
-    },
-  ];
-
-  const table = useReactTable({
-    data: dummyData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+export default function BaptismCertificateTable({
+  certificates,
+}: {
+  certificates: CertificateRequest[];
+}) {
+  const { table, columns } = CertificateTableData({ certificates });
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-md ">
-            Baptismal Certificate Requests
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto rounded-md border">
-            <Table>
-              <TableHeader className="bg-muted dark:bg-zinc-900">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} className="text-xs uppercase">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="text-center">
-                      No certificate requests found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-2 w-full ">
+        {/* Header */}
 
-      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-        <DialogTitle>{""}</DialogTitle>
-        <DialogContent className="w-full max-w-3xl p-6">
-          {selected && (
-            <div className="w-full border-4 border-yellow-600 p-10 text-center bg-white text-black rounded-md space-y-2">
-              <h2 className="text-lg font-bold">CERTIFICATE OF BAPTISM</h2>
-              <p>This certifies that</p>
-              <h1 className="text-2xl font-bold underline">wendel</h1>
-              <p>
-                was baptized by immersion in the name of the Lord Jesus Christ
-                on
-                <strong>june</strong>
-              </p>
-              <p>
-                <br />
-                <strong> Cana Circuit Church</strong>
-              </p>
-              <div className="flex justify-around mt-8 text-sm">
-                <div>
-                  <p>______________________</p>
-                  <p>Church Minister</p>
-                </div>
-                <div>
-                  <p>______________________</p>
-                  <p>Presiding Pastor</p>
-                </div>
+        {/* Filters and Actions */}
+        <Card className="dark:bg-black">
+          <CardHeader>
+            <div className="flex items-center justify-between space-x-2">
+              <div>
+                {" "}
+                <CardTitle className="text-xl">Baptism Certificate</CardTitle>
+                <CardDescription className="text-gray-600">
+                  A comprehensive list of requested baptism certificates
+                </CardDescription>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between flex-wrap gap-2 py-2">
+              <div className="flex items-center flex-wrap gap-2">
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-2 top-[6px] h-5 w-3 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={
+                      (table
+                        .getColumn("firstName")
+                        ?.getFilterValue() as string) ?? ""
+                    }
+                    onChange={(e) =>
+                      table
+                        .getColumn("firstName")
+                        ?.setFilterValue(e.target.value)
+                    }
+                    className="pl-6 w-[120px] h-[36px] text-[11px] text-muted-foreground"
+                  />
+                </div>
+              </div>
+
+              {/* Column Toggle */}
+              <div className="flex items-center gap-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                    >
+                      <Filter className="mr-1 h-3 w-3" />
+                      Columns
+                      <ChevronDown className="ml-1 h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {table
+                      .getAllColumns()
+                      .filter((column) => column.getCanHide())
+                      .map((column) => (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize text-xs"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(val) =>
+                            column.toggleVisibility(!!val)
+                          }
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination */}
+            <CertificatePagination table={table} />
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }

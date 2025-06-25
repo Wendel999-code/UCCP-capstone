@@ -6,17 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Member } from "@/global/type";
+import { CertificateRequest } from "@/global/type";
 import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
+const CertificatePagination = ({
+  table,
+}: {
+  table: Table<CertificateRequest>;
+}) => {
   return (
     <div className="flex items-center justify-between space-x-2 py-4">
-      {/* <div className="flex-1 text-[10px] text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div> */}
       <div className="flex items-center space-x-2">
         <p className="text-[10px] font-medium">Rows per page</p>
         <Select
@@ -61,4 +61,4 @@ const ApplicationPagination = ({ table }: { table: Table<Member> }) => {
   );
 };
 
-export default ApplicationPagination;
+export default CertificatePagination;

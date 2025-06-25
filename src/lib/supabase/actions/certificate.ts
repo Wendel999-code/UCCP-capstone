@@ -1,5 +1,6 @@
 import { CertificateRequest } from "@/global/type";
 import supabase from "../client";
+import { getChurchAdmin } from "./dal";
 
 export async function RequestCertificate(
   data: Omit<CertificateRequest, "id" | "status">
@@ -63,11 +64,29 @@ export async function RequestCertificate(
   }
 }
 
-// export async function GetReqCertificate() {
-//   try {
-//     const { churchAdmin: admin } = await getChurchAdmin();
-//   } catch (error) {
-//     console.log("error in get req certificate", error);
-//     return [];
-//   }
-// }
+export async function GetReqCertificate() {
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { data, error } = await supabase
+      .from("req_certificate")
+      .select("*, Church:church_id(brgy)")
+      .eq("church_id", admin.church_id)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      message: "Request fetched successfully",
+      data,
+    };
+  } catch (error) {
+    console.log("error in get req certificate", error);
+    return {
+      success: false,
+      message: "Failed to retrieve request certificate",
+      data: [],
+    };
+  }
+}

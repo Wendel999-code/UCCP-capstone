@@ -32,9 +32,12 @@ export interface CertificateRequest {
   lastName: string;
   email: string;
   date_of_birth: string;
-  church_id: string;
-  circuit?: string;
+  created_at: string;
+  church_id?: string;
   status: "Pending" | "Declined" | "Completed";
+  Church?: {
+    brgy?: string;
+  };
 }
 
 export type ChurchAdmin = {
