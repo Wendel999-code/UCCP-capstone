@@ -1,8 +1,17 @@
 "use client";
 
+import { useGetAllChurches } from "@/app/hooks/useChurch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { RequestCertificate } from "@/lib/supabase/actions/certificate";
 import { Loader } from "lucide-react";
 import Image from "next/image";
@@ -12,12 +21,14 @@ import { toast } from "react-toastify";
 export default function RequestPage() {
   const [loading, setLoading] = useState(false);
 
+  const { data: churches, isLoading } = useGetAllChurches();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     date_of_birth: "",
     email: "",
-    circuit: "",
+    church_id: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,26 +142,47 @@ export default function RequestPage() {
 
             {/* Circuit */}
             <div className="p-2">
-              <Label
-                htmlFor="circuit"
-                className="text-xs text-muted-foreground"
-              >
-                Circuit
-              </Label>
-              <Input
-                id="circuit"
-                name="circuit"
-                placeholder="Example: Palanit"
-                value={formData.circuit}
-                onChange={handleChange}
-              />
+              {isLoading ? (
+                <Skeleton className="h-12 w-20" />
+              ) : (
+                <>
+                  <div>
+                    <label
+                      htmlFor="church"
+                      className="block text-sm font-medium text-gray-500 text-[12px]"
+                    >
+                      Select Circuit
+                    </label>
+                    <Select
+                      value={formData.church_id}
+                      onValueChange={(val) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          church_id: val,
+                        }))
+                      }
+                    >
+                      <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                        <SelectValue placeholder="Choose your church" />
+                      </SelectTrigger>
+                      <SelectContent className="z-50 max-h-64 overflow-y-auto">
+                        {churches?.map((church) => (
+                          <SelectItem key={church.id} value={church.id}>
+                            {church.brgy}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Submit Button */}
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-amber-600 hover:bg-amber-700 text-white w-full cursor-pointer"
+              className="bg-amber-700 hover:bg-amber-500 text-white w-full cursor-pointer"
             >
               {loading ? (
                 <>

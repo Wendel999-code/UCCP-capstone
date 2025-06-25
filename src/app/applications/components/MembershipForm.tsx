@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { churchType } from "@/global/type";
 import { ApplyForMembership } from "@/lib/supabase/actions/member";
 import { ArrowLeft, Heart, Loader } from "lucide-react";
 import Link from "next/link";
@@ -16,18 +17,17 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-type churchType = {
-  id: string;
-  brgy: string;
-};
+
 
 const MembershipForm = ({ churches }: { churches: churchType[] }) => {
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState<number | "">("");
   const [gender, setGender] = useState("");
   const [hasChildren, setHasChildren] = useState(false);
   const [address, setAddress] = useState("");
+
   const [church_id, setChurchId] = useState("");
 
   const [loading, setLoading] = useState(false);

@@ -32,6 +32,7 @@ export default function BaptismCertificateTable() {
     { accessorKey: "Lastname", header: "Lastname" },
     { accessorKey: "dateOfBirth", header: "Date of Birth" },
     { accessorKey: "requestedDate", header: "Requested On" },
+    { accessorKey: "email", header: "Email" },
     { accessorKey: "status", header: "Status" },
     {
       id: "actions",

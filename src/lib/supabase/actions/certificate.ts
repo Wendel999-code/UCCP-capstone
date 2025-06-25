@@ -4,14 +4,14 @@ import supabase from "../client";
 export async function RequestCertificate(
   data: Omit<CertificateRequest, "id" | "status">
 ) {
-  const { firstName, lastName, email, date_of_birth, circuit } = data;
+  const { firstName, lastName, email, date_of_birth, church_id } = data;
 
   const requiredFields = {
     firstName,
     lastName,
     email,
     date_of_birth,
-    circuit,
+    church_id,
   };
 
   const missingFields = Object.entries(requiredFields)
@@ -26,6 +26,13 @@ export async function RequestCertificate(
   }
 
   try {
+    const { data: currentUser, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError || !currentUser) {
+      throw userError || new Error("Unauthorized");
+    }
+
     const { data: req, error } = await supabase
       .from("req_certificate")
       .insert([
@@ -34,7 +41,7 @@ export async function RequestCertificate(
           lastName,
           email,
           date_of_birth,
-          circuit,
+          church_id,
         },
       ])
       .select("id")
@@ -55,3 +62,12 @@ export async function RequestCertificate(
     };
   }
 }
+
+// export async function GetReqCertificate() {
+//   try {
+//     const { churchAdmin: admin } = await getChurchAdmin();
+//   } catch (error) {
+//     console.log("error in get req certificate", error);
+//     return [];
+//   }
+// }

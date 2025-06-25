@@ -10,8 +10,8 @@ export interface Member {
   activeStatus: string;
   church_id: string;
   baptism_status?: "Baptized" | "Not Baptized";
-  baptism_date: string;
-  officiant: string;
+  baptism_date?: string;
+  officiant?: string;
   Church?: {
     brgy: string;
   };
@@ -32,7 +32,8 @@ export interface CertificateRequest {
   lastName: string;
   email: string;
   date_of_birth: string;
-  circuit: string;
+  church_id: string;
+  circuit?: string;
   status: "Pending" | "Declined" | "Completed";
 }
 
@@ -48,4 +49,9 @@ export type ApproveMemberInput = {
   memberID: string;
   acceptanceDate: string;
   officiant: string;
+};
+
+export type churchType = {
+  id: string;
+  brgy: string;
 };
