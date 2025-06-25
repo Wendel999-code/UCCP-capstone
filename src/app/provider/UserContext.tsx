@@ -1,16 +1,16 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createContext,
-  useContext,
-  useMemo,
-  useEffect,
   ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
 } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import supabase from "@/lib/supabase/client";
 import { fetchCurrentUser } from "@/lib/supabase/actions/auth";
+import supabase from "@/lib/supabase/client";
 
 type User = {
   role: string;

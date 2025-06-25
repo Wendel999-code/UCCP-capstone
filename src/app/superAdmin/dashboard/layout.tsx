@@ -1,6 +1,6 @@
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import SuperAdminLayoutGuard from "./superAdminLayoutGuard";
+import SuperAdminLayoutGuard from "./components/superAdminLayoutGuard";
 
 export default function AdminLayout({
   children,
@@ -18,4 +18,4 @@ export default function AdminLayout({
       </div>
     </SuperAdminLayoutGuard>
   );
-}
+} 

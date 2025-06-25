@@ -15,7 +15,6 @@ export default function SuperAdminLayoutGuard({
 
   useEffect(() => {
     if (loading) return;
-
     if (!user || user.role !== "super_admin") {
       router.replace("/");
     }
