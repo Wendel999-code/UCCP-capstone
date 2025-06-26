@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -43,7 +44,9 @@ const CertificateAction = ({ memberID }: { memberID: string }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* <CertificatePreview memberID={memberID} /> */}
-        preview
+
+        <DropdownMenuItem>Copy details</DropdownMenuItem>
+        <DropdownMenuItem>preview</DropdownMenuItem>
         <DropdownMenuSeparator />
         <AlertDialog>
           <AlertDialogTrigger asChild>

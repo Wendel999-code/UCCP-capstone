@@ -3,6 +3,7 @@ export interface Member {
   firstName: string;
   lastName: string;
   age: number;
+  date_of_birth: string;
   address: string;
   category: string;
   hasChildren: boolean;
@@ -32,7 +33,7 @@ export interface CertificateRequest {
   lastName: string;
   email: string;
   date_of_birth: string;
-  created_at: string;
+  created_at?: string;
   church_id?: string;
   status: "Pending" | "Declined" | "Completed";
   Church?: {

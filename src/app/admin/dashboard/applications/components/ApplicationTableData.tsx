@@ -100,6 +100,24 @@ export function ApplicationTableData({
       cell: ({ row }) => <p className="ml-3">{row.getValue("age")}</p>,
     },
     {
+      accessorKey: "date_of_birth",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="h-8 px-2"
+          >
+            Date of Birth
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <p className="ml-3">{row.getValue("date_of_birth")}</p>
+      ),
+    },
+    {
       accessorKey: "gender",
       header: "gender",
       cell: ({ row }) => <div>{row.getValue("gender")}</div>,

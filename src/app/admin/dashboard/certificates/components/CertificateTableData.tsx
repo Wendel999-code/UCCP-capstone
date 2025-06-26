@@ -137,9 +137,9 @@ export function CertificateTableData({
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const member = row.original;
+        const certificate = row.original;
 
-        return <CertificateAction memberID={member.id} />;
+        return <CertificateAction memberID={certificate.id} />;
       },
     },
   ];

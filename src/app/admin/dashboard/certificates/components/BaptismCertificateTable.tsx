@@ -75,7 +75,7 @@ export default function BaptismCertificateTable({
                         .getColumn("firstName")
                         ?.setFilterValue(e.target.value)
                     }
-                    className="pl-6 w-[120px] h-[36px] text-[11px] text-muted-foreground"
+                    className="pl-6 w-[200px] h-[36px] text-[11px] text-muted-foreground"
                   />
                 </div>
               </div>

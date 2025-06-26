@@ -80,7 +80,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
                   onChange={(e) =>
                     table.getColumn("firstName")?.setFilterValue(e.target.value)
                   }
-                  className="pl-6 w-[110px] h-[36px] text-[11px] text-muted-foreground"
+                  className="pl-6 w-[200px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 
@@ -111,7 +111,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
               </Select>
 
               {/* Status Filter */}
-              <Select
+              {/* <Select
                 value={
                   (table
                     .getColumn("activeStatus")
@@ -133,7 +133,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
                     </SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
 
             {/* Column Toggle + Export */}

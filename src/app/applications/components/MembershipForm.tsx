@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -17,16 +18,14 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-
-
 const MembershipForm = ({ churches }: { churches: churchType[] }) => {
-  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState<number | "">("");
   const [gender, setGender] = useState("");
   const [hasChildren, setHasChildren] = useState(false);
   const [address, setAddress] = useState("");
+  const [date_of_birth, setDateOfBirth] = useState("");
 
   const [church_id, setChurchId] = useState("");
 
@@ -49,6 +48,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
         gender,
         hasChildren,
         church_id,
+        date_of_birth,
       };
 
       const result = await ApplyForMembership(membershipData);
@@ -155,6 +155,22 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                         e.target.value === "" ? "" : Number(e.target.value)
                       )
                     }
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="Date of Birth"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Date of Birth
+                  </label>
+                  <Input
+                    id="Date of Birth"
+                    type="date"
+                    value={date_of_birth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
                     placeholder="0"
                   />

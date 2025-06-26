@@ -33,18 +33,18 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-const getStatusColor = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case "active":
-      return " text-green-800 px-2 py-1 rounded-md font-medium w-full";
-    case "pending":
-      return " text-orange-500 px-2 py-1 rounded-md font-medium w-full";
-    case "inactive":
-      return " text-red-800 px-2 py-1 rounded-md font-medium w-full";
-    default:
-      return " text-gray-800 px-2 py-1 rounded-md font-medium w-full";
-  }
-};
+// const getStatusColor = (status: string) => {
+//   switch (status?.toLowerCase()) {
+//     case "active":
+//       return " text-green-800 px-2 py-1 rounded-md font-medium w-full";
+//     case "pending":
+//       return " text-orange-500 px-2 py-1 rounded-md font-medium w-full";
+//     case "inactive":
+//       return " text-red-800 px-2 py-1 rounded-md font-medium w-full";
+//     default:
+//       return " text-gray-800 px-2 py-1 rounded-md font-medium w-full";
+//   }
+// };
 
 export function TablesData({ members }: { members: Member[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -113,6 +113,26 @@ export function TablesData({ members }: { members: Member[] }) {
         <p className="ml-3 text-[14px]">{row.getValue("age")}</p>
       ),
     },
+
+    {
+      accessorKey: "date_of_birth",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-[12px] px-2"
+          >
+            Date of Birth
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <p className="ml-3 text-[14px]">{row.getValue("date_of_birth")}</p>
+      ),
+    },
+
     {
       accessorKey: "gender",
       header: ({ column }) => {
@@ -130,6 +150,25 @@ export function TablesData({ members }: { members: Member[] }) {
       ),
     },
 
+    // {
+    //   accessorKey: "date_of_birth",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //         className="h-8 px-2"
+    //       >
+    //         Date of Birth
+    //         <ArrowUpDown className="ml-2 h-4 w-4" />
+    //       </Button>
+    //     );
+    //   },
+    //   cell: ({ row }) => (
+    //     <p className="ml-3 w-[20px]">{row.getValue("date_of_birth")}</p>
+    //   ),
+    // },
+
     {
       accessorKey: "category",
       header: "Category",
@@ -144,39 +183,39 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
     },
-    {
-      accessorKey: "activeStatus",
-      header: "Status",
-      cell: ({ row }) => {
-        const status = row.getValue("activeStatus") as string;
-        return (
-          <p className={`${getStatusColor(status)} text-[14px]`}>
-            {status
-              ? status.charAt(0).toUpperCase() + status.slice(1)
-              : "Unknown"}
-          </p>
-        );
-      },
-    },
-    {
-      accessorKey: "baptism_status",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Baptism
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const baptism = row.getValue("baptism_status") as string;
-        return <p className="text-[14px]"> {baptism}</p>;
-      },
-    },
+    // {
+    //   accessorKey: "activeStatus",
+    //   header: "Status",
+    //   cell: ({ row }) => {
+    //     const status = row.getValue("activeStatus") as string;
+    //     return (
+    //       <p className={`${getStatusColor(status)} text-[14px]`}>
+    //         {status
+    //           ? status.charAt(0).toUpperCase() + status.slice(1)
+    //           : "Unknown"}
+    //       </p>
+    //     );
+    //   },
+    // },
+    // {
+    //   accessorKey: "baptism_status",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //         className="h-8 px-2"
+    //       >
+    //         Baptism
+    //         <ArrowUpDown className="ml-2 h-4 w-4" />
+    //       </Button>
+    //     );
+    //   },
+    //   cell: ({ row }) => {
+    //     const baptism = row.getValue("baptism_status") as string;
+    //     return <p className="text-[14px]"> {baptism}</p>;
+    //   },
+    // },
 
     {
       accessorKey: "circuit",

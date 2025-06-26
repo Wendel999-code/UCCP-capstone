@@ -14,12 +14,21 @@ export async function ApplyForMembership(
     | "category"
   >
 ) {
-  const { firstName, lastName, age, address, gender, hasChildren, church_id } =
-    data;
+  const {
+    firstName,
+    lastName,
+    age,
+    address,
+    gender,
+    hasChildren,
+    church_id,
+    date_of_birth,
+  } = data;
 
   const requiredFields = {
     firstName,
     lastName,
+    date_of_birth,
     age,
     address,
     gender,
@@ -64,6 +73,7 @@ export async function ApplyForMembership(
         {
           firstName,
           lastName,
+          date_of_birth,
           age,
           address,
           gender,
