@@ -14,6 +14,7 @@ import {
   type ColumnFiltersState,
   type SortingState,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 import SuperAdminAction from "./SuperAdminAction";
 
@@ -34,18 +35,18 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-const getStatusColor = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case "active":
-      return " text-green-800 px-2 py-1 rounded-md font-medium w-full";
-    case "pending":
-      return " text-orange-500 px-2 py-1 rounded-md font-medium w-full";
-    case "inactive":
-      return " text-red-800 px-2 py-1 rounded-md font-medium w-full";
-    default:
-      return " text-gray-800 px-2 py-1 rounded-md font-medium w-full";
-  }
-};
+// const getStatusColor = (status: string) => {
+//   switch (status?.toLowerCase()) {
+//     case "active":
+//       return " text-green-800 px-2 py-1 rounded-md font-medium w-full";
+//     case "pending":
+//       return " text-orange-500 px-2 py-1 rounded-md font-medium w-full";
+//     case "inactive":
+//       return " text-red-800 px-2 py-1 rounded-md font-medium w-full";
+//     default:
+//       return " text-gray-800 px-2 py-1 rounded-md font-medium w-full";
+//   }
+// };
 
 export function SuperAdminTablesData({ members }: { members: Member[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -145,46 +146,45 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
         );
       },
     },
+    // {
+    //   accessorKey: "activeStatus",
+    //   header: "Status",
+    //   cell: ({ row }) => {
+    //     const status = row.getValue("activeStatus") as string;
+    //     return (
+    //       <p className={`${getStatusColor(status)} text-[14px] `}>
+    //         {status
+    //           ? status.charAt(0).toUpperCase() + status.slice(1)
+    //           : "Unknown"}
+    //       </p>
+    //     );
+    //   },
+    // },
     {
-      accessorKey: "activeStatus",
-      header: "Status",
+      accessorKey: "date_of_birth",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          Date of Birth
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => {
-        const status = row.getValue("activeStatus") as string;
-        return (
-          <p className={`${getStatusColor(status)} text-[14px] `}>
-            {status
-              ? status.charAt(0).toUpperCase() + status.slice(1)
-              : "Unknown"}
-          </p>
-        );
-      },
-    },
-    {
-      accessorKey: "baptism_status",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Baptism
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const baptism = row.getValue("baptism_status") as string;
-        return (
-          <p
-            className={`text-[14px] ${
-              baptism === "Baptized" ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {" "}
-            {baptism}
-          </p>
-        );
+        const rawDate = row.getValue("date_of_birth");
+        const parsedDate =
+          rawDate && typeof rawDate === "string"
+            ? new Date(rawDate)
+            : undefined;
+
+        const formatted =
+          parsedDate && !isNaN(parsedDate.getTime())
+            ? format(parsedDate, "MMMM d, yyyy")
+            : "N/A";
+
+        return <p className="ml-3 text-[14px]">{formatted}</p>;
       },
     },
 

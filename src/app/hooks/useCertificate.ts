@@ -11,3 +11,17 @@ export const useGetReqCertificate = () =>
       return res.data;
     },
   });
+
+// export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
+//   useQuery<GeneratedCertificate>({
+//     queryKey: ["req-certificate-ByID", reqID],
+//     queryFn: async () => {
+//       const res = await GetReqCertificateByID(reqID);
+//       if (!res) throw new Error("No certificate found");
+
+//       console.log(res);
+//       return res;
+//     },
+//     enabled: open,
+//     refetchOnWindowFocus: false,
+//   });

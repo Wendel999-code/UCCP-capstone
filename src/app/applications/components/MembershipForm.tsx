@@ -70,9 +70,9 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center  px-4 py-12">
       <div className="max-w-2xl w-full space-y-8">
-        <div className="rounded-lg border bg-white p-8 shadow-md">
+        <div className="rounded-lg border  p-8 shadow-md">
           <div className="mb-6">
             <Link
               href="/"

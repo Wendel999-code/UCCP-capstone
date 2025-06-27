@@ -27,6 +27,15 @@ export interface Baptismal_Record {
   member_id: string;
 }
 
+export interface GeneratedCertificate {
+  baptism_date: string;
+  officiant: string;
+  firstName: string;
+  lastName: string;
+  date_of_birth: string;
+  circuit: string;
+}
+
 export interface CertificateRequest {
   id: string;
   firstName: string;
@@ -35,9 +44,13 @@ export interface CertificateRequest {
   date_of_birth: string;
   created_at?: string;
   church_id?: string;
-  status: "Pending" | "Declined" | "Completed";
+  status?: "Pending" | "Declined" | "Completed";
   Church?: {
     brgy?: string;
+  };
+  Baptismal_Record?: {
+    baptism_date?: string;
+    officiant?: string;
   };
 }
 

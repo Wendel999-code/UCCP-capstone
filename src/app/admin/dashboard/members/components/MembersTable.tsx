@@ -36,11 +36,15 @@ import {
 } from "@/components/ui/table";
 
 import { Member } from "@/global/type";
+import { useState } from "react";
+import AddMemberModal from "./AddMemberModal";
 import Pagination from "./Pagination";
 import { TablesData } from "./TablesData";
 
 export default function MembersTable({ members }: { members: Member[] }) {
   const { table, columns } = TablesData({ members });
+
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   return (
     <div className="space-y-2 w-full">
@@ -54,6 +58,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
               </CardDescription>
             </div>
             <Button
+              onClick={() => setAddModalOpen(true)}
               size={"sm"}
               className="h-7 px-3 text-[12px] cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black "
             >
@@ -234,6 +239,8 @@ export default function MembersTable({ members }: { members: Member[] }) {
           <Pagination table={table} />
         </CardContent>
       </Card>
+
+      <AddMemberModal open={addModalOpen} setOpen={setAddModalOpen} />
     </div>
   );
 }

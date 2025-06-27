@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { ManageChurchById } from "@/lib/supabase/actions/church";
 import { GetPendingApplicationsCount } from "@/lib/supabase/actions/member";
+import { useQuery } from "@tanstack/react-query";
 
 export const useSidebarData = () =>
   useQuery({
@@ -15,7 +15,7 @@ export const useSidebarData = () =>
         throw new Error("Failed to fetch sidebar data");
 
       return {
-        brgy: churchRes.brgy,
+        church: churchRes.church,
         pendingCount: countRes.count,
       };
     },

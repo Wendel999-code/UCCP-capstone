@@ -15,6 +15,8 @@ import { ArrowUpDown } from "lucide-react";
 import React from "react";
 import ApplicationAction from "./ApplicationAction";
 
+import { format } from "date-fns";
+
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {
     case "UCM":
@@ -101,21 +103,30 @@ export function ApplicationTableData({
     },
     {
       accessorKey: "date_of_birth",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Date of Birth
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <p className="ml-3">{row.getValue("date_of_birth")}</p>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          Date of Birth
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => {
+        const rawDate = row.getValue("date_of_birth");
+        const parsedDate =
+          rawDate && typeof rawDate === "string"
+            ? new Date(rawDate)
+            : undefined;
+
+        const formatted =
+          parsedDate && !isNaN(parsedDate.getTime())
+            ? format(parsedDate, "MMMM d, yyyy")
+            : "N/A";
+
+        return <p className="ml-3 text-[14px]">{formatted}</p>;
+      },
     },
     {
       accessorKey: "gender",

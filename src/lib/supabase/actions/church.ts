@@ -27,7 +27,7 @@ export async function ManageChurchById() {
 
     const { data, error: churchError } = await supabase
       .from("Church")
-      .select("brgy")
+      .select("brgy,id")
       .eq("id", admin?.church_id)
       .single();
 
@@ -35,7 +35,7 @@ export async function ManageChurchById() {
 
     return {
       success: true,
-      brgy: data.brgy,
+      church: data,
     };
   } catch (error) {
     console.error("Error in Manage Church by Id:", error);

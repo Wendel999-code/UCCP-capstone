@@ -11,9 +11,9 @@ import {
   type ColumnFiltersState,
   type SortingState,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
-import CertificateAction from "./CertificateAction";
 
 export function CertificateTableData({
   certificates,
@@ -68,21 +68,30 @@ export function CertificateTableData({
     },
     {
       accessorKey: "date_of_birth",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Date of Birth
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <p className="ml-3">{row.getValue("date_of_birth")}</p>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          Date of Birth
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => {
+        const rawDate = row.getValue("date_of_birth");
+        const parsedDate =
+          rawDate && typeof rawDate === "string"
+            ? new Date(rawDate)
+            : undefined;
+
+        const formatted =
+          parsedDate && !isNaN(parsedDate.getTime())
+            ? format(parsedDate, "MMMM d, yyyy")
+            : "N/A";
+
+        return <p className="ml-3 text-[14px]">{formatted}</p>;
+      },
     },
     {
       accessorKey: "email",
@@ -136,11 +145,11 @@ export function CertificateTableData({
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => {
-        const certificate = row.original;
+      // cell: ({ row }) => {
+      //   const certificate = row.original;
 
-        return <CertificateAction memberID={certificate.id} />;
-      },
+      //   return <CertificateAction  />;
+      // },
     },
   ];
 

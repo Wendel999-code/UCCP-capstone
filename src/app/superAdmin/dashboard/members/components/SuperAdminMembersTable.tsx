@@ -1,7 +1,7 @@
 "use client";
 
 import { flexRender } from "@tanstack/react-table";
-import { ChevronDown, Download, Filter, Plus, Search } from "lucide-react";
+import { ChevronDown, Download, Filter, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,13 +57,13 @@ export default function SuperAdminMembersTable({
                 A comprehensive list of all church members
               </CardDescription>
             </div>
-            <Button
+            {/* <Button
               size={"sm"}
               className="h-7 px-3 text-[12px] cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black "
             >
               <Plus className="mr-1 h-3 w-3" />
               Add Member
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
 
@@ -73,7 +73,7 @@ export default function SuperAdminMembersTable({
             <div className="flex flex-wrap items-center gap-2">
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-2 top-[8px] h-3 w-3 text-muted-foreground" />
+                <Search className="absolute left-2 top-[13px] h-3 w-3 text-muted-foreground" />
                 <Input
                   placeholder="Search..."
                   value={
@@ -84,7 +84,7 @@ export default function SuperAdminMembersTable({
                   onChange={(e) =>
                     table.getColumn("firstName")?.setFilterValue(e.target.value)
                   }
-                  className="pl-6 w-[110px] h-[36px] text-[11px] text-muted-foreground"
+                  className="pl-6 w-[200px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 
@@ -119,7 +119,7 @@ export default function SuperAdminMembersTable({
               </Select>
 
               {/* Status Filter */}
-              <Select
+              {/* <Select
                 value={
                   (table
                     .getColumn("activeStatus")
@@ -141,7 +141,7 @@ export default function SuperAdminMembersTable({
                     </SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
+              </Select> */}
 
               <Select
                 value={

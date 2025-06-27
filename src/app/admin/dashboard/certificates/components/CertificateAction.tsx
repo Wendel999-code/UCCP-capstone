@@ -22,11 +22,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 
-const CertificateAction = ({ memberID }: { memberID: string }) => {
+const CertificateAction = ({ reqId }: { reqId: string }) => {
   // const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
 
   // const handleDeleteApplication = async () => {
-  //   deleteMember(memberID, {
+  //   deleteMember(reqId, {
   //     onSuccess: () => toast.success("Application deleted successfully"),
   //     onError: (error) => toast.error(error.message),
   //   });
@@ -41,12 +41,22 @@ const CertificateAction = ({ memberID }: { memberID: string }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/* <CertificatePreview memberID={memberID} /> */}
+        {/* <CertificatePreview reqId={reqId} /> */}
 
-        <DropdownMenuItem>Copy details</DropdownMenuItem>
-        <DropdownMenuItem>preview</DropdownMenuItem>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Button
+            className=" text-blue-600 border-none w-full cursor-pointer"
+            variant={"outline"}
+            size={"sm"}
+          >
+            Copy Details
+          </Button>
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -54,7 +64,7 @@ const CertificateAction = ({ memberID }: { memberID: string }) => {
               {" "}
               <Button
                 variant={"outline"}
-                className="text-red-600 border-none cursor-pointer"
+                className="text-red-600 border-none cursor-pointer  w-full"
               >
                 Delete
               </Button>

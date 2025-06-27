@@ -1,27 +1,27 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
-  Calendar,
-  Home,
   Bell,
+  Calendar,
   File,
+  Home,
+  Loader,
+  LogOut,
   UserCheck,
   Users,
-  LogOut,
-  Loader,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
+import { useSidebarData } from "@/app/hooks/useSideBar";
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Logout } from "@/lib/supabase/actions/auth";
+import supabase from "@/lib/supabase/client";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Skeleton } from "@/components/ui/skeleton";
-import supabase from "@/lib/supabase/client";
-import { Logout } from "@/lib/supabase/actions/auth";
-import { motion } from "framer-motion";
-import { useSidebarData } from "@/app/hooks/useSideBar";
 
 const SideBar = () => {
   const pathname = usePathname();
@@ -79,9 +79,9 @@ const SideBar = () => {
     >
       <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
         {isLoading ? (
-          <Skeleton className="rounded-2xl text-center w-[180px] h-[24px]" />
+          <Skeleton className="rounded-2xl dark:bg-gray-900 text-center w-[180px] h-[24px]" />
         ) : (
-          data?.brgy
+          data?.church?.brgy
         )}
       </h1>
 

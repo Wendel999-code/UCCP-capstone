@@ -1,6 +1,7 @@
 import { Member } from "@/global/type";
 
 import supabase from "../client";
+import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
 
 export async function ApplyForMembership(
@@ -266,6 +267,7 @@ export async function ApproveMembership(
           baptism_date: acceptanceOfDate,
           officiant,
           circuit: church.brgy,
+          church_id: churchAdmin.church_id,
         },
       ])
       .select()
@@ -349,8 +351,6 @@ export async function GetMemberByID(MemberID: string) {
 
     if (baptismError) throw baptismError;
 
-    console.log("Member details:", baptism_record);
-
     return {
       success: true,
       data: { ...data, ...baptism_record },
@@ -387,5 +387,88 @@ export async function GetAllMembersBySuperAdmin() {
       message: "Failed to retrieve members",
       data: [],
     };
+  }
+}
+
+export async function addMemberAction(
+  initialState: unknown,
+  formData: FormData
+) {
+  const raw = {
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    age: formData.get("age"),
+    date_of_birth: formData.get("date_of_birth"),
+    gender: formData.get("gender"),
+    category: formData.get("category"),
+    address: formData.get("address"),
+    church_id: formData.get("church_id"),
+    circuit: formData.get("circuit"),
+    baptismDate: formData.get("baptismDate"),
+    officiant: formData.get("officiant"),
+  };
+
+  const parsed = memberSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return { success: false, errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const {
+    firstName,
+    lastName,
+    age,
+    date_of_birth,
+    gender,
+    category,
+    address,
+    church_id,
+    baptismDate,
+    officiant,
+    circuit,
+  } = parsed.data;
+
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { data: memberData, error: memberError } = await supabase
+      .from("member")
+      .insert({
+        firstName,
+        lastName,
+        age,
+        date_of_birth,
+        gender,
+        category,
+        address,
+        church_id,
+        activeStatus: "active",
+        baptism_status: "Baptized",
+      })
+      .eq("church_id", admin.church_id)
+      .select("id")
+      .single();
+
+    if (memberError) throw memberError;
+
+    const { data: CertData, error: CertError } = await supabase
+      .from("baptismal_record")
+      .insert({
+        member_id: memberData.id,
+        church_id: admin.church_id,
+        circuit,
+        baptism_date: baptismDate,
+        officiant,
+        fullName: `${lastName}  ${firstName}`,
+      })
+      .eq("church_id", admin.church_id)
+      .single();
+
+    if (CertError) throw CertError;
+
+    return { success: true };
+  } catch (error) {
+    console.log("error in add member action", error);
+    return;
   }
 }
