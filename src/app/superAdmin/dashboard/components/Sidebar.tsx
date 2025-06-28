@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Calendar, Home, LogOut, Users } from "lucide-react";
+import { Bell, Calendar, Home, Loader, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -8,13 +8,17 @@ import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logout } from "@/lib/supabase/actions/auth";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 const SuperAdminSideBar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [isLoading, setLoading] = useState(false);
+
   const handleLogout = async () => {
+    setLoading(true);
     try {
       const res = await Logout();
       if (!res.success) {
@@ -25,12 +29,14 @@ const SuperAdminSideBar = () => {
       router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const links = [
     {
-      href: "/superAdmin",
+      href: "/superAdmin/dashboard",
       label: "Dashboard",
       icon: Home,
     },
@@ -97,8 +103,17 @@ const SuperAdminSideBar = () => {
         size="sm"
         className="mt-auto h-9 text-sm font-semibold bg-red-900 text-white hover:bg-red-500 cursor-pointer"
       >
-        Logout
-        <LogOut className="ml-2 h-4 w-4" />
+        {isLoading ? (
+          <>
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          </>
+        ) : (
+          <>
+            {" "}
+            Logout
+            <LogOut className="ml-2 h-4 w-4" />
+          </>
+        )}
       </Button>
     </motion.nav>
   );

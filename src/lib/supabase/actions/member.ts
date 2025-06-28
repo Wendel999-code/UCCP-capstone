@@ -301,23 +301,30 @@ export async function DeleteMember(memberID: string) {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
 
-    let query = supabase.from("member").delete().eq("id", memberID);
-
     if (admin.role === "church_admin") {
-      query = query.eq("church_id", admin.church_id);
+      const { data: deletedMember, error } = await supabase
+        .from("member")
+        .delete()
+        .eq("id", memberID)
+        .eq("church_id", admin.church_id)
+        .single();
+
+      if (error) throw error;
+
+      console.log("Deleted member (church_admin):", deletedMember);
+
+      return {
+        success: true,
+        message: "Member deleted successfully",
+      };
     }
-    const { data: deletedMember, error } = await query.single();
-
-    if (error) throw error;
-
-    console.log("deleted member:", deletedMember);
 
     return {
-      success: true,
-      message: "Member deleted successfully",
+      success: false,
+      message: "Unauthorized: insufficient permissions to delete member",
     };
   } catch (error) {
-    console.error("Error deleting member :", error);
+    console.error("Error deleting member:", error);
     return {
       success: false,
       message: "Failed to delete member",
@@ -354,6 +361,56 @@ export async function GetMemberByID(MemberID: string) {
     return {
       success: true,
       data: { ...data, ...baptism_record },
+    };
+  } catch (error) {
+    console.error("Error in getting member by id:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve member details",
+    };
+  }
+}
+
+export async function GetMemberByIDBySuperAdmin(memberID: string) {
+  if (!memberID) {
+    return {
+      success: false,
+      message: "Member ID is required",
+    };
+  }
+
+  try {
+    const admin = await SuperAdmin();
+
+    console.log("Admin role:", admin.role);
+
+    if (admin.role === "super_admin") {
+      const { data, error } = await supabase
+        .from("member")
+        .select("*, Church:church_id(brgy)")
+        .eq("id", memberID)
+        .eq("activeStatus", "active")
+        .single();
+
+      if (error) throw error;
+
+      const { data: baptism_record, error: baptismError } = await supabase
+        .from("baptismal_record")
+        .select("baptism_date, officiant")
+        .eq("member_id", memberID)
+        .maybeSingle();
+
+      if (baptismError) throw baptismError;
+
+      return {
+        success: true,
+        data: { ...data, ...baptism_record },
+      };
+    }
+
+    return {
+      success: false,
+      message: "Unauthorized: insufficient permissions to get member details",
     };
   } catch (error) {
     console.error("Error in getting member by id:", error);
@@ -470,5 +527,46 @@ export async function addMemberAction(
   } catch (error) {
     console.log("error in add member action", error);
     return;
+  }
+}
+
+export async function DeleteMemberBySuperAdmin(memberID: string) {
+  if (!memberID) {
+    return {
+      success: false,
+      message: "Member ID is required",
+    };
+  }
+
+  try {
+    const admin = await SuperAdmin();
+
+    if (admin.role === "super_admin") {
+      const { data: deletedMember, error } = await supabase
+        .from("member")
+        .delete()
+        .eq("id", memberID)
+        .single();
+
+      if (error) throw error;
+
+      console.log("Deleted member (super_admin):", deletedMember);
+
+      return {
+        success: true,
+        message: "Member deleted successfully",
+      };
+    }
+
+    return {
+      success: false,
+      message: "Unauthorized: insufficient permissions to delete member",
+    };
+  } catch (error) {
+    console.error("Error deleting member:", error);
+    return {
+      success: false,
+      message: "Failed to delete member",
+    };
   }
 }

@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addMemberAction } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
@@ -77,16 +84,48 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
             type="date"
             error={state?.errors?.date_of_birth}
           />
-          <InputBlock
-            name="gender"
-            label="Gender"
-            error={state?.errors?.gender}
-          />
-          <InputBlock
-            name="category"
-            label="Category"
-            error={state?.errors?.category}
-          />
+          <div>
+            <Label htmlFor="gender" className="text-xs text-gray-600">
+              Gender
+            </Label>
+            <Select name="gender">
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select your gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+            {state?.errors?.category && (
+              <p className="text-red-500 text-xs mt-1">
+                {state.errors.category.join(", ")}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="category" className="text-xs text-gray-600">
+              Category
+            </Label>
+            <Select name="category">
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="CHILDREN">CHILDREN</SelectItem>
+                <SelectItem value="CYAF">CYAF</SelectItem>
+                <SelectItem value="CYF">CYF</SelectItem>
+                <SelectItem value="CWA">CWA</SelectItem>
+                <SelectItem value="UCM">UCM</SelectItem>
+              </SelectContent>
+            </Select>
+            {state?.errors?.category && (
+              <p className="text-red-500 text-xs mt-1">
+                {state.errors.category.join(", ")}
+              </p>
+            )}
+          </div>
+
           <InputBlock
             name="address"
             label="Address"

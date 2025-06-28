@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeleteMember } from "@/app/hooks/useMember";
+import { useDeleteMemberBySuperAdmin } from "@/app/hooks/useMember";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,28 +20,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { GetMemberByIDBySuperAdmin } from "@/lib/supabase/actions/member";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
-import { ViewMemberModal } from "@/app/admin/dashboard/members/components/ViewMemberModal";
-import { GetMemberByID } from "@/lib/supabase/actions/member";
-import { useQueryClient } from "@tanstack/react-query";
+import { ViewMemberBySuperAdmin } from "./ViewMemberBySuperAdmin";
 
 const SuperAdminAction = ({ memberID }: { memberID: string }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [openViewMember, setOpenViewMember] = useState(false);
 
-  const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
+  const { mutate: deleteMember, isPending: isDeleting } =
+    useDeleteMemberBySuperAdmin();
 
   const queryClient = useQueryClient();
 
   const handlePrefetch = () => {
     queryClient.prefetchQuery({
-      queryKey: ["member-details", memberID],
+      queryKey: ["member-details-super-admin", memberID],
       queryFn: async () => {
-        const res = await GetMemberByID(memberID);
+        const res = await GetMemberByIDBySuperAdmin(memberID);
         if (!res.success) throw new Error(res.message);
         return res.data;
       },
@@ -49,6 +49,12 @@ const SuperAdminAction = ({ memberID }: { memberID: string }) => {
   };
 
   const handleDeleteConfirmed = () => {
+    if (!memberID) {
+      toast.error("Member ID is required");
+      setOpenDeleteDialog(false);
+      return;
+    }
+
     deleteMember(memberID, {
       onSuccess: () => {
         toast.success("Member deleted successfully");
@@ -126,7 +132,7 @@ const SuperAdminAction = ({ memberID }: { memberID: string }) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ViewMemberModal
+      <ViewMemberBySuperAdmin
         open={openViewMember}
         setOpen={setOpenViewMember}
         memberID={memberID}

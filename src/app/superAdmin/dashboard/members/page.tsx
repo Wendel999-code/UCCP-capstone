@@ -2,7 +2,6 @@
 
 import { useGetAllmemberBySuperAdmin } from "@/app/hooks/useMember";
 import { TableSkeleton } from "@/components/TableSkeleton";
-import React from "react";
 import SuperAdminMembersTable from "./components/SuperAdminMembersTable";
 
 const Members = () => {

@@ -215,8 +215,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
       enableHiding: false,
       cell: ({ row }) => {
         const member = row.original;
-
-        return <SuperAdminAction memberID={member.id} />;
+        return <SuperAdminAction memberID={member?.id} />;
       },
     },
   ];

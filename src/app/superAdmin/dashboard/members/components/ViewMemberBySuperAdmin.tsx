@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemberDetails } from "@/app/hooks/useMember";
+import { useMemberDetailsBySuperAdmin } from "@/app/hooks/useMember";
 import { cn } from "@/app/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -33,12 +33,12 @@ const RenderField = ({
   </div>
 );
 
-export function ViewMemberModal({
+export function ViewMemberBySuperAdmin({
   open,
   setOpen,
   memberID,
 }: ViewMemberModalProps) {
-  const { data: member, isLoading: isFetching } = useMemberDetails(
+  const { data: member, isLoading: isFetching } = useMemberDetailsBySuperAdmin(
     memberID,
     open
   );

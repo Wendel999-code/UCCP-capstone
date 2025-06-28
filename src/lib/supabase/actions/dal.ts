@@ -15,11 +15,7 @@ export async function getChurchAdmin() {
       .eq("id", currentUser.user.id)
       .single();
 
-    if (
-      adminError ||
-      (churchAdmin?.role !== "church_admin" &&
-        churchAdmin?.role !== "super_admin")
-    ) {
+    if (adminError || churchAdmin?.role !== "church_admin") {
       throw adminError || new Error("Unauthorized access");
     }
 
@@ -47,17 +43,17 @@ export async function SuperAdmin() {
       throw userError || new Error("Unauthorized");
     }
 
-    const { data: Admin, error: adminError } = await supabase
+    const { data: admin, error: adminError } = await supabase
       .from("User")
       .select("role")
       .eq("id", currentUser.user.id)
       .single();
 
-    if (adminError || Admin?.role !== "super_admin") {
+    if (adminError || admin?.role !== "super_admin") {
       throw adminError || new Error("Unauthorized access");
     }
 
-    return Admin;
+    return admin;
   } catch (error) {
     console.log("error in fetching super admin", error);
     throw error;
