@@ -232,11 +232,13 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   </SelectTrigger>
                   <SelectContent className="z-50 max-h-64 overflow-y-auto">
                     {churches.length > 0 ? (
-                      churches.map((church) => (
-                        <SelectItem key={church.id} value={church.id}>
-                          {church.brgy}
-                        </SelectItem>
-                      ))
+                      [...churches]
+                        .sort((a, b) => a.brgy.localeCompare(b.brgy))
+                        .map((church) => (
+                          <SelectItem key={church.id} value={church.id}>
+                            {church.brgy}
+                          </SelectItem>
+                        ))
                     ) : (
                       <div className="p-2 text-sm text-gray-500">
                         No churches found
