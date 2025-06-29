@@ -221,14 +221,14 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   htmlFor="church"
                   className="block text-sm font-medium text-gray-500 text-[12px]"
                 >
-                  Select Circuit
+                  Local Church
                 </label>
                 <Select
                   value={church_id}
                   onValueChange={(val) => setChurchId(val)}
                 >
                   <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
-                    <SelectValue placeholder="Choose your church" />
+                    <SelectValue placeholder="Select your church" />
                   </SelectTrigger>
                   <SelectContent className="z-50 max-h-64 overflow-y-auto">
                     {churches.length > 0 ? (

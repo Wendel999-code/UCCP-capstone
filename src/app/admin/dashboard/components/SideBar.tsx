@@ -1,14 +1,12 @@
 "use client";
 
 import {
-  Bell,
-  Calendar,
   File,
   Home,
   Loader,
   LogOut,
   UserCheck,
-  Users,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -112,21 +110,21 @@ const SideBar = () => {
             label: "Certificates",
             icon: <File className="h-4 w-4" />,
           },
-          {
-            href: "/admin/dashboard/events",
-            label: "Events",
-            icon: <Calendar className="h-4 w-4" />,
-          },
-          {
-            href: "/admin/dashboard/announcements",
-            label: "Announcements",
-            icon: <Bell className="h-4 w-4" />,
-            extra: (
-              <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
-                3
-              </span>
-            ),
-          },
+          // {
+          //   href: "/admin/dashboard/events",
+          //   label: "Events",
+          //   icon: <Calendar className="h-4 w-4" />,
+          // },
+          // {
+          //   href: "/admin/dashboard/announcements",
+          //   label: "Announcements",
+          //   icon: <Bell className="h-4 w-4" />,
+          //   extra: (
+          //     <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
+          //       3
+          //     </span>
+          //   ),
+          // },
         ].map(({ href, label, icon, extra }) => {
           const isActive = pathname === href;
           return (

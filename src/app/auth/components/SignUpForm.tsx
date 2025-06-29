@@ -140,7 +140,7 @@ export default function SignupForm() {
                   value={confirmpassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="pr-10 focus-visible:ring-amber-500 text-black"
+                  className="pr-10 focus-visible:ring-amber-500 text-black dark:text-white"
                 />
                 <button
                   type="button"

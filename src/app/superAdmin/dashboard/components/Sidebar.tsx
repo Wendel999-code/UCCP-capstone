@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Calendar, Home, Loader, LogOut, Users } from "lucide-react";
+import { Home, Loader, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -45,17 +45,17 @@ const SuperAdminSideBar = () => {
       label: "Members",
       icon: Users,
     },
-    {
-      href: "/admin/dashboard/events",
-      label: "Events",
-      icon: Calendar,
-    },
-    {
-      href: "/admin/dashboard/announcements",
-      label: "Announcements",
-      icon: Bell,
-      badge: "3",
-    },
+    // {
+    //   href: "/admin/dashboard/events",
+    //   label: "Events",
+    //   icon: Calendar,
+    // },
+    // {
+    //   href: "/admin/dashboard/announcements",
+    //   label: "Announcements",
+    //   icon: Bell,
+    //   badge: "3",
+    // },
   ];
 
   return (
@@ -70,7 +70,7 @@ const SuperAdminSideBar = () => {
       </h1>
 
       <ul className="space-y-1">
-        {links.map(({ href, label, icon: Icon, badge }) => {
+        {links.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
             <li key={href}>
@@ -87,11 +87,11 @@ const SuperAdminSideBar = () => {
                   <Icon className="h-4 w-4" />
                   {label}
                 </div>
-                {badge && (
+                {/* {badge && (
                   <span className="ml-auto h-5 w-5 text-xs font-semibold text-yellow-900 bg-yellow-200 dark:bg-yellow-400/80 dark:text-yellow-900 flex items-center justify-center rounded-full">
                     {badge}
                   </span>
-                )}
+                )} */}
               </Link>
             </li>
           );

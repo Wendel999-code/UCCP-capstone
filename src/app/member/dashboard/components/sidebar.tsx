@@ -4,7 +4,7 @@ import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logout } from "@/lib/supabase/actions/auth";
 import { motion } from "framer-motion";
-import { Bell, Calendar, File, Home, Loader, LogOut } from "lucide-react";
+import { File, Home, Loader, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -57,22 +57,22 @@ const SideBar = () => {
             label: "Certificates",
             icon: <File className="h-4 w-4" />,
           },
-          {
-            href: "/admin/dashboard/events",
-            label: "Events",
-            icon: <Calendar className="h-4 w-4" />,
-          },
-          {
-            href: "/admin/dashboard/announcements",
-            label: "Announcements",
-            icon: <Bell className="h-4 w-4" />,
-            extra: (
-              <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
-                3
-              </span>
-            ),
-          },
-        ].map(({ href, label, icon, extra }) => {
+          // {
+          //   href: "/admin/dashboard/events",
+          //   label: "Events",
+          //   icon: <Calendar className="h-4 w-4" />,
+          // },
+          // {
+          //   href: "/admin/dashboard/announcements",
+          //   label: "Announcements",
+          //   icon: <Bell className="h-4 w-4" />,
+          //   extra: (
+          //     <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
+          //       3
+          //     </span>
+          //   ),
+          // },
+        ].map(({ href, label, icon }) => {
           const isActive = pathname === href;
           return (
             <li key={href}>
@@ -89,7 +89,6 @@ const SideBar = () => {
                   {icon}
                   {label}
                 </div>
-                {extra}
               </Link>
             </li>
           );

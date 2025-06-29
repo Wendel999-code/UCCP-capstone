@@ -102,7 +102,7 @@ export function ViewMemberModal({
                 value={member.hasChildren ? "Yes" : "No"}
               />
               <RenderField
-                label="Circuit"
+                label="Local Church"
                 value={member.Church?.brgy ?? "N/A"}
               />
               <RenderField

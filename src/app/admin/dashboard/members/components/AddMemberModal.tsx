@@ -139,7 +139,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
               <Skeleton className="h-9 mt-1 rounded-md" />
             ) : (
               <Input
-                name="circuit"
+                name="Local Church"
                 value={data?.church?.brgy ?? ""}
                 className="mt-1 text-amber-500"
                 readOnly

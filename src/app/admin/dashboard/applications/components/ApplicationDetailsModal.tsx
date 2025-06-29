@@ -164,7 +164,6 @@ export default function ApplicationDetailsModal({
               Officiant <span className="text-red-500">*</span>
             </Label>
             <Input
-              placeholder="Fr. Jose"
               value={officiant}
               onChange={(e) => setOfficiant(e.target.value)}
             />
