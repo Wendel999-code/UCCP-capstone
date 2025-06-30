@@ -85,7 +85,7 @@ function About() {
               width={350}
               height={350}
               priority
-              className="ml-10 dark:rounded-md hover:scale-105 transition-transform duration-300"
+              className=" dark:rounded-md hover:scale-105 transition-transform duration-300"
             />
           </motion.div>
         </div>

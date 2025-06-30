@@ -94,62 +94,66 @@ function Header() {
           )}
         </nav>
 
-        {/* Mobile menu toggle button */}
-        <div className="md:hidden  flex">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger className="mr-2">
-              <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
-            </SheetTrigger>
-            <SheetContent className="h-[450px] w-[260px]  rounded-md">
-              <SheetHeader>
-                <SheetTitle className="text-center">
-                  {" "}
-                  <p className="text-xl font-bold tracking-tighter">
-                    <span className="text-red-900">CANA</span>{" "}
-                    <span className="text-amber-500">Circuit</span>
-                  </p>
-                </SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col md:hidden gap-7 items-start ml-4">
-                {navItems.map((section) => (
-                  <Link
-                    key={section}
-                    href={`#${section}`}
-                    onClick={() => setOpen(false)}
-                    className="text-md hover:text-yellow-500 transition-colors"
-                  >
-                    {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </Link>
-                ))}
-                <ModeToggle />
-                {loading ? (
-                  <Skeleton className="h-5 w-12 rounded-md" />
-                ) : user ? (
-                  <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    size="sm"
-                    className="group h-[30px] dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-                  >
-                    Logout
-                    <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1" />
-                  </Button>
-                ) : (
-                  <Link href="/auth/login">
+        <div className="md:hidden flex gap-2">
+          <ModeToggle />
+          <div className="md:hidden  flex">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger className="mr-2">
+                <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
+              </SheetTrigger>
+              <SheetContent className="h-[450px] w-[260px]  rounded-md">
+                <SheetHeader>
+                  <SheetTitle className="text-center">
+                    {" "}
+                    <p className="text-xl font-bold tracking-tighter">
+                      <span className="text-red-900">CANA</span>{" "}
+                      <span className="text-amber-500">Circuit</span>
+                    </p>
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col md:hidden gap-7 items-start ml-4">
+                  {navItems.map((section) => (
+                    <Link
+                      key={section}
+                      href={`#${section}`}
+                      onClick={() => setOpen(false)}
+                      className="text-md hover:text-yellow-500 transition-colors"
+                    >
+                      {section.charAt(0).toUpperCase() + section.slice(1)}
+                    </Link>
+                  ))}
+
+                  {loading ? (
+                    <Skeleton className="h-5 w-12 rounded-md" />
+                  ) : user ? (
                     <Button
+                      onClick={handleLogout}
                       variant="outline"
                       size="sm"
-                      className="group h-[30px] dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
+                      className="group h-[30px] dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
                     >
-                      Sign in
-                      <ArrowRight className="ml-2 h-2 w-2 group-hover:translate-x-1" />
+                      Logout
+                      <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1" />
                     </Button>
-                  </Link>
-                )}
-              </nav>
-            </SheetContent>
-          </Sheet>
+                  ) : (
+                    <Link href="/auth/login">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="group h-[30px] dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
+                      >
+                        Sign in
+                        <ArrowRight className="ml-2 h-2 w-2 group-hover:translate-x-1" />
+                      </Button>
+                    </Link>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
+
+        {/* Mobile menu toggle button */}
       </div>
 
       {/* Mobile Menu */}
