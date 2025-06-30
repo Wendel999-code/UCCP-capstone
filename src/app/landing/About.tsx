@@ -22,46 +22,53 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3 },
+    transition: { duration: 0.4 },
   },
 };
 
 function About() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, {
-    once: false,
+    once: true,
     amount: 0.3,
   });
 
   return (
-    <section id="about" className="py-12 md:px-46" ref={sectionRef}>
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
+    <section
+      id="about"
+      className="py-16 px-4 md:px-8 lg:px-16 bg-background"
+      ref={sectionRef}
+    >
+      <div className="container mx-auto max-w-6xl">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
           {/* Left Column */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="space-y-4"
+            className="space-y-5"
           >
             <motion.h2
               variants={itemVariants}
-              className="text-3xl font-bold tracking-tighter sm:text-4xl text-yellow-800"
+              className="text-3xl md:text-4xl font-bold tracking-tight text-red-900 dark:text-amber-500"
             >
               About Our Church
             </motion.h2>
             <motion.p
               variants={itemVariants}
-              className="text-gray-700 md:text-lg"
+              className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
             >
-              Founded in 1985, Grace Church has been a pillar of spiritual
-              guidance and community support for over three decades. Our
-              congregation has grown from a small group of dedicated believers
-              to a thriving community of faith.
+              Founded in 1985,{" "}
+              <span className="font-semibold text-red-800 dark:text-amber-500">
+                Grace Church
+              </span>{" "}
+              has been a pillar of spiritual guidance and community support for
+              over three decades. Our congregation has grown from a small group
+              of dedicated believers to a thriving community of faith.
             </motion.p>
             <motion.p
               variants={itemVariants}
-              className="text-gray-700 md:text-lg"
+              className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
             >
               We are committed to serving our community through various outreach
               programs, educational initiatives, and spiritual guidance. Our
@@ -71,14 +78,16 @@ function About() {
           </motion.div>
 
           {/* Right Column: Image */}
-          <div className="relative w-full h-80  lg:h-full">
+          <motion.div variants={itemVariants}>
             <Image
               src="/uccp.jpg"
-              alt="uccp"
-              fill
-              className="object-contain rounded-xl  w-auto h-[400px] shadow-md"
+              alt="Grace Church"
+              width={350}
+              height={350}
+              priority
+              className="ml-10 dark:rounded-md hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
