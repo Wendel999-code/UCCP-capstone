@@ -1,62 +1,129 @@
-// import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
-import React from "react";
-import MainCard from "./main-card";
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Heart, Send } from "lucide-react";
+import { useState } from "react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 const Welcome = () => {
+  const [testimonial, setTestimonial] = useState("");
+  const [testimonials, setTestimonials] = useState([
+    {
+      id: 1,
+      name: "Maria Lopez",
+      message:
+        "God has been faithful in providing for my family this month. Praise God for His provision!",
+      verse: "Philippians 4:19",
+    },
+    {
+      id: 2,
+      name: "John Smith",
+      message:
+        "Thankful for the peace that surpasses understanding even in difficult times.",
+      verse: "Philippians 4:7",
+    },
+    {
+      id: 3,
+      name: "John Smith",
+      message:
+        "Thankful for the peace that surpasses understanding even in difficult times.",
+      verse: "Philippians 4:7",
+    },
+    {
+      id: 4,
+      name: "John Smith",
+      message:
+        "Thankful for the peace that surpassases understanding even in difficult times.",
+      verse: "Philippians 4:7",
+    },
+    {
+      id: 5,
+      name: "John Smith",
+      message:
+        "Thankful for the peace that surpasses understanding even in difficult times.",
+      verse: "Philippians 4:7",
+    },
+    {
+      id: 6,
+      name: "John Smith",
+      message:
+        "Thankful for the peace that surpasses understanding even in difficult times.",
+      verse: "Philippians 4:7",
+    },
+  ]);
+
+  const handlePost = () => {
+    if (!testimonial.trim()) return;
+    const newTestimonial = {
+      id: Date.now(),
+      name: "Wendel Johnson", // Replace with dynamic user name
+      message: testimonial.trim(),
+      verse: "",
+    };
+    setTestimonials([newTestimonial, ...testimonials]);
+    setTestimonial("");
+  };
+
   return (
-    <div className="flex flex-col px-12 gap-12 py-8">
-      {/* Top Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-        {/* Welcome Text */}
-        <div className="flex flex-col gap-4">
-          <h1 className="text-4xl lg:text-5xl font-semibold">
-            Welcome, Wendel Johnson{" "}
-            <span className="bg-yellow-50 text-sm font-medium text-yellow-900 p-2 rounded-md ml-2">
-              Member
-            </span>
-          </h1>
-          <span className="text-md text-gray-600 leading-relaxed">
-            "For I know the plans I have for you," declares the LORD, <br />
-            "plans to prosper you and not to harm you, plans to give you hope
-            and a future." <br />
-            <span className="italic">- Jeremiah 29:11</span>
-          </span>
-        </div>
-
-        {/* Prayer Box */}
-        <div className="w-full lg:w-[300px]">
-          <div className="rounded-lg border bg-yellow-50 p-4 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <Heart className="h-4 w-4 text-yellow-600" />
-              <h4 className="font-semibold">Daily Prayer</h4>
+    <div className="flex flex-col max-w-2xl mx-auto   gap-6">
+      {/* Create Testimonial Box */}
+      <Card>
+        <CardContent className="p-1">
+          <div className="flex items-start gap-3 ">
+            <Image
+              src="/uccp.jpg"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full h-10 w-10 object-cover"
+            />
+            <div className="flex-1 flex flex-col gap-2">
+              <Textarea
+                placeholder="Share your testimony or thanksgiving..."
+                value={testimonial}
+                onChange={(e) => setTestimonial(e.target.value)}
+                className="resize-none min-h-[80px] text-[10px] md:text-sm"
+              />
+              <div className="flex justify-end">
+                <Button
+                  onClick={handlePost}
+                  size="sm"
+                  className="bg-yellow-700 cursor-pointer hover:bg-yellow-600 text-white flex items-center gap-1"
+                >
+                  <Send className="h-4 w-4" />
+                  Post Testimonial
+                </Button>
+              </div>
             </div>
-            <p className="text-md  text-yellow-900">
-              "May the God of hope fill you with all joy and peace as you trust
-              in him."
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">Romans 15:13</p>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <MainCard />
+      <Separator />
 
-      {/* Dummy Cards Section
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map((item) => (
-          <div
-            key={item}
-            className="rounded-lg border p-4 shadow-sm bg-white flex flex-col gap-2"
-          >
-            <h3 className="text-lg font-semibold">Card Title {item}</h3>
-            <p className="text-sm text-gray-500">Card description goes here.</p>
-            <Button size="sm" variant="outline">
-              View More
-            </Button>
-          </div>
+      {/* Testimonial Feeds */}
+      <div className="flex flex-col gap-4">
+        {testimonials.map((t) => (
+          <Card key={t.id}>
+            <CardContent className="p-4 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Heart className="h-4 w-4 text-yellow-600" />
+                <h4 className="font-semibold text-yellow-900">{t.name}</h4>
+              </div>
+              <p className="text-sm text-gray-700">{t.message}</p>
+              {t.verse && (
+                <p className="text-xs text-muted-foreground italic">
+                  {t.verse}
+                </p>
+              )}
+            </CardContent>
+          </Card>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

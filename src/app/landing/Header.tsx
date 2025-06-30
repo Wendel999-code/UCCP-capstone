@@ -15,6 +15,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 
@@ -22,10 +24,16 @@ const navItems = ["about", "services", "events", "testimonials", "contact"];
 
 function Header() {
   const { user, loading } = useRedirectIfAuthenticated();
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const handleLogout = async () => {
     const res = await Logout();
     toast[res.success ? "success" : "error"](res.message);
+    if (res.success) {
+      setOpen(false);
+      router.replace("/");
+    }
   };
 
   return (
@@ -35,21 +43,21 @@ function Header() {
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
-      <div className="container flex h-16 items-center justify-between py-16">
+      <div className="container flex h-8  items-center justify-between p-2 py-8  ">
         <Link href="/">
           <div className="px-4 md:px-16">
             <Image
-              src={"/uccp.jpg"}
-              alt="CANA Circuit Logo"
-              width={70}
-              height={80}
-              className="rounded-md w-auto h-20 object-cover transition-transform group-hover:scale-105"
+              src="/uccp.jpg"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full h-10 w-10 object-cover"
             />
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-8 items-center">
+        <nav className="hidden md:flex gap-4 items-end  ">
           {navItems.map((section) => (
             <Link
               key={section}
@@ -88,7 +96,7 @@ function Header() {
 
         {/* Mobile menu toggle button */}
         <div className="md:hidden  flex">
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger className="mr-2">
               <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
             </SheetTrigger>
@@ -96,10 +104,10 @@ function Header() {
               <SheetHeader>
                 <SheetTitle className="text-center">
                   {" "}
-                  <h1 className="text-xl font-bold tracking-tighter">
+                  <p className="text-xl font-bold tracking-tighter">
                     <span className="text-red-900">CANA</span>{" "}
                     <span className="text-amber-500">Circuit</span>
-                  </h1>
+                  </p>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col md:hidden gap-7 items-start ml-4">
@@ -107,6 +115,7 @@ function Header() {
                   <Link
                     key={section}
                     href={`#${section}`}
+                    onClick={() => setOpen(false)}
                     className="text-md hover:text-yellow-500 transition-colors"
                   >
                     {section.charAt(0).toUpperCase() + section.slice(1)}
