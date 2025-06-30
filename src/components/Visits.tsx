@@ -24,9 +24,9 @@ const Visits = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 rounded-full border border-red-300 bg-red-100 px-4 py-1 text-red-800 dark:border-yellow-500 dark:bg-yellow-900/20 dark:text-yellow-300 text-sm font-medium shadow-sm mt-4"
+          className="inline-flex items-center text-center gap-2 rounded-full border border-red-300 bg-red-100 px-4 py-1 text-red-800 dark:border-yellow-500 dark:bg-yellow-900/20 dark:text-yellow-300 text-sm font-medium shadow-sm mt-4"
         >
-          <Eye className="h-4 w-4" />
+          <Eye className="h-4 w-4 text-center" />
           {count.toLocaleString()} visitors
         </motion.div>
       ) : (

@@ -134,7 +134,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
           />
 
           <div>
-            <Label className="text-xs text-gray-600">Circuit</Label>
+            <Label className="text-xs text-gray-600">Local Church</Label>
             {isLoading ? (
               <Skeleton className="h-9 mt-1 rounded-md" />
             ) : (
