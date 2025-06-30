@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Visits from "@/components/Visits";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -88,10 +89,12 @@ function Hero() {
             custom={4}
           >
             <Link href="/applications">
-              <Button className="bg-red-900 cursor-pointer hover:bg-red-800 text-white px-6 py-2.5 text-base font-semibold shadow-red-700 shadow-md hover:shadow-lg hover:shadow-red-600 drop-shadow-[0_0_6px_#7f1d1d] transition-all duration-300 animate-pulse">
+              <Button className="bg-red-900  mt-4 cursor-pointer hover:bg-red-800 text-white px-6 py-2.5 text-base font-semibold shadow-red-700 shadow-md hover:shadow-lg hover:shadow-red-600 drop-shadow-[0_0_6px_#7f1d1d] transition-all duration-300 animate-pulse">
                 Join Our Circuit
               </Button>
             </Link>
+
+            <Visits />
           </motion.div>
         </motion.div>
 
