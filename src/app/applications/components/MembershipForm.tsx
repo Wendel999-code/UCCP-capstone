@@ -232,7 +232,8 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   </SelectTrigger>
                   <SelectContent className="z-50 max-h-64 overflow-y-auto">
                     {churches.length > 0 ? (
-                      [...churches]
+                      churches
+                        .slice()
                         .sort((a, b) => a.brgy.localeCompare(b.brgy))
                         .map((church) => (
                           <SelectItem key={church.id} value={church.id}>

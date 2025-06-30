@@ -115,7 +115,7 @@ export function CertificateTableData({
     },
     {
       accessorKey: "brgy",
-      header: "circuit",
+      header: "Local Church",
       cell: ({ row }) => {
         const circuit = row.original.Church?.brgy;
         return <p className="text-amber-500"> {circuit}</p>;

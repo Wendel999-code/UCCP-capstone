@@ -197,7 +197,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2"
         >
-          Circuit
+          Local Church
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),

@@ -161,7 +161,7 @@ export function ApplicationTableData({
     },
     {
       accessorKey: "circuit",
-      header: "circuit",
+      header: "Local Church",
       cell: ({ row }) => {
         const circuit = row.original.Church?.brgy as string;
         return <p className="text-amber-500"> {circuit}</p>;

@@ -143,7 +143,7 @@ export default function ApplicationDetailsModal({
           />
 
           <div className="sm:col-span-2">
-            <RenderField label="Circuit" value={member?.Church?.brgy ?? ""} />
+            <RenderField label="Local Church" value={member?.Church?.brgy ?? ""} />
           </div>
 
           {/* Acceptance Date (Required) */}

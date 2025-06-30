@@ -151,7 +151,7 @@ export default function RequestPage() {
                       htmlFor="church"
                       className="block text-sm font-medium text-gray-500 text-[12px]"
                     >
-                      Select Circuit
+                      Select Church
                     </label>
                     <Select
                       value={formData.church_id}
@@ -166,11 +166,14 @@ export default function RequestPage() {
                         <SelectValue placeholder="Choose your church" />
                       </SelectTrigger>
                       <SelectContent className="z-50 max-h-64 overflow-y-auto">
-                        {churches?.map((church) => (
-                          <SelectItem key={church.id} value={church.id}>
-                            {church.brgy}
-                          </SelectItem>
-                        ))}
+                        {churches
+                          ?.slice()
+                          .sort((a, b) => a.brgy.localeCompare(b.brgy))
+                          .map((church) => (
+                            <SelectItem key={church.id} value={church.id}>
+                              {church.brgy}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>
