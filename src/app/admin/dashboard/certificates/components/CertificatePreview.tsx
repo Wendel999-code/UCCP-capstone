@@ -1,67 +1,85 @@
-// "use client";
+"use client";
 
-// import { Button } from "@/components/ui/button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import html2canvas from "html2canvas";
+import Image from "next/image";
+import { useRef } from "react";
 
-// export default function CertificatePreview({ reqId }: { reqId: string }) {
-//   const [open, setOpen] = useState(false);
+interface CertificatePreviewProps {
+  userData: {
+    firstName: string;
+    lastName: string;
+    date_of_birth: string;
+    churchName?: string;
+  };
+}
 
-//   // const RenderField = ({
-//   //   label,
-//   //   value,
-//   // }: {
-//   //   label: string;
-//   //   value?: string | number;
-//   // }) => (
-//   //   <div>
-//   //     <Label className="text-xs text-gray-600">{label}</Label>
-//   //     {isFetching ? (
-//   //       <Skeleton className="h-9 mt-1 rounded-md" />
-//   //     ) : (
-//   //       <Input readOnly value={String(value ?? "")} />
-//   //     )}
-//   //   </div>
-//   // );
+export default function CertificatePreview({
+  userData,
+}: CertificatePreviewProps) {
+  const certRef = useRef<HTMLDivElement>(null);
 
-//   return (
-//     <Dialog open={open} onOpenChange={setOpen}>
-//       <DialogTrigger asChild>
-//         <Button
-//           variant="outline"
-//           className="text-blue-500 border-none w-full text-left cursor-pointer"
-//         >
-//           Generate Certificate
-//         </Button>
-//       </DialogTrigger>
-//       <DialogContent className="max-w-lg w-full bg-amber-50 dark:bg-zinc-900 rounded-xl">
-//         <DialogHeader>
-//           <DialogTitle className="text-red-900 dark:text-amber-400 text-2xl font-bold text-center">
-//             Baptismal Certificate
-//           </DialogTitle>
-//         </DialogHeader>
+  const handleDownload = async () => {
+    if (!certRef.current) return;
+    const canvas = await html2canvas(certRef.current, {
+      useCORS: true,
+      scale: 2,
+    });
+    const link = document.createElement("a");
+    link.download = `${userData.firstName}-${userData.lastName}-certificate.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
 
-//         {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-//           <RenderField label="First Name" value={member.firstName} />
-//           <RenderField label="Last Name" value={member?.lastName} />
-//           <RenderField label="Date of Birth" value={member?.date_of_birth} />
-//           <RenderField label="Place of Baptism" value={member?.address} />
-//           <RenderField
-//             label="Officiant"
-//             value={member?.Baptismal_Record?.officiant}
-//           />
-//           <RenderField
-//             label="Date of Baptism"
-//             value={member?.Baptismal_Record?.baptism_date}
-//           />
-//         </div> */}
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
+  if (!userData) {
+    return (
+      <div className="flex items-center justify-center p-6 text-gray-500 dark:text-gray-400">
+        No user data provided.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 p-4 flex flex-col items-center justify-center bg-neutral-50 dark:bg-neutral-900">
+      <div
+        ref={certRef}
+        className="relative w-[350px] sm:w-[500px] md:w-[700px] lg:w-[800px] aspect-[4/3] mx-auto shadow-lg rounded-md overflow-hidden bg-white dark:bg-neutral-800"
+      >
+        {/* Background template */}
+        <Image
+          src="/cert.png"
+          alt="Certificate Template"
+          height={400}
+          width={400}
+          className="object-cover h-auto w-auto "
+        />
+
+        {/* Overlay user data */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-red-900 dark:text-amber-500 drop-shadow">
+            Certificate of Baptism
+          </h2>
+          <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
+            This certifies that
+          </p>
+          <p className="mt-2 text-lg sm:text-xl md:text-2xl font-semibold text-red-800 dark:text-amber-400">
+            {userData.firstName} {userData.lastName}
+          </p>
+          <p className="mt-2 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
+            born on {new Date(userData.date_of_birth).toLocaleDateString()}
+          </p>
+          <p className="mt-2 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
+            was baptized at {userData.churchName}
+          </p>
+        </div>
+      </div>
+
+      <Button
+        onClick={handleDownload}
+        className="bg-amber-700 hover:bg-amber-600 text-white"
+      >
+        Download Certificate
+      </Button>
+    </div>
+  );
+}

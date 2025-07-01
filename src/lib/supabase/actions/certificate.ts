@@ -5,7 +5,8 @@ import { getChurchAdmin } from "./dal";
 export async function RequestCertificate(
   data: Omit<CertificateRequest, "id" | "status">
 ) {
-  const { firstName, lastName, email, date_of_birth, church_id } = data;
+  const { firstName, lastName, email, date_of_birth, church_id, member_id } =
+    data;
 
   const requiredFields = {
     firstName,
@@ -13,6 +14,7 @@ export async function RequestCertificate(
     email,
     date_of_birth,
     church_id,
+    member_id,
   };
 
   const missingFields = Object.entries(requiredFields)
@@ -34,9 +36,7 @@ export async function RequestCertificate(
       throw userError || new Error("Unauthorized");
     }
 
-
     //Todo fix this kasi pwede login kala pero diri ka member
-
     const { data: req, error } = await supabase
       .from("req_certificate")
       .insert([
@@ -46,7 +46,7 @@ export async function RequestCertificate(
           email,
           date_of_birth,
           church_id,
-          member_id: currentUser.user.id,
+          member_id,
         },
       ])
       .select("id")
@@ -77,7 +77,7 @@ export async function GetReqCertificate() {
       .from("req_certificate")
       .select("*, Church:church_id(brgy)")
       .eq("church_id", admin.church_id)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 

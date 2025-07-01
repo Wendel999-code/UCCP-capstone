@@ -281,7 +281,7 @@ export async function ApproveMembership(
       firstName: updatedMember.firstName,
       lastName: updatedMember.lastName,
       church: church.brgy,
-      memberID: `UCCP-${updatedMember.id}`,
+      memberID: updatedMember.id,
       member_email: updatedMember.member_email,
     };
 

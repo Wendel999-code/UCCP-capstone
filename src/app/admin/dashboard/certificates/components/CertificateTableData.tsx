@@ -14,6 +14,7 @@ import {
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
+import CertificateAction from "./CertificateAction";
 
 export function CertificateTableData({
   certificates,
@@ -145,11 +146,11 @@ export function CertificateTableData({
     {
       id: "actions",
       enableHiding: false,
-      // cell: ({ row }) => {
-      //   const certificate = row.original;
+      cell: ({ row }) => {
+        const member = row.original;
 
-      //   return <CertificateAction  />;
-      // },
+        return <CertificateAction memberID={member.member_id} />;
+      },
     },
   ];
 

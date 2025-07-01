@@ -13,6 +13,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -20,17 +26,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { Copy, Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
-const CertificateAction = ({ reqId }: { reqId: string }) => {
-  // const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
+const CertificateAction = ({ memberID }: { memberID: string }) => {
+  const handleCopyMemberId = async () => {
+    await navigator.clipboard.writeText(memberID);
+    toast.success("Member ID copied to clipboard!");
+  };
 
-  // const handleDeleteApplication = async () => {
-  //   deleteMember(reqId, {
-  //     onSuccess: () => toast.success("Application deleted successfully"),
-  //     onError: (error) => toast.error(error.message),
-  //   });
-  // };
+  const handleDelete = async () => {
+    toast.success("Deleted (hook placeholder).");
+  };
 
   return (
     <DropdownMenu>
@@ -40,47 +47,57 @@ const CertificateAction = ({ reqId }: { reqId: string }) => {
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+
+      <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/* <CertificatePreview reqId={reqId} /> */}
+
+        {/* Preview Certificate */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Eye className="mr-2 h-4 w-4 text-amber-600" />
+              <span>Preview Certificate</span>
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl">
+            <DialogTitle>Certificate Preview</DialogTitle>
+            {/* <CertificatePreview memberID={memberID} /> */}
+          </DialogContent>
+        </Dialog>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Button
-            className=" text-blue-600 border-none w-full cursor-pointer"
-            variant={"outline"}
-            size={"sm"}
-          >
-            Copy Details
-          </Button>
+        {/* Copy Member ID */}
+        <DropdownMenuItem onClick={handleCopyMemberId}>
+          <Copy className="mr-2 h-4 w-4 text-blue-600" />
+          <span>Copy Member ID</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
+
+        {/* Delete Confirmation */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div>
-              {" "}
-              <Button
-                variant={"outline"}
-                className="text-red-600 border-none cursor-pointer  w-full"
-              >
-                Delete
-              </Button>
-            </div>
+            <DropdownMenuItem>
+              <Trash2 className="mr-2 h-4 w-4 text-red-600" />
+              <span className="text-red-600">Delete</span>
+            </DropdownMenuItem>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action will permanently delete this request. This cannot be
-                undone.
+                This will permanently delete this certificate request. This
+                action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white">
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>

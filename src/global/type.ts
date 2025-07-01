@@ -42,6 +42,7 @@ export interface CertificateRequest {
   firstName: string;
   lastName: string;
   email: string;
+  member_id: string;
   date_of_birth: string;
   created_at?: string;
   church_id?: string;

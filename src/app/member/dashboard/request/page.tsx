@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RequestCertificate } from "@/lib/supabase/actions/certificate";
+import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { FormEvent, useState } from "react";
@@ -29,6 +30,7 @@ export default function RequestPage() {
     date_of_birth: "",
     email: "",
     church_id: "",
+    member_id: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,11 +47,19 @@ export default function RequestPage() {
       const res = await RequestCertificate(formData);
       if (res.success) {
         toast.success(res.message);
+        setFormData({
+          firstName: "",
+          lastName: "",
+          date_of_birth: "",
+          email: "",
+          church_id: "",
+          member_id: "",
+        });
       } else {
         toast.error(res.message);
       }
     } catch (error) {
-      console.log("error in submit request", error);
+      console.error("Error in submit request:", error);
       toast.error("Something went wrong.");
     } finally {
       setLoading(false);
@@ -57,147 +67,149 @@ export default function RequestPage() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start bg-white dark:bg-zinc-900 p-6 rounded-lg shadow">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="p-4 md:p-6 max-w-5xl mx-auto"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-lg">
         {/* Left: Certificate Image */}
-        <div className="flex justify-center">
-          <Image
-            src="/cert.png"
-            alt="Sample Baptism Certificate"
-            width={500}
-            height={420}
-            className="rounded-md shadow-md mt-5"
-          />
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-center items-center"
+        >
+          <div className="w-52 sm:w-64 md:w-72 lg:w-80 xl:w-96 transition-transform hover:scale-105">
+            <Image
+              src="/cert.png"
+              alt="Sample Baptism Certificate"
+              width={500}
+              height={420}
+              priority
+              className="rounded-md shadow-md dark:shadow-amber-500/20 w-full h-auto object-cover"
+            />
+          </div>
+        </motion.div>
 
         {/* Right: Form */}
-        <fieldset disabled={loading}>
-          <div className="space-y-4">
-            <div className="p-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                <div>
-                  <Label
-                    htmlFor="firstName"
-                    className="text-xs text-muted-foreground"
-                  >
-                    First Name
-                  </Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    placeholder="Juan"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <Label
-                    htmlFor="lastName"
-                    className="text-xs text-muted-foreground"
-                  >
-                    Last Name
-                  </Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Dela Cruz"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Date of Birth */}
-            <div className="p-2">
-              <Label
-                htmlFor="dateOfBirth"
-                className="text-xs text-muted-foreground px-1"
-              >
-                Date of Birth
-              </Label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="firstName">First Name</Label>
               <Input
-                id="dateOfBirth"
-                name="date_of_birth"
-                type="date"
-                value={formData.date_of_birth}
+                className="mt-1"
+                id="firstName"
+                name="firstName"
+                placeholder="Juan"
+                value={formData.firstName}
                 onChange={handleChange}
+                required
               />
             </div>
-
-            {/* Email */}
-            <div className="p-2">
-              <Label htmlFor="email" className="text-xs text-muted-foreground">
-                Email
-              </Label>
+            <div>
+              <Label htmlFor="lastName">Last Name</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="juan@example.com"
-                value={formData.email}
+                className="mt-1"
+                id="lastName"
+                name="lastName"
+                placeholder="Dela Cruz"
+                value={formData.lastName}
                 onChange={handleChange}
+                required
               />
             </div>
-
-            {/* Circuit */}
-            <div className="p-2">
-              {isLoading ? (
-                <Skeleton className="h-12 w-20" />
-              ) : (
-                <>
-                  <div>
-                    <label
-                      htmlFor="church"
-                      className="block text-sm font-medium text-gray-500 text-[12px]"
-                    >
-                      Select Church
-                    </label>
-                    <Select
-                      value={formData.church_id}
-                      onValueChange={(val) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          church_id: val,
-                        }))
-                      }
-                    >
-                      <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
-                        <SelectValue placeholder="Choose your church" />
-                      </SelectTrigger>
-                      <SelectContent className="z-50 max-h-64 overflow-y-auto">
-                        {churches
-                          ?.slice()
-                          .sort((a, b) => a.brgy.localeCompare(b.brgy))
-                          .map((church) => (
-                            <SelectItem key={church.id} value={church.id}>
-                              {church.brgy}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="bg-amber-700 hover:bg-amber-500 text-white w-full cursor-pointer"
-            >
-              {loading ? (
-                <>
-                  <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
-                </>
-              ) : (
-                "Submit Request"
-              )}
-            </Button>
           </div>
-        </fieldset>
+
+          <div>
+            <Label htmlFor="date_of_birth">Date of Birth</Label>
+            <Input
+              className="mt-1"
+              id="date_of_birth"
+              name="date_of_birth"
+              type="date"
+              value={formData.date_of_birth}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              className="mt-1"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="juan@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="church">Select Church</Label>
+            {isLoading ? (
+              <Skeleton className="h-12 w-full" />
+            ) : (
+              <Select
+                value={formData.church_id}
+                onValueChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    church_id: val,
+                  }))
+                }
+                required
+              >
+                <SelectTrigger className="mt-1 rounded-md border px-3 py-2">
+                  <SelectValue placeholder="Choose your church" />
+                </SelectTrigger>
+                <SelectContent>
+                  {churches
+                    ?.slice()
+                    .sort((a, b) => a.brgy.localeCompare(b.brgy))
+                    .map((church) => (
+                      <SelectItem key={church.id} value={church.id}>
+                        {church.brgy}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="MemberID">Member ID</Label>
+            <Input
+              className="mt-1"
+              id="MemberID"
+              name="member_id"
+              type="text"
+              placeholder="1234567890"
+              value={formData.member_id}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="bg-amber-700 hover:bg-amber-600 text-white w-full"
+          >
+            {loading ? (
+              <>
+                <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
+              </>
+            ) : (
+              "Submit Request"
+            )}
+          </Button>
+        </form>
       </div>
-    </div>
+    </motion.div>
   );
 }

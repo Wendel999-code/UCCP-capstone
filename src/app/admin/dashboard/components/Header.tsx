@@ -42,10 +42,10 @@ const Header = () => {
         <Link href="/admin/dashboard" className="flex items-center">
           <Image
             src="/uccp.jpg"
-            alt="CANA Circuit Logo"
-            width={80}
-            height={48}
-            className="h-16 ml-20 w-auto object-contain dark:rounded-t-full  dark:rounded-b-none rounded-lg transition-transform duration-300 hover:scale-105"
+            alt="Profile"
+            width={40}
+            height={40}
+            className="rounded-full h-12 w-12 object-cover md:ml-22"
           />
         </Link>
 
