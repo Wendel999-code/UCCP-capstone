@@ -20,14 +20,17 @@ const SideBar = () => {
     setLoading(true);
     try {
       const res = await Logout();
+
       if (!res.success) {
         toast.error(res.message);
         return;
       }
+
       toast.success(res.message);
       router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
+      toast.error("An unexpected error occurred during logout.");
     } finally {
       setLoading(false);
     }

@@ -10,6 +10,7 @@ import About from "./landing/About";
 // import NewsLetter from "./landing/NewsLetter";
 import Footer from "./landing/Footer";
 import Header from "./landing/Header";
+import Testimonials from "./landing/Testimonials";
 
 export default function Home() {
   return (
@@ -26,12 +27,14 @@ export default function Home() {
         {/* About Section */}
         <About />
 
+        <Testimonials />
+
         {/*       
         <Services />
 
         <Event />
 
-        <Testimonials />
+      
 
         <Contact />
 

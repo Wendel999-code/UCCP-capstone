@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  File,
-  Home,
-  Loader,
-  LogOut,
-  UserCheck,
-  Users
-} from "lucide-react";
+import { File, Home, Loader, LogOut, UserCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 

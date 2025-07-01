@@ -125,7 +125,6 @@ export const fetchCurrentUser = async () => {
     if (roleError) throw new Error(roleError.message);
 
     return roleData;
-    
   } catch (error) {
     console.log("Failed to fetch current user.", error);
     return null;

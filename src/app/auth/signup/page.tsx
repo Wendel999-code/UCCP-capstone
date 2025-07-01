@@ -1,11 +1,10 @@
-import React from "react";
-import SignupForm from "../components/SignUpForm";
 import Header from "@/app/landing/Header";
+import SignupForm from "../components/SignUpForm";
 
 const page = () => {
   return (
     <>
-     <Header />
+      <Header />
       <SignupForm />
     </>
   );

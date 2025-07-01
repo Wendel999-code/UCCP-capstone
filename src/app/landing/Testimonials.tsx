@@ -1,8 +1,9 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { motion, useAnimationControls } from "framer-motion";
 import Image from "next/image";
-import React from "react";
-import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const testimonials = [
   {
@@ -55,76 +56,104 @@ const testimonials = [
   },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0 },
-};
+function MarqueeRow({ reverse = false, speed = 30 }) {
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    controls.start({
+      x: reverse ? ["-50%", "0%"] : ["0%", "-50%"],
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: speed,
+          ease: "linear",
+        },
+      },
+    });
+  }, [controls, reverse, speed]);
+
+  return (
+    <motion.div
+      className="flex gap-6 w-max"
+      animate={controls}
+      onMouseEnter={() => controls.stop()}
+      onMouseLeave={() =>
+        controls.start({
+          x: reverse ? ["-50%", "0%"] : ["0%", "-50%"],
+          transition: {
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: speed,
+              ease: "linear",
+            },
+          },
+        })
+      }
+    >
+      {[...testimonials, ...testimonials].map((t, idx) => (
+        <Card
+          key={idx}
+          className="
+    w-60  sm:w-72 md:w-80 
+    flex-shrink-0 
+    border border-amber-200 dark:border-amber-700 
+    bg-white dark:bg-neutral-900
+  "
+        >
+          <CardContent className="p-2 sm:p-4">
+            <div className="flex gap-3 sm:gap-4 items-center mb-2 sm:mb-3">
+              <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden ring-2 ring-amber-500 shadow">
+                <Image
+                  src={t.image}
+                  alt={t.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                <h4 className="font-semibold text-red-900 dark:text-amber-500 text-sm sm:text-base">
+                  {t.name}
+                </h4>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                  {t.memberSince}
+                </p>
+              </div>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300 italic text-xs sm:text-sm">
+              "{t.message}"
+            </p>
+          </CardContent>
+        </Card>
+      ))}
+    </motion.div>
+  );
+}
 
 function Testimonials() {
   return (
-    <section id="testimonials" className="py-12 md:py-16 lg:py-20 bg-yellow-50">
-      <motion.div
-        className="container px-4 md:px-6 md:ml-22"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-        viewport={{ once: false, amount: 0.3 }}
-      >
-        <motion.div
-          className="text-center mb-10 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          viewport={{ once: false, amount: 0.2 }}
-        >
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-yellow-800">
+    <section
+      id="testimonials"
+      className="py-16 bg-yellow-50 dark:bg-neutral-950 overflow-hidden"
+    >
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-red-900 dark:text-amber-500">
             Testimonials
           </h2>
-          <p className="mt-4 text-gray-700 md:text-lg">
+          <p className="mt-3 text-gray-700 dark:text-gray-300 md:text-lg">
             Hear from our church family
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-          variants={{
-            show: {
-              transition: {
-                staggerChildren: 0.15,
-              },
-            },
-          }}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
-        >
-          {testimonials.map((t, idx) => (
-            <motion.div
-              key={idx}
-              className="rounded-lg border bg-white p-6 shadow-md hover:shadow-lg transition duration-300"
-              variants={fadeUp}
-            >
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-yellow-500 shadow-md">
-                    <Image
-                      src={t.image}
-                      alt={t.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">{t.name}</h4>
-                    <p className="text-sm text-gray-600">{t.memberSince}</p>
-                  </div>
-                </div>
-                <p className="text-gray-700 italic">"{t.message}"</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
+        <div className="space-y-8">
+          <MarqueeRow reverse={false} speed={40} />{" "}
+          {/* Top row: left to right */}
+          <MarqueeRow reverse={true} speed={40} />{" "}
+          {/* Bottom row: right to left */}
+        </div>
+      </div>
     </section>
   );
 }

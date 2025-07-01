@@ -42,11 +42,16 @@ const Nav = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const res = await Logout();
-    toast[res.success ? "success" : "error"](res.message);
-    if (res.success) {
-      setOpen(false);
-      router.push("/");
+    try {
+      const res = await Logout();
+      toast[res.success ? "success" : "error"](res.message);
+
+      if (res.success) {
+        router.replace("/");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("An unexpected error occurred during logout.");
     }
   };
 
