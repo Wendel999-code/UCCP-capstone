@@ -1,4 +1,5 @@
 import { GetAllChurches } from "@/lib/supabase/actions/church";
+import Header from "../landing/Header";
 import MembershipForm from "./components/MembershipForm";
 
 const page = async () => {
@@ -6,6 +7,7 @@ const page = async () => {
 
   return (
     <>
+      <Header />
       <MembershipForm churches={churches.data} />
     </>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -12,8 +11,7 @@ import {
 } from "@/components/ui/select";
 import { churchType } from "@/global/type";
 import { ApplyForMembership } from "@/lib/supabase/actions/member";
-import { ArrowLeft, Heart, Loader } from "lucide-react";
-import Link from "next/link";
+import { Heart, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -23,9 +21,10 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState<number | "">("");
   const [gender, setGender] = useState("");
-  const [hasChildren, setHasChildren] = useState(false);
+  // const [hasChildren, setHasChildren] = useState(false);
   const [address, setAddress] = useState("");
   const [date_of_birth, setDateOfBirth] = useState("");
+  const [member_email, setMemberEmail] = useState("");
 
   const [church_id, setChurchId] = useState("");
 
@@ -46,9 +45,10 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
         age: Number(age),
         address,
         gender,
-        hasChildren,
+        // hasChildren,
         church_id,
         date_of_birth,
+        member_email,
       };
 
       const result = await ApplyForMembership(membershipData);
@@ -73,7 +73,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
     <div className="min-h-screen flex items-center justify-center  px-4 py-12">
       <div className="max-w-2xl w-full space-y-8">
         <div className="rounded-lg border  p-8 shadow-md">
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <Link
               href="/"
               className="inline-flex text-[12px] items-center gap-2 text-yellow-600 hover:text-yellow-700"
@@ -81,7 +81,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
               <ArrowLeft className="h-4 w-4" />
               Back to Home
             </Link>
-          </div>
+          </div> */}
 
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -197,7 +197,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
 
               {/* Checkbox */}
               <div>
-                <label className="block text-sm font-medium text-gray-500 text-[12px] mb-1">
+                {/* <label className="block text-sm font-medium text-gray-500 text-[12px] mb-1">
                   Do you have children?
                 </label>
                 <div className="flex items-center gap-2 border">
@@ -212,7 +212,22 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   <label htmlFor="hasChildren" className="text-sm">
                     Yes
                   </label>
-                </div>
+                </div> */}
+                <label
+                  htmlFor="Email Address"
+                  className="block text-sm font-medium text-gray-500 text-[12px]"
+                >
+                  Email Address
+                </label>
+                <Input
+                  id="Email Address"
+                  type="email"
+                  required
+                  value={member_email}
+                  onChange={(e) => setMemberEmail(e.target.value)}
+                  className="mt-1 block md:w-[296px]  rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                  placeholder="example@gmail.com"
+                />
               </div>
 
               {/* Church Selection */}

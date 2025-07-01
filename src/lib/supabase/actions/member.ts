@@ -1,5 +1,6 @@
 import { Member } from "@/global/type";
 
+import { ResendEmail } from "@/lib/server";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
@@ -21,7 +22,7 @@ export async function ApplyForMembership(
     age,
     address,
     gender,
-    hasChildren,
+    member_email,
     church_id,
     date_of_birth,
   } = data;
@@ -34,6 +35,7 @@ export async function ApplyForMembership(
     address,
     gender,
     church_id,
+    member_email,
   };
 
   const missingFields = Object.entries(requiredFields)
@@ -81,7 +83,7 @@ export async function ApplyForMembership(
           church_id,
           category,
           activeStatus: "pending",
-          hasChildren: hasChildren ?? false,
+          member_email,
         },
       ])
       .select("id")
@@ -253,7 +255,7 @@ export async function ApproveMembership(
       .update({ activeStatus: "active", baptism_status: "Baptized" })
       .eq("id", memberID)
       .eq("church_id", churchAdmin.church_id)
-      .select("id, firstName, lastName")
+      .select("id, firstName, lastName, member_email")
       .single();
 
     if (error) throw error;
@@ -275,7 +277,17 @@ export async function ApproveMembership(
 
     if (baptismError) throw baptismError;
 
-    console.log("Membership approved:", updatedMember, data);
+    const member = {
+      firstName: updatedMember.firstName,
+      lastName: updatedMember.lastName,
+      church: church.brgy,
+      memberID: `UCCP-${updatedMember.id}`,
+      member_email: updatedMember.member_email,
+    };
+
+    const res = await ResendEmail(member);
+
+    console.log("Membership approved:", updatedMember, data, res.message);
 
     return {
       success: true,

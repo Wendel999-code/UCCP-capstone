@@ -4,9 +4,10 @@ export interface Member {
   lastName: string;
   age: number;
   date_of_birth: string;
+  member_email: string;
   address: string;
   category: string;
-  hasChildren: boolean;
+  hasChildren?: boolean;
   gender: string;
   activeStatus: string;
   church_id: string;
@@ -71,4 +72,12 @@ export type ApproveMemberInput = {
 export type churchType = {
   id: string;
   brgy: string;
+};
+
+export type MemberResend = {
+  firstName: string;
+  lastName: string;
+  church: string;
+  memberID: string;
+  member_email?: string;
 };

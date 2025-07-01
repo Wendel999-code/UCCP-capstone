@@ -20,7 +20,14 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 
-const navItems = ["about", "services", "events", "testimonials", "contact"];
+const navItems = [
+  { label: "Home", slug: "" },
+  { label: "About", slug: "about" },
+  { label: "Services", slug: "services" },
+  { label: "Events", slug: "events" },
+  { label: "Testimonials", slug: "testimonials" },
+  { label: "Contact", slug: "contact" },
+];
 
 function Header() {
   const { user, loading } = useRedirectIfAuthenticated();
@@ -58,15 +65,16 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-4 items-end  ">
-          {navItems.map((section) => (
+          {navItems.map(({ label, slug }) => (
             <Link
-              key={section}
-              href={`#${section}`}
+              key={label}
+              href={label === "Home" ? "/" : `#${slug}`}
               className="text-md hover:text-yellow-500 transition-colors"
             >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
+              {label}
             </Link>
           ))}
+
           <ModeToggle />
           {loading ? (
             <Skeleton className="h-5 w-12 rounded-md" />
@@ -112,14 +120,14 @@ function Header() {
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col md:hidden gap-7 items-start ml-4">
-                  {navItems.map((section) => (
+                  {navItems.map(({ label, slug }) => (
                     <Link
-                      key={section}
-                      href={`#${section}`}
+                      key={label}
+                      href={label === "Home" ? "/" : `#${slug}`}
                       onClick={() => setOpen(false)}
                       className="text-md hover:text-yellow-500 transition-colors"
                     >
-                      {section.charAt(0).toUpperCase() + section.slice(1)}
+                      {label}
                     </Link>
                   ))}
 
