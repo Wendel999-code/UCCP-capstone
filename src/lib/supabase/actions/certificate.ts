@@ -1,43 +1,50 @@
-import { CertificateRequest } from "@/global/type";
+import { GetReqCertificateResponse } from "@/global/type";
 import supabase from "../client";
+import { certificateRequestSchema } from "../validation/certificate";
 import { getChurchAdmin } from "./dal";
 
 export async function RequestCertificate(
-  data: Omit<CertificateRequest, "id" | "status">
+  initialState: unknown,
+  formdata: FormData
 ) {
-  const { firstName, lastName, email, date_of_birth, church_id, member_id } =
-    data;
+  const raw = {
+    firstName: formdata.get("firstName"),
+    lastName: formdata.get("lastName"),
+    email: formdata.get("email"),
+    date_of_birth: formdata.get("date_of_birth"),
+    church_id: formdata.get("church_id"),
+    member_id: formdata.get("member_id"),
+    father_fn: formdata.get("father_fn"),
+    mother_fn: formdata.get("mother_fn"),
+  };
 
-  const requiredFields = {
+  const parsed = certificateRequestSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return { success: false, errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const {
     firstName,
     lastName,
     email,
     date_of_birth,
     church_id,
     member_id,
-  };
-
-  const missingFields = Object.entries(requiredFields)
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
-
-  if (missingFields.length > 0) {
-    return {
-      success: false,
-      message: `Please fill out: ${missingFields.join(", ")}`,
-    };
-  }
+    father_fn,
+    mother_fn,
+  } = parsed?.data;
 
   try {
     const { data: currentUser, error: userError } =
       await supabase.auth.getUser();
 
     if (userError || !currentUser) {
-      throw userError || new Error("Unauthorized");
+      throw userError;
     }
 
     //Todo fix this kasi pwede login kala pero diri ka member
-    const { data: req, error } = await supabase
+    const { error } = await supabase
       .from("req_certificate")
       .insert([
         {
@@ -47,24 +54,21 @@ export async function RequestCertificate(
           date_of_birth,
           church_id,
           member_id,
+          father_fn,
+          mother_fn,
         },
       ])
-      .select("id")
+      .select()
       .single();
 
     if (error) throw error;
 
     return {
       success: true,
-      message: "Request submitted successfully",
-      data: req.id,
     };
   } catch (error) {
     console.error("Error in request certificate:", error);
-    return {
-      success: false,
-      message: "Failed to request certificate",
-    };
+    return { success: false, error: error };
   }
 }
 
@@ -96,55 +100,81 @@ export async function GetReqCertificate() {
   }
 }
 
-// export async function GetReqCertificateByID(reqId: string) {
-//   if (!reqId) {
-//     return;
-//   }
+export async function GetReqCertificateByID(
+  reqId: string
+): Promise<GetReqCertificateResponse> {
+  if (!reqId) {
+    return { success: false, error: "Request ID is required", data: null };
+  }
 
-//   try {
-//     const { churchAdmin: admin } = await getChurchAdmin();
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
 
-//     const { data: certificate, error: certError } = await supabase
-//       .from("req_certificate")
-//       .select("member_id")
-//       .eq("id", reqId)
-//       .eq("church_id", admin.church_id)
-//       .single();
+    // Fetch certificate
+    const { data: certificate, error: certError } = await supabase
+      .from("req_certificate")
+      .select("member_id, father_fn, mother_fn")
+      .eq("id", reqId)
+      .eq("church_id", admin.church_id)
+      .single();
 
-//     if (certError) throw certError;
+    if (certError) {
+      console.error("Error fetching certificate:", certError);
+      return { success: false, error: certError.message, data: null };
+    }
 
-//     if (!certificate?.member_id)
-//       throw new Error("No member ID found in certificate");
+    if (!certificate?.member_id) {
+      return {
+        success: false,
+        error: "No member ID found in certificate",
+        data: null,
+      };
+    }
 
-//     const { data: member, error: memberError } = await supabase
-//       .from("member")
-//       .select("firstName, lastName,  date_of_birth")
-//       .eq("id", certificate.member_id)
-//       .single();
+    // Fetch member
+    const { data: member, error: memberError } = await supabase
+      .from("member")
+      .select("firstName, lastName, date_of_birth")
+      .eq("id", certificate.member_id)
+      .single();
 
-//     if (memberError) throw memberError;
+    if (memberError) {
+      console.error("Error fetching member:", memberError);
+      return { success: false, error: memberError.message, data: null };
+    }
 
-//     const { data: baptismalRecord, error: baptismalError } = await supabase
-//       .from("baptismal_record")
-//       .select("baptism_date, officiant, circuit")
-//       .eq("member_id", certificate.member_id)
-//       .single();
+    // Fetch baptismal record
+    const { data: baptismalRecord, error: baptismalError } = await supabase
+      .from("baptismal_record")
+      .select("baptism_date, officiant, circuit")
+      .eq("member_id", certificate.member_id)
+      .single();
 
-//     if (baptismalError) throw baptismalError;
+    if (baptismalError) {
+      console.error("Error fetching baptismal record:", baptismalError);
+      return { success: false, error: baptismalError.message, data: null };
+    }
 
-//     console.log("baptismalRecord", baptismalRecord);
-//     console.log("member", member);
+    const responseData = {
+      baptism_date: baptismalRecord?.baptism_date ?? "",
+      officiant: baptismalRecord?.officiant ?? "",
+      circuit: baptismalRecord?.circuit ?? "",
+      firstName: member?.firstName ?? "",
+      lastName: member?.lastName ?? "",
+      date_of_birth: member?.date_of_birth ?? "",
+      father_fn: certificate?.father_fn ?? "",
+      mother_fn: certificate?.mother_fn ?? "",
+    };
 
-//     return {
-//       baptism_date: baptismalRecord?.baptism_date ?? "",
-//       officiant: baptismalRecord?.officiant ?? "",
-//       circuit: baptismalRecord?.circuit ?? "",
-//       firstName: member?.firstName ?? "",
-//       lastName: member?.lastName ?? "",
-//       date_of_birth: member?.date_of_birth ?? "",
-//     };
-//   } catch (error) {
-//     console.error("error in get req by id", error);
-//     return;
-//   }
-// }
+    console.log("GetReqCertificateByID success:", responseData);
+
+    return { success: true, data: responseData, error: null };
+  } catch (error) {
+    console.error("Unhandled error in GetReqCertificateByID:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      data: null,
+    };
+  }
+}

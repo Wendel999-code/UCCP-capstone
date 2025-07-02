@@ -520,7 +520,7 @@ export async function addMemberAction(
 
     if (memberError) throw memberError;
 
-    const { data: CertData, error: CertError } = await supabase
+    const { error: CertError } = await supabase
       .from("baptismal_record")
       .insert({
         member_id: memberData.id,

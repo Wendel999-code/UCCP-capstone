@@ -16,55 +16,27 @@ import { RequestCertificate } from "@/lib/supabase/actions/certificate";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
-export default function RequestPage() {
-  const [loading, setLoading] = useState(false);
+const RequestPage = () => {
+  const { data: churches, isLoading: isChurchLoading } = useGetAllChurches();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const { data: churches, isLoading } = useGetAllChurches();
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    date_of_birth: "",
-    email: "",
-    church_id: "",
-    member_id: "",
+  const [state, formAction, pending] = useActionState(RequestCertificate, {
+    success: false,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await RequestCertificate(formData);
-      if (res.success) {
-        toast.success(res.message);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          date_of_birth: "",
-          email: "",
-          church_id: "",
-          member_id: "",
-        });
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      console.error("Error in submit request:", error);
-      toast.error("Something went wrong.");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (state?.success) {
+      toast.success("Request submitted successfully");
+      formRef.current?.reset();
+    } else if (state?.errors) {
+      toast.error("Request failed");
+    } else if (state?.success === false) {
+      toast.error("Invalid member ID!");
     }
-  };
+  }, [state]);
 
   return (
     <motion.div
@@ -93,78 +65,66 @@ export default function RequestPage() {
           </div>
         </motion.div>
 
-        {/* Right: Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Right: Request Form */}
+        <form
+          ref={formRef}
+          action={formAction}
+          className="space-y-4 flex flex-col justify-center"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                className="mt-1"
-                id="firstName"
-                name="firstName"
-                placeholder="Juan"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                className="mt-1"
-                id="lastName"
-                name="lastName"
-                placeholder="Dela Cruz"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="date_of_birth">Date of Birth</Label>
-            <Input
-              className="mt-1"
-              id="date_of_birth"
-              name="date_of_birth"
-              type="date"
-              value={formData.date_of_birth}
-              onChange={handleChange}
-              required
+            <InputBlock
+              name="firstName"
+              label="First Name"
+              placeholder="Juan"
+              error={state?.errors?.firstName}
+            />
+            <InputBlock
+              name="lastName"
+              label="Last Name"
+              placeholder="Dela Cruz"
+              error={state?.errors?.lastName}
             />
           </div>
 
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              className="mt-1"
-              id="email"
-              name="email"
-              type="email"
-              placeholder="juan@example.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <InputBlock
+            name="date_of_birth"
+            label="Date of Birth"
+            type="date"
+            error={state?.errors?.date_of_birth}
+          />
 
+          <InputBlock
+            name="father_fn"
+            label="Father's Full Name"
+            placeholder="Jose Dela Cruz"
+            error={state?.errors?.father_fn}
+          />
+
+          <InputBlock
+            name="mother_fn"
+            label="Mother's Full Name"
+            placeholder="Maria Dela Cruz"
+            error={state?.errors?.mother_fn}
+          />
+
+          <InputBlock
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="juan@example.com"
+            error={state?.errors?.email}
+          />
+
+          {/* Church Selection */}
           <div>
-            <Label htmlFor="church">Select Church</Label>
-            {isLoading ? (
-              <Skeleton className="h-12 w-full" />
+            <Label htmlFor="church_id" className="text-xs text-gray-600">
+              Select Church
+            </Label>
+            {isChurchLoading ? (
+              <Skeleton className="h-10 w-full mt-1 rounded-md" />
             ) : (
-              <Select
-                value={formData.church_id}
-                onValueChange={(val) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    church_id: val,
-                  }))
-                }
-                required
-              >
-                <SelectTrigger className="mt-1 rounded-md border px-3 py-2">
+              <Select name="church_id" required>
+                <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Choose your church" />
                 </SelectTrigger>
                 <SelectContent>
@@ -179,28 +139,26 @@ export default function RequestPage() {
                 </SelectContent>
               </Select>
             )}
+            {state?.errors?.church_id && (
+              <p className="text-red-500 text-xs mt-1">
+                {state.errors.church_id.join(", ")}
+              </p>
+            )}
           </div>
 
-          <div>
-            <Label htmlFor="MemberID">Member ID</Label>
-            <Input
-              className="mt-1"
-              id="MemberID"
-              name="member_id"
-              type="text"
-              placeholder="1234567890"
-              value={formData.member_id}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <InputBlock
+            name="member_id"
+            label="Member ID"
+            placeholder="1234567890"
+            error={state?.errors?.member_id}
+          />
 
           <Button
             type="submit"
-            disabled={loading}
-            className="bg-amber-700 hover:bg-amber-600 text-white w-full"
+            disabled={pending}
+            className="w-full bg-amber-500 hover:bg-amber-600 cursor-pointer text-white mt-2"
           >
-            {loading ? (
+            {pending ? (
               <>
                 <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
               </>
@@ -211,5 +169,40 @@ export default function RequestPage() {
         </form>
       </div>
     </motion.div>
+  );
+};
+
+export default RequestPage;
+
+/**
+ * InputBlock for consistent field + label + error handling
+ */
+function InputBlock({
+  name,
+  label,
+  type = "text",
+  placeholder,
+  error,
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  error?: string[];
+}) {
+  return (
+    <div>
+      <Label htmlFor={name} className="text-xs text-gray-600">
+        {label}
+      </Label>
+      <Input
+        id={name}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        className="mt-1"
+      />
+      {error && <p className="text-red-500 text-xs mt-1">{error.join(", ")}</p>}
+    </div>
   );
 }

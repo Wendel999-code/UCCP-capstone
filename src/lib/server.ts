@@ -24,7 +24,7 @@ export async function ResendEmail({
   console.log("Sending membership email to:", member_email);
 
   const { error: resendError } = await resend.emails.send({
-    from: "UCCP <noreply@wndl.dev>",
+    from: "UCCP <support@wndl.dev>",
     to: [member_email],
     subject: `Welcome, ${firstName}! Your UCCP Membership Details`,
     react: EmailTemplate(firstName, lastName, church, memberID),

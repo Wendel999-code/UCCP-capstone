@@ -1,5 +1,8 @@
-import { CertificateRequest } from "@/global/type";
-import { GetReqCertificate } from "@/lib/supabase/actions/certificate";
+import { CertificateDetails, CertificateRequest } from "@/global/type";
+import {
+  GetReqCertificate,
+  GetReqCertificateByID,
+} from "@/lib/supabase/actions/certificate";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetReqCertificate = () =>
@@ -12,16 +15,16 @@ export const useGetReqCertificate = () =>
     },
   });
 
-// export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
-//   useQuery<GeneratedCertificate>({
-//     queryKey: ["req-certificate-ByID", reqID],
-//     queryFn: async () => {
-//       const res = await GetReqCertificateByID(reqID);
-//       if (!res) throw new Error("No certificate found");
-
-//       console.log(res);
-//       return res;
-//     },
-//     enabled: open,
-//     refetchOnWindowFocus: false,
-//   });
+export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
+  useQuery<CertificateDetails>({
+    queryKey: ["req-certificate-ByID", reqID],
+    queryFn: async () => {
+      const res = await GetReqCertificateByID(reqID);
+      if (!res.success || !res.data) {
+        throw new Error(res.error || "Failed to fetch certificate.");
+      }
+      return res.data;
+    },
+    enabled: open,
+    refetchOnWindowFocus: false,
+  });

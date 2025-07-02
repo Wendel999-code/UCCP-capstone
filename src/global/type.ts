@@ -41,6 +41,8 @@ export interface CertificateRequest {
   id: string;
   firstName: string;
   lastName: string;
+  father_fn: string;
+  mother_fn: string;
   email: string;
   member_id: string;
   date_of_birth: string;
@@ -82,3 +84,20 @@ export type MemberResend = {
   memberID: string;
   member_email?: string;
 };
+
+export interface CertificateDetails {
+  baptism_date: string;
+  officiant: string;
+  circuit: string;
+  firstName: string;
+  lastName: string;
+  date_of_birth: string;
+  father_fn: string;
+  mother_fn: string;
+}
+
+export interface GetReqCertificateResponse {
+  success: boolean;
+  data: CertificateDetails | null;
+  error: string | null;
+}

@@ -1,85 +1,101 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import html2canvas from "html2canvas";
+import { useGetReqCertificateByID } from "@/app/hooks/useCertificate";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Image from "next/image";
-import { useRef } from "react";
 
-interface CertificatePreviewProps {
-  userData: {
-    firstName: string;
-    lastName: string;
-    date_of_birth: string;
-    churchName?: string;
-  };
+interface CertMemberModalProps {
+  openCertPreview: boolean;
+  setOpenCertPreview: (value: boolean) => void;
+  reqID: string;
 }
 
-export default function CertificatePreview({
-  userData,
-}: CertificatePreviewProps) {
-  const certRef = useRef<HTMLDivElement>(null);
-
-  const handleDownload = async () => {
-    if (!certRef.current) return;
-    const canvas = await html2canvas(certRef.current, {
-      useCORS: true,
-      scale: 2,
-    });
-    const link = document.createElement("a");
-    link.download = `${userData.firstName}-${userData.lastName}-certificate.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  };
-
-  if (!userData) {
-    return (
-      <div className="flex items-center justify-center p-6 text-gray-500 dark:text-gray-400">
-        No user data provided.
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4 p-4 flex flex-col items-center justify-center bg-neutral-50 dark:bg-neutral-900">
-      <div
-        ref={certRef}
-        className="relative w-[350px] sm:w-[500px] md:w-[700px] lg:w-[800px] aspect-[4/3] mx-auto shadow-lg rounded-md overflow-hidden bg-white dark:bg-neutral-800"
-      >
-        {/* Background template */}
-        <Image
-          src="/cert.png"
-          alt="Certificate Template"
-          height={400}
-          width={400}
-          className="object-cover h-auto w-auto "
-        />
-
-        {/* Overlay user data */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-red-900 dark:text-amber-500 drop-shadow">
-            Certificate of Baptism
-          </h2>
-          <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
-            This certifies that
-          </p>
-          <p className="mt-2 text-lg sm:text-xl md:text-2xl font-semibold text-red-800 dark:text-amber-400">
-            {userData.firstName} {userData.lastName}
-          </p>
-          <p className="mt-2 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
-            born on {new Date(userData.date_of_birth).toLocaleDateString()}
-          </p>
-          <p className="mt-2 text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300">
-            was baptized at {userData.churchName}
-          </p>
-        </div>
-      </div>
-
-      <Button
-        onClick={handleDownload}
-        className="bg-amber-700 hover:bg-amber-600 text-white"
-      >
-        Download Certificate
-      </Button>
-    </div>
+const CertificatePreview = ({
+  reqID,
+  openCertPreview,
+  setOpenCertPreview,
+}: CertMemberModalProps) => {
+  const { data, isLoading, error } = useGetReqCertificateByID(
+    reqID,
+    openCertPreview
   );
-}
+  return (
+    <Dialog open={openCertPreview} onOpenChange={setOpenCertPreview}>
+      <DialogContent className="max-w-[900px] w-full p-12 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg shadow-xl">
+        <DialogHeader className="text-center mb-6">
+          <DialogTitle className="text-3xl font-serif font-bold uppercase text-neutral-800 dark:text-neutral-100">
+            United Church of Christ in the Philippines
+          </DialogTitle>
+          <div className="flex justify-center mt-2">
+            <Image src="/uccp.jpg" alt="UCCP Logo" width={80} height={80} />
+          </div>
+          <div className="mt-2">
+            <p className="text-2xl font-bold font-serif">
+              Certificate of Baptism
+            </p>
+          </div>
+          <DialogDescription className="text-base italic text-neutral-700 dark:text-neutral-300">
+            This certifies the following information
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="text-neutral-800 dark:text-neutral-100 font-serif space-y-6 text-center text-lg">
+          {isLoading && <p className="text-center">Loading...</p>}
+          {error && (
+            <p className="text-center text-red-600 dark:text-red-400">
+              {error.message}
+            </p>
+          )}
+          {data && (
+            <div className="space-y-5">
+              <p>
+                This certifies that{" "}
+                <span className="underline font-bold text-xl">
+                  {data.firstName} {data.lastName}
+                </span>
+              </p>
+              <p>
+                Child of <span className="underline">{data.father_fn}</span> and{" "}
+                <span className="underline">{data.mother_fn}</span>
+              </p>
+              <p>
+                Born on <span className="underline">{data.date_of_birth}</span>,
+                baptized on{" "}
+                <span className="underline">{data.baptism_date}</span>
+              </p>
+              <p>
+                at <span className="underline">{data.circuit}</span>
+              </p>
+
+              <div className="flex justify-between mt-12 px-12">
+                <div className="text-left">
+                  <p className="font-bold">Officiating Minister</p>
+                  <p className="mt-3 underline">{data.officiant}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold">Certified Correct</p>
+                  <p className="mt-3 underline">Church Secretary</p>
+                </div>
+              </div>
+
+              <div className="border-t border-neutral-300 dark:border-neutral-600 mt-12 pt-4 text-center text-base text-neutral-600 dark:text-neutral-400">
+                <p>United Church of Christ in the Philippines</p>
+                <p className="italic">
+                  In the name of God: Father, Son, and Holy Spirit
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default CertificatePreview;
