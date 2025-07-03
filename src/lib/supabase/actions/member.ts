@@ -1,6 +1,6 @@
 import { Member } from "@/global/type";
 
-import { ResendEmail } from "@/lib/server";
+import { ResendEmail } from "@/lib/resend";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";

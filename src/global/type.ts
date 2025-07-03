@@ -85,6 +85,13 @@ export type MemberResend = {
   member_email?: string;
 };
 
+export type ReqCertUpdateType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  brgy:string
+};
+
 export interface CertificateDetails {
   baptism_date: string;
   officiant: string;

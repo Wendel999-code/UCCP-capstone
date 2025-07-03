@@ -1,4 +1,5 @@
 import { GetReqCertificateResponse } from "@/global/type";
+import { ReqCertUpdate } from "@/lib/resend";
 import supabase from "../client";
 import { certificateRequestSchema } from "../validation/certificate";
 import { getChurchAdmin } from "./dal";
@@ -81,6 +82,7 @@ export async function GetReqCertificate() {
       .from("req_certificate")
       .select("*, Church:church_id(brgy)")
       .eq("church_id", admin.church_id)
+      .eq("status", "Pending")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -110,7 +112,6 @@ export async function GetReqCertificateByID(
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
 
-    // Fetch certificate
     const { data: certificate, error: certError } = await supabase
       .from("req_certificate")
       .select("member_id, father_fn, mother_fn")
@@ -131,7 +132,6 @@ export async function GetReqCertificateByID(
       };
     }
 
-    // Fetch member
     const { data: member, error: memberError } = await supabase
       .from("member")
       .select("firstName, lastName, date_of_birth,gender")
@@ -143,7 +143,6 @@ export async function GetReqCertificateByID(
       return { success: false, error: memberError.message, data: null };
     }
 
-    // Fetch baptismal record
     const { data: baptismalRecord, error: baptismalError } = await supabase
       .from("baptismal_record")
       .select("baptism_date, officiant, circuit")
@@ -206,6 +205,65 @@ export async function DeleteReqCertificate(reqId: string) {
     return {
       success: false,
       message: "Failed to delete request certificate",
+    };
+  }
+}
+
+export async function GeneratedCertificate(reqID: string) {
+  if (!reqID) {
+    return { success: false, message: "Request ID is required" };
+  }
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { data: certificate, error: certError } = await supabase
+      .from("req_certificate")
+      .update({ status: "Completed" })
+      .eq("id", reqID)
+      .eq("church_id", admin.church_id)
+      .select("email,firstName,lastName, member_id ")
+      .single();
+
+    if (certError) {
+      console.error("Error fetching certificate:", certError);
+      return { success: false, message: certError.message };
+    }
+
+    if (!certificate?.email) {
+      return { success: false, message: "No email found in certificate" };
+    }
+
+    const { data: baptismalRecord, error: baptismalError } = await supabase
+      .from("baptismal_record")
+      .select("circuit")
+      .eq("member_id", certificate.member_id)
+      .eq("church_id", admin.church_id)
+
+      .single();
+
+    if (baptismalError) {
+      console.error("Error fetching baptismal record:", baptismalError);
+      return { success: false, message: baptismalError.message };
+    }
+
+    const reqData = {
+      firstName: certificate.firstName,
+      lastName: certificate.lastName,
+      email: certificate.email,
+      brgy: baptismalRecord?.circuit,
+    };
+
+    await ReqCertUpdate(reqData);
+
+    return {
+      success: true,
+      message: "Request certificate generated successfully",
+    };
+  } catch (error) {
+    console.log("error in generate certificate", error);
+    return {
+      success: false,
+      message: "Failed to generate request certificate",
     };
   }
 }

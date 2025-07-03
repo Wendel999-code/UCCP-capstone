@@ -11,11 +11,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GeneratedCertificate } from "@/lib/supabase/actions/certificate";
 import { getAgeAtBaptism } from "@/utils/dateHelper";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import domtoimage from "dom-to-image-more";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 interface CertMemberModalProps {
   openCertPreview: boolean;
@@ -29,6 +32,8 @@ const CertificatePreview = ({
   setOpenCertPreview,
 }: CertMemberModalProps) => {
   const { data, isLoading } = useGetReqCertificateByID(reqID, openCertPreview);
+
+  const queryClient = useQueryClient();
 
   const [isCapturing, setIsCapturing] = useState(false);
   const certRef = useRef<HTMLDivElement>(null);
@@ -50,14 +55,8 @@ const CertificatePreview = ({
     if (!certRef.current || !data) return;
     setIsCapturing(true);
     try {
-     
-      const targetWidth = 1240;
-      const targetHeight = 1754;
-
       const dataUrl = await domtoimage.toPng(certRef.current, {
         quality: 1,
-        width: targetWidth,
-        height: targetHeight,
         cacheBust: true,
       });
 
@@ -65,6 +64,10 @@ const CertificatePreview = ({
       link.download = `${data.lastName}_${data.firstName}_Baptism_Certificate.png`;
       link.href = dataUrl;
       link.click();
+      await GeneratedCertificate(reqID);
+      queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
+      setOpenCertPreview(false);
+      toast.success("Sent email to recipient.");
     } catch (error) {
       console.error("Download error:", error);
     } finally {
@@ -177,10 +180,10 @@ const CertificatePreview = ({
                     <p className="underline">{data.circuit}</p>
                     Local Church
                   </div>
-                  <div>
+                  {/* <div>
                     <p className="underline"> </p>
                     Church Secretary
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ) : (
