@@ -18,7 +18,7 @@ import { ArrowRight, File, Home, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const navItems = [
@@ -54,6 +54,18 @@ const Nav = () => {
       toast.error("An unexpected error occurred during logout.");
     }
   };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push("/");
+      } else if (user.role !== "member") {
+        router.push("/");
+      }
+    }
+  }, [loading, user, router]);
+
+  if (loading) return <Skeleton className="h-10 w-full" />;
 
   return (
     <motion.header

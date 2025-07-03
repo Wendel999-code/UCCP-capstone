@@ -134,7 +134,7 @@ export async function GetReqCertificateByID(
     // Fetch member
     const { data: member, error: memberError } = await supabase
       .from("member")
-      .select("firstName, lastName, date_of_birth")
+      .select("firstName, lastName, date_of_birth,gender")
       .eq("id", certificate.member_id)
       .single();
 
@@ -164,6 +164,7 @@ export async function GetReqCertificateByID(
       date_of_birth: member?.date_of_birth ?? "",
       father_fn: certificate?.father_fn ?? "",
       mother_fn: certificate?.mother_fn ?? "",
+      gender: member?.gender ?? "",
     };
 
     console.log("GetReqCertificateByID success:", responseData);
@@ -175,6 +176,36 @@ export async function GetReqCertificateByID(
       success: false,
       error: error instanceof Error ? error.message : String(error),
       data: null,
+    };
+  }
+}
+
+export async function DeleteReqCertificate(reqId: string) {
+  if (!reqId) {
+    return { success: false, error: "Request ID is required", data: null };
+  }
+
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { error } = await supabase
+      .from("req_certificate")
+      .delete()
+      .eq("id", reqId)
+      .eq("church_id", admin.church_id)
+      .single();
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      message: "Request certificate deleted successfully",
+    };
+  } catch (error) {
+    console.log("error in delete req certificate", error);
+    return {
+      success: false,
+      message: "Failed to delete request certificate",
     };
   }
 }

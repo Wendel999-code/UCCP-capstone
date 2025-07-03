@@ -27,6 +27,7 @@ const SideBar = () => {
       }
 
       toast.success(res.message);
+
       router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);

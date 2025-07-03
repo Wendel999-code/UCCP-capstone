@@ -91,6 +91,7 @@ export interface CertificateDetails {
   circuit: string;
   firstName: string;
   lastName: string;
+  gender: string;
   date_of_birth: string;
   father_fn: string;
   mother_fn: string;

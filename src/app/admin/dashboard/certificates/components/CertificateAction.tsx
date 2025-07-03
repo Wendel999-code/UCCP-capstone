@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -21,20 +10,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GetReqCertificateByID } from "@/lib/supabase/actions/certificate";
+import {
+  DeleteReqCertificate,
+  GetReqCertificateByID,
+} from "@/lib/supabase/actions/certificate";
 import { useQueryClient } from "@tanstack/react-query";
 import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import CertificatePreview from "./CertificatePreview";
+import DeleteDialog from "./DeleteDialog";
 
 const CertificateAction = ({ reqID }: { reqID: string }) => {
   const [openCertPreview, setOpenCertPreview] = useState(false);
   const queryClient = useQueryClient();
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleDelete = async () => {
-    toast.success("Deleted (hook placeholder).");
-    // TODO: Implement actual delete logic
+    try {
+      const res = await DeleteReqCertificate(reqID);
+      if (res.success) {
+        toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
+      } else if (!res.success) {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error("Error deleting certificate:", error);
+    }
   };
 
   const handlePrefetch = () => {
@@ -70,39 +73,22 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
             onMouseEnter={handlePrefetch}
             className="hover:bg-amber-100 cursor-pointer dark:hover:bg-amber-900"
           >
-            <Eye className="mr-1 h-4 w-4 text-amber-500" />
+            <Eye className="h-4 w-4 text-amber-500" />
             <span>Preview Certificate</span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
           {/* Delete Confirmation */}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="hover:bg-red-100 dark:hover:bg-red-950">
-                <Trash2 className="mr-2 h-4 w-4 text-red-900 dark:text-red-500" />
-                <span className="text-red-900 dark:text-red-400">Delete</span>
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete this certificate request. This
-                  action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-red-900 hover:bg-red-800 text-white"
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <DropdownMenuItem
+            onClick={() => setOpenDelete(true)}
+            className="hover:bg-red-100 dark:hover:bg-red-950"
+          >
+            <Trash2 className=" h-4 w-4 text-red-900 dark:text-red-500" />
+            <span className="text-red-900 dark:text-red-400 cursor-pointer">
+              Delete
+            </span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -110,6 +96,13 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
         reqID={reqID}
         openCertPreview={openCertPreview}
         setOpenCertPreview={setOpenCertPreview}
+      />
+      <DeleteDialog
+        open={openDelete}
+        setOpen={setOpenDelete}
+        onDelete={handleDelete}
+        title="Delete Certificate"
+        description="Are you sure you want to delete this  requested  certificate? This action cannot be undone."
       />
     </>
   );

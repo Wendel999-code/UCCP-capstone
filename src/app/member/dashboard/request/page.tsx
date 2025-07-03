@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RequestCertificate } from "@/lib/supabase/actions/certificate";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import Image from "next/image";
@@ -27,16 +28,20 @@ const RequestPage = () => {
     success: false,
   });
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (state?.success) {
       toast.success("Request submitted successfully");
+      queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
+
       formRef.current?.reset();
     } else if (state?.errors) {
       toast.error("Request failed");
     } else if (state?.success === false) {
       toast.error("Invalid member ID!");
     }
-  }, [state]);
+  }, [state, queryClient]);
 
   return (
     <motion.div
