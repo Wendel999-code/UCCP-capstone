@@ -435,19 +435,27 @@ export async function GetMemberByIDBySuperAdmin(memberID: string) {
 
 export async function GetAllMembersBySuperAdmin() {
   try {
-    await SuperAdmin();
+    const admin = await SuperAdmin();
 
-    const { data, error } = await supabase
-      .from("member")
-      .select("*, Church:church_id(brgy)")
-      .neq("activeStatus", "pending")
-      .order("created_at", { ascending: true });
+    if (admin.role === "super_admin") {
+      const { data, error } = await supabase
+        .from("member")
+        .select("*, Church:church_id(brgy)")
+        .neq("activeStatus", "pending")
+        .order("created_at", { ascending: true });
 
-    if (error) throw error;
+      if (error) throw error;
+
+      return {
+        success: true,
+        data,
+      };
+    }
 
     return {
-      success: true,
-      data,
+      success: false,
+      message: "Unauthorized: insufficient permissions to get members",
+      data: [],
     };
   } catch (error) {
     console.error("Error in GetAllMembers:", error);
@@ -579,6 +587,67 @@ export async function DeleteMemberBySuperAdmin(memberID: string) {
     return {
       success: false,
       message: "Failed to delete member",
+    };
+  }
+}
+
+export async function GetAllMemberPerChurchCount() {
+  try {
+    const superAdmin = await SuperAdmin();
+
+    if (superAdmin.role !== "super_admin") {
+      return {
+        success: false,
+        message: "Unauthorized: insufficient permissions to get member counts",
+        data: [],
+      };
+    }
+
+    const { data, error } = await supabase
+      .from("member")
+      .select("church_id")
+      .neq("activeStatus", "pending");
+
+    if (error) throw error;
+
+    const counts: Record<string, number> = {};
+
+    //loop church id para diri na dont need count member perchurch
+    data.forEach((member) => {
+      const churchId = member.church_id;
+
+      if (churchId) {
+        counts[churchId] = (counts[churchId] || 0) + 1;
+      }
+    });
+
+    const { data: churches, error: churchError } = await supabase
+      .from("Church")
+      .select("id, brgy");
+
+    if (churchError) throw churchError;
+
+    const results = Object.entries(counts).map(([churchId, count]) => {
+
+      const church = churches.find((c) => c.id === churchId);
+      
+      return {
+        church_id: churchId,
+        brgy: church?.brgy || "Unknown",
+        member_count: count,
+      };
+    });
+
+    return {
+      success: true,
+      data: results,
+    };
+  } catch (error) {
+    console.error("Error in GetAllMemberPerChurchCount:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve member counts",
+      data: [],
     };
   }
 }

@@ -97,12 +97,12 @@ export function ViewMemberBySuperAdmin({
                   </Badge>
                 </div>
               </div>
-              <RenderField
+              {/* <RenderField
                 label="Has Children"
                 value={member.hasChildren ? "Yes" : "No"}
-              />
+              /> */}
               <RenderField
-                label="Circuit"
+                label="Local Church"
                 value={member.Church?.brgy ?? "N/A"}
               />
               <RenderField

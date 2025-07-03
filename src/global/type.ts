@@ -89,7 +89,7 @@ export type ReqCertUpdateType = {
   firstName: string;
   lastName: string;
   email: string;
-  brgy:string
+  brgy: string;
 };
 
 export interface CertificateDetails {
@@ -109,3 +109,9 @@ export interface GetReqCertificateResponse {
   data: CertificateDetails | null;
   error: string | null;
 }
+
+export type CountMemPerChurch = {
+  church_id: string;
+  brgy: string;
+  member_count: number;
+};

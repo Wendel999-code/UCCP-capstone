@@ -59,7 +59,7 @@ function About() {
           >
             Founded in 1985,{" "}
             <span className="font-semibold text-red-800 dark:text-amber-500">
-              Grace Church
+              Lester Lou's Church
             </span>{" "}
             has been a pillar of spiritual guidance and community support for
             over three decades. Our congregation has grown from a small group of

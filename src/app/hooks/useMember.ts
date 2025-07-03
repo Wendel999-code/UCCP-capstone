@@ -1,8 +1,9 @@
-import { ApproveMemberInput, Member } from "@/global/type";
+import { ApproveMemberInput, CountMemPerChurch, Member } from "@/global/type";
 import {
   ApproveMembership,
   DeleteMember,
   DeleteMemberBySuperAdmin,
+  GetAllMemberPerChurchCount,
   GetAllMembersByChurchId,
   GetAllMembersBySuperAdmin,
   GetApplicationID,
@@ -41,6 +42,7 @@ export const useApproveMember = () => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+      queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
     },
   });
 };
@@ -80,6 +82,7 @@ export const useDeleteMember = () => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+      queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
     },
   });
 };
@@ -97,6 +100,7 @@ export const useDeleteMemberBySuperAdmin = () => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+      queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
     },
   });
 };
@@ -130,6 +134,16 @@ export const useGetAllmemberBySuperAdmin = () =>
     queryKey: ["membersBySuperAdmin"],
     queryFn: async () => {
       const res = await GetAllMembersBySuperAdmin();
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+  });
+
+export const useCountMemPerChurch = () =>
+  useQuery<CountMemPerChurch[]>({
+    queryKey: ["count-members-per-church"],
+    queryFn: async () => {
+      const res = await GetAllMemberPerChurchCount();
       if (!res.success) throw new Error(res.message);
       return res.data;
     },

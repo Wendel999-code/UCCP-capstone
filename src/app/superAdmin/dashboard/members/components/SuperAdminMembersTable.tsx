@@ -35,6 +35,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { useGetAllChurches } from "@/app/hooks/useChurch";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Member } from "@/global/type";
 import Pagination from "./SuperAdminPagination";
 import { SuperAdminTablesData } from "./SuperAdminTablesData";
@@ -45,6 +47,7 @@ export default function SuperAdminMembersTable({
   members: Member[];
 }) {
   const { table, columns } = SuperAdminTablesData({ members });
+  const { data: churches, isLoading } = useGetAllChurches();
 
   return (
     <div className="space-y-2 w-full">
@@ -153,15 +156,30 @@ export default function SuperAdminMembersTable({
                     ?.setFilterValue(val === "all" ? "" : val)
                 }
               >
-                <SelectTrigger className="w-[110px] h-7 text-xs">
-                  <SelectValue placeholder="Circuit" />
+                <SelectTrigger className="w-[160px] h-8 text-xs">
+                  <SelectValue placeholder="Select local church" />
                 </SelectTrigger>
                 <SelectContent>
-                  {["all", "Palanit", "San Juan"].map((val) => (
-                    <SelectItem key={val} className="text-[10px]" value={val}>
-                      {val === "all" ? "All" : val}
+                  <SelectItem value="all" className="text-xs">
+                    All Circuits
+                  </SelectItem>
+                  {isLoading ? (
+                    <SelectItem disabled value="loading" className="text-xs">
+                      <Skeleton className="h-4 w-12 rounded-sm " />
+                      <Skeleton className="h-4 w-12 rounded-sm " />
+                      <Skeleton className="h-4 w-12 rounded-sm " />
                     </SelectItem>
-                  ))}
+                  ) : (
+                    churches?.map((church) => (
+                      <SelectItem
+                        key={church.id}
+                        value={church.brgy}
+                        className="text-xs"
+                      >
+                        {church.brgy}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
