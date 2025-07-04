@@ -1,7 +1,15 @@
 "use client";
 
 import { TrendingUp, Users } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { useCountMemPerChurch } from "@/app/hooks/useMember";
 import {
@@ -29,7 +37,7 @@ export function Analytics() {
   const totalMembers = chartData.reduce((sum, item) => sum + item.members, 0);
 
   return (
-    <Card>
+    <Card className="">
       <CardHeader>
         <CardTitle>Member Distribution by Local Church</CardTitle>
         <CardDescription>
@@ -49,60 +57,60 @@ export function Analytics() {
         ) : error ? (
           <p className="text-red-500">Error: {error.message}</p>
         ) : (
-          <div className="flex justify-center w-full overflow-x-auto">
-            <BarChart
-              data={chartData}
-              width={400}
-              height={250}
-              margin={{ top: 10, right: 10, bottom: 20, left: 10 }}
-              barCategoryGap={12}
-            >
-              <CartesianGrid
-                vertical={false}
-                strokeDasharray="3 3"
-                stroke={theme === "dark" ? "#333" : "#ccc"}
-              />
-              <XAxis
-                dataKey="circuit"
-                tickLine={false}
-                tickMargin={6}
-                axisLine={false}
-                style={{
-                  fontSize: "10px",
-                  fill: theme === "dark" ? "#ddd" : "#333",
-                }}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                width={30}
-                style={{
-                  fontSize: "10px",
-                  fill: theme === "dark" ? "#ddd" : "#333",
-                }}
-              />
-              <Tooltip
-                cursor={{ fill: "transparent" }}
-                content={({ active, payload }) =>
-                  active && payload?.length ? (
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-2 rounded text-xs shadow">
-                      <p>{payload[0].payload.circuit}</p>
-                      <p className="font-semibold">
-                        {payload[0].value} members
-                      </p>
-                    </div>
-                  ) : null
-                }
-              />
-              <Bar
-                dataKey="members"
-                fill={theme === "dark" ? "#4ade80" : "#3b82f6"}
-                radius={[4, 4, 0, 0]}
-                maxBarSize={30}
-                isAnimationActive={true}
-              />
-            </BarChart>
+          <div className="w-full overflow-x-auto">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={chartData}
+                margin={{ top: 10, right: 10, bottom: 20, left: 10 }}
+                barCategoryGap={12}
+              >
+                <CartesianGrid
+                  vertical={false}
+                  strokeDasharray="3 3"
+                  stroke={theme === "dark" ? "#333" : "#ccc"}
+                />
+                <XAxis
+                  dataKey="circuit"
+                  tickLine={false}
+                  tickMargin={6}
+                  axisLine={false}
+                  style={{
+                    fontSize: "10px",
+                    fill: theme === "dark" ? "#ddd" : "#333",
+                  }}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  width={30}
+                  style={{
+                    fontSize: "10px",
+                    fill: theme === "dark" ? "#ddd" : "#333",
+                  }}
+                />
+                <Tooltip
+                  cursor={{ fill: "transparent" }}
+                  content={({ active, payload }) =>
+                    active && payload?.length ? (
+                      <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-2 rounded text-xs shadow">
+                        <p>{payload[0].payload.circuit}</p>
+                        <p className="font-semibold">
+                          {payload[0].value} members
+                        </p>
+                      </div>
+                    ) : null
+                  }
+                />
+                <Bar
+                  dataKey="members"
+                  fill={theme === "dark" ? "#4ade80" : "#fbbf24"}
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={30}
+                  isAnimationActive={true}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         )}
       </CardContent>
