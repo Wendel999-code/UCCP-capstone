@@ -115,3 +115,9 @@ export type CountMemPerChurch = {
   brgy: string;
   member_count: number;
 };
+
+export type Testimonial = {
+  id: string;
+  fullName?: string;
+  description?: string;
+};

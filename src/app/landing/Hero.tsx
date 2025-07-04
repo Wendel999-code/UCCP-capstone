@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import Visits from "@/components/Visits";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import { useRef } from "react";
 
 const locations = [
   "Palanit",
@@ -46,14 +47,17 @@ const itemVariants = {
 };
 
 function Hero() {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { amount: 0.3, once: false });
+
   return (
-    <section className="w-full py-16 bg-background mt-17">
+    <section ref={sectionRef} className="w-full py-16 bg-background mt-17">
       <div className="container mx-auto px-6 flex flex-col items-center gap-12 text-center">
         {/* Title & Description */}
         <motion.div
           className="flex flex-col justify-center items-center space-y-6"
           initial="hidden"
-          animate="show"
+          animate={isInView ? "show" : "hidden"}
         >
           <div className="space-y-4">
             <motion.h1
@@ -103,7 +107,7 @@ function Hero() {
           className="flex flex-wrap gap-2 justify-center pt-8"
           variants={containerVariants}
           initial="hidden"
-          animate="show"
+          animate={isInView ? "show" : "hidden"}
         >
           {locations.map((location) => (
             <motion.span

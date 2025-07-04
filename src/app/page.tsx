@@ -16,32 +16,11 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-
       <main className="flex-1">
-        {/* Hero Section */}
         <Hero />
-
-        {/* Welcome Message */}
-        {/* <WelcomeMessage /> */}
-
-        {/* About Section */}
         <About />
-
         <Testimonials />
-
-        {/*       
-        <Services />
-
-        <Event />
-
-      
-
-        <Contact />
-
-        <NewsLetter /> */}
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

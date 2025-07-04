@@ -23,8 +23,8 @@ import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated"
 const navItems = [
   { label: "Home", slug: "" },
   { label: "About", slug: "about" },
-  { label: "Services", slug: "services" },
-  { label: "Events", slug: "events" },
+  // { label: "Services", slug: "services" },
+  // { label: "Events", slug: "events" },
   { label: "Testimonials", slug: "testimonials" },
   { label: "Contact", slug: "contact" },
 ];

@@ -29,7 +29,7 @@ const itemVariants = {
 function About() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, {
-    once: true,
+    once: false,
     amount: 0.3,
   });
 
@@ -82,7 +82,7 @@ function About() {
           className="flex justify-center lg:justify-end"
         >
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             animate={{
@@ -93,7 +93,7 @@ function About() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 2 }}
             className="w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72"
           >
             <Image
