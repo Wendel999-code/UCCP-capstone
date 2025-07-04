@@ -47,7 +47,7 @@ const itemVariants = {
 
 function Hero() {
   return (
-    <section className="w-full py-16 bg-background">
+    <section className="w-full py-16 bg-background mt-17">
       <div className="container mx-auto px-6 flex flex-col items-center gap-12 text-center">
         {/* Title & Description */}
         <motion.div

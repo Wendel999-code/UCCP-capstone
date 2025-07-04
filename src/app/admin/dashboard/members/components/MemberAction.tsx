@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { GetMemberByID } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader, MoreHorizontal } from "lucide-react";
+import { Edit, Eye, Loader, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ViewMemberModal } from "./ViewMemberModal";
@@ -75,21 +75,25 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
+            className="text-sky-500 cursor-pointer"
             onClick={() => setOpenViewMember(true)}
             onMouseEnter={handlePrefetch}
           >
-            View member
+            <Eye className="text-sky-500" /> View
           </DropdownMenuItem>
 
-          <DropdownMenuItem>Edit details</DropdownMenuItem>
+          <DropdownMenuItem className="text-amber-500 cursor-pointer">
+            {" "}
+            <Edit className="text-amber-500" /> Edit{" "}
+          </DropdownMenuItem>
           {/* <DropdownMenuItem>Send message</DropdownMenuItem> */}
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
             onClick={() => setOpenDeleteDialog(true)}
-            className="text-red-500 hover:bg-red-600 hover:text-white"
+            className="text-red-500 hover:bg-red-600 cursor-pointer hover:text-white"
           >
-            Delete member
+            <Trash className="text-red-500" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

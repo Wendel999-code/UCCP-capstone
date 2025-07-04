@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Loader, MoreHorizontal } from "lucide-react";
+import { Loader, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
 
@@ -43,7 +43,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <ApplicationDetailsModal memberID={memberID} />
@@ -88,9 +88,9 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
               {" "}
               <Button
                 variant={"outline"}
-                className="text-red-600 border-none cursor-pointer"
+                className="text-red-600 border-none   w-full cursor-pointer"
               >
-                Delete application
+                <Trash className="text-red-600" /> Delete
               </Button>
             </div>
           </AlertDialogTrigger>

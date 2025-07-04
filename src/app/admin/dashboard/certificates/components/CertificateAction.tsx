@@ -71,10 +71,10 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
           <DropdownMenuItem
             onClick={() => setOpenCertPreview(true)}
             onMouseEnter={handlePrefetch}
-            className="hover:bg-amber-100 cursor-pointer dark:hover:bg-amber-900"
+            className=" cursor-pointer hover:bg-sky-900 "
           >
-            <Eye className="h-4 w-4 text-amber-500" />
-            <span>Preview Certificate</span>
+            <Eye className="h-4 w-4 text-sky-500" />
+            <span className="cursor-pointer text-sky-500  ">Preview </span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />

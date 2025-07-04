@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetApplicationID } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -88,9 +88,9 @@ export default function ApplicationDetailsModal({
         <Button
           onMouseEnter={handlePrefetch}
           variant="outline"
-          className="text-amber-500 border-none w-full text-left cursor-pointer"
+          className="text-sky-500 border-none w-full text-center   cursor-pointer"
         >
-          View applications
+          <Eye className="text-sky-500 mr-1" /> View
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg w-full bg-amber-50 dark:bg-zinc-900 rounded-xl">
@@ -143,7 +143,10 @@ export default function ApplicationDetailsModal({
           />
 
           <div className="sm:col-span-2">
-            <RenderField label="Local Church" value={member?.Church?.brgy ?? ""} />
+            <RenderField
+              label="Local Church"
+              value={member?.Church?.brgy ?? ""}
+            />
           </div>
 
           {/* Acceptance Date (Required) */}
