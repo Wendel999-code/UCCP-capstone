@@ -45,7 +45,7 @@ const Header = () => {
             alt="Profile"
             width={40}
             height={40}
-            className="rounded-full h-12 w-12 object-cover md:ml-22"
+            className="rounded-full rounded-b-3xl dark:rounded-b-full h-11 dark:h-10  w-10 object-cover md:ml-22"
           />
         </Link>
 

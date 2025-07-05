@@ -43,8 +43,6 @@ export function ViewMemberModal({
     open
   );
 
-  console.log("member", member);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-lg w-full bg-amber-50 dark:bg-zinc-900 rounded-xl">
@@ -82,7 +80,7 @@ export function ViewMemberModal({
                 <Input readOnly className="mt-1" value={member.address} />
               </div>
               <div>
-                <Label className="text-xs text-gray-600">Status</Label>
+                <Label className="text-xs text-gray-600">Member Status</Label>
                 <div className="mt-1">
                   <Badge
                     variant="outline"
@@ -98,8 +96,8 @@ export function ViewMemberModal({
                 </div>
               </div>
               <RenderField
-                label="Has Children"
-                value={member.hasChildren ? "Yes" : "No"}
+                label="Marital Status"
+                value={member.marital_status ?? "Single"}
               />
               <RenderField
                 label="Local Church"

@@ -138,8 +138,8 @@ export default function ApplicationDetailsModal({
           </div>
 
           <RenderField
-            label="Have Children"
-            value={member?.hasChildren ? "Yes" : "No"}
+            label="Marital Status"
+            value={member?.marital_status ?? "Single"}
           />
 
           <div className="sm:col-span-2">

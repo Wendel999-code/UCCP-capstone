@@ -8,6 +8,7 @@ export interface Member {
   address: string;
   category: string;
   hasChildren?: boolean;
+  marital_status?: string;
   gender: string;
   activeStatus: string;
   church_id: string;

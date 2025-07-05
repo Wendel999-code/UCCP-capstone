@@ -25,12 +25,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Edit, Eye, Loader, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
 import { ViewMemberModal } from "./ViewMemberModal";
+import { UpdateMember } from "./UpdateMember";
 
 const MemberAction = ({ memberID }: { memberID: string }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [openViewMember, setOpenViewMember] = useState(false);
+
+  const [openEditMember, setOpenEditMember] = useState(false);
 
   const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
 
@@ -82,7 +86,11 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
             <Eye className="text-sky-500" /> View
           </DropdownMenuItem>
 
-          <DropdownMenuItem className="text-amber-500 cursor-pointer">
+          <DropdownMenuItem
+            onMouseEnter={handlePrefetch}
+            onClick={() => setOpenEditMember(true)}
+            className="text-amber-500 cursor-pointer"
+          >
             {" "}
             <Edit className="text-amber-500" /> Edit{" "}
           </DropdownMenuItem>
@@ -132,6 +140,12 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
       <ViewMemberModal
         open={openViewMember}
         setOpen={setOpenViewMember}
+        memberID={memberID}
+      />
+
+      <UpdateMember
+        open={openEditMember}
+        setOpen={setOpenEditMember}
         memberID={memberID}
       />
     </>

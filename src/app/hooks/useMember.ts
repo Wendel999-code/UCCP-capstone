@@ -10,6 +10,7 @@ import {
   GetMemberByID,
   GetMemberByIDBySuperAdmin,
   GetPendingApplication,
+  UpdateMemberByID,
 } from "@/lib/supabase/actions/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -148,3 +149,28 @@ export const useCountMemPerChurch = () =>
       return res.data;
     },
   });
+
+export const useUpdateMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      memberID,
+      updatedData,
+    }: {
+      memberID: string;
+      updatedData: Record<string, any>;
+    }) => {
+      const res = await UpdateMemberByID(null, memberID, updatedData);
+      if (!res.success) throw new Error(res.message);
+      return res;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
+      queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+      queryClient.invalidateQueries({
+        queryKey: ["member-details", variables.memberID],
+      });
+    },
+  });
+};

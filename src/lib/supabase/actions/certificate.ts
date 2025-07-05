@@ -147,7 +147,7 @@ export async function GetReqCertificateByID(
       .from("baptismal_record")
       .select("baptism_date, officiant, circuit")
       .eq("member_id", certificate.member_id)
-      .single();
+      .maybeSingle();
 
     if (baptismalError) {
       console.error("Error fetching baptismal record:", baptismalError);

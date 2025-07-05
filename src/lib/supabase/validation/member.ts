@@ -9,8 +9,12 @@ export const memberSchema = z.object({
   category: z.string().min(1, "Category is required"),
   address: z.string().min(1, "Address is required"),
   church_id: z.string().min(1, "Church ID is required"),
-    circuit: z.string().min(1, "Circuit is required"),
-
+  circuit: z.string().min(1, "Circuit is required"),
+  marital_status: z.string().min(1, "Marital Status is required"),
   baptismDate: z.string().min(1, "Baptism Date is required"),
   officiant: z.string().min(1, "Officiant is required"),
+  member_email: z
+    .string()
+    .min(1, "Member email is required")
+    .email("Invalid email address"),
 });

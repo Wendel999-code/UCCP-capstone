@@ -25,6 +25,7 @@ export async function ApplyForMembership(
     member_email,
     church_id,
     date_of_birth,
+    marital_status,
   } = data;
 
   const requiredFields = {
@@ -36,6 +37,7 @@ export async function ApplyForMembership(
     gender,
     church_id,
     member_email,
+    marital_status,
   };
 
   const missingFields = Object.entries(requiredFields)
@@ -84,6 +86,7 @@ export async function ApplyForMembership(
           category,
           activeStatus: "pending",
           member_email,
+          marital_status,
         },
       ])
       .select("id")
@@ -165,7 +168,7 @@ export async function GetAllMembersByChurchId() {
       .select("*, Church:church_id(brgy)")
       .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
       .neq("activeStatus", "pending")
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 
@@ -383,6 +386,88 @@ export async function GetMemberByID(MemberID: string) {
   }
 }
 
+export async function UpdateMemberByID(
+  prevState: any,
+  memberID: string,
+  updatedData: Record<string, any>
+) {
+  try {
+    const {
+      firstName,
+      lastName,
+      age,
+      date_of_birth,
+      gender,
+      category,
+      address,
+      baptism_status,
+      baptism_date,
+      officiant,
+      marital_status,
+    } = updatedData;
+
+    // Update member table
+    const { error: updateError } = await supabase
+      .from("member")
+      .update({
+        firstName,
+        lastName,
+        age,
+        date_of_birth: date_of_birth || null,
+        gender,
+        category,
+        address,
+        baptism_status,
+        marital_status,
+      })
+      .eq("id", memberID);
+
+    if (updateError) throw updateError;
+
+    // Update baptismal_record table
+    const { data: baptismExists } = await supabase
+      .from("baptismal_record")
+      .select("id")
+      .eq("member_id", memberID)
+      .maybeSingle();
+
+    if (baptismExists) {
+      // Update existing baptismal record
+      const { error: baptismUpdateError } = await supabase
+        .from("baptismal_record")
+        .update({
+          baptism_date: baptism_date || null,
+          officiant,
+        })
+        .eq("member_id", memberID);
+
+      if (baptismUpdateError) throw baptismUpdateError;
+    } else if (baptism_date || officiant) {
+      // Insert if baptism info provided and no record exists
+      const { error: baptismInsertError } = await supabase
+        .from("baptismal_record")
+        .insert({
+          member_id: memberID,
+          baptism_date: baptism_date || null,
+          officiant,
+        });
+
+      if (baptismInsertError) throw baptismInsertError;
+    }
+
+    return {
+      success: true,
+      message: "Member updated successfully",
+    };
+  } catch (error: any) {
+    console.error("Error updating member:", error);
+    return {
+      success: false,
+      message: error.message || "Failed to update member",
+    };
+  }
+}
+
 export async function GetMemberByIDBySuperAdmin(memberID: string) {
   if (!memberID) {
     return {
@@ -483,6 +568,8 @@ export async function addMemberAction(
     circuit: formData.get("circuit"),
     baptismDate: formData.get("baptismDate"),
     officiant: formData.get("officiant"),
+    marital_status: formData.get("marital_status"),
+    member_email: formData.get("member_email"),
   };
 
   const parsed = memberSchema.safeParse(raw);
@@ -503,6 +590,8 @@ export async function addMemberAction(
     baptismDate,
     officiant,
     circuit,
+    marital_status,
+    member_email,
   } = parsed.data;
 
   try {
@@ -521,6 +610,8 @@ export async function addMemberAction(
         church_id,
         activeStatus: "active",
         baptism_status: "Baptized",
+        marital_status,
+        member_email,
       })
       .eq("church_id", admin.church_id)
       .select("id")
@@ -628,9 +719,8 @@ export async function GetAllMemberPerChurchCount() {
     if (churchError) throw churchError;
 
     const results = Object.entries(counts).map(([churchId, count]) => {
-
       const church = churches.find((c) => c.id === churchId);
-      
+
       return {
         church_id: churchId,
         brgy: church?.brgy || "Unknown",

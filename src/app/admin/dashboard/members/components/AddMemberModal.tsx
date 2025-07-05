@@ -46,6 +46,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
       setOpen(false);
     } else if (state?.errors) {
       toast.error("Saving member error please try again.");
+      console.log(state.errors);
     }
   }, [state, setOpen, queryClient]);
 
@@ -84,6 +85,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
             type="date"
             error={state?.errors?.date_of_birth}
           />
+
           <div>
             <Label htmlFor="gender" className="text-xs text-gray-600">
               Gender
@@ -100,6 +102,27 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
             {state?.errors?.category && (
               <p className="text-red-500 text-xs mt-1">
                 {state.errors.category.join(", ")}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="marital_status" className="text-xs text-gray-600">
+              Marital Status
+            </Label>
+            <Select name="marital_status">
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select  marital status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Single">Single</SelectItem>
+                <SelectItem value="Married">Married</SelectItem>
+                <SelectItem value="Widowed">Widowed</SelectItem>
+                <SelectItem value="Separated">Separated</SelectItem>
+              </SelectContent>
+            </Select>
+            {state?.errors?.marital_status && (
+              <p className="text-red-500 text-xs mt-1">
+                {state.errors.marital_status.join(", ")}
               </p>
             )}
           </div>
@@ -125,6 +148,12 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
               </p>
             )}
           </div>
+          <InputBlock
+            name="member_email"
+            label="Email Address"
+            type="email"
+            error={state?.errors?.member_email}
+          />
 
           <InputBlock
             name="address"
@@ -139,7 +168,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
               <Skeleton className="h-9 mt-1 rounded-md" />
             ) : (
               <Input
-                name="Local Church"
+                name="circuit"
                 value={data?.church?.brgy ?? ""}
                 className="mt-1 text-amber-500"
                 readOnly

@@ -31,6 +31,8 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [marital_status, setMaritalStatus] = useState("")
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +48,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
         address,
         gender,
         // hasChildren,
+        marital_status,
         church_id,
         date_of_birth,
         member_email,
@@ -76,7 +79,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
           {/* <div className="mb-6">
             <Link
               href="/"
-              className="inline-flex text-[12px] items-center gap-2 text-yellow-600 hover:text-yellow-700"
+              className="inline-flex text-[12px] items-center gap-2 text-yellow-600 hover:te"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home
@@ -115,7 +118,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="mt-1 text-gray-700 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    className="mt-1  block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
                     placeholder="John"
                   />
                 </div>
@@ -131,7 +134,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
                     placeholder="Doe"
                   />
                 </div>
@@ -155,7 +158,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                         e.target.value === "" ? "" : Number(e.target.value)
                       )
                     }
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
                     placeholder="0"
                   />
                 </div>
@@ -171,7 +174,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     type="date"
                     value={date_of_birth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
                     placeholder="0"
                   />
                 </div>
@@ -184,12 +187,35 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     Gender
                   </label>
                   <Select value={gender} onValueChange={setGender}>
-                    <SelectTrigger className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                    <SelectTrigger className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm ">
                       <SelectValue placeholder="Select Gender" />
                     </SelectTrigger>
                     <SelectContent className="z-50">
                       <SelectItem value="Male">Male</SelectItem>
                       <SelectItem value="Female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="gender"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Marital Status
+                  </label>
+                  <Select
+                    value={marital_status}
+                    onValueChange={setMaritalStatus}
+                  >
+                    <SelectTrigger className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm ">
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent className="z-50">
+                      <SelectItem value="Single">Single</SelectItem>
+                      <SelectItem value="Married">Married</SelectItem>
+                      <SelectItem value="Widowed">Widowed</SelectItem>
+                      <SelectItem value="Separated">Separated</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -202,7 +228,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                 </label>
                 <div className="flex items-center gap-2 border">
                   <Checkbox
-                    className="border border-gray-700"
+                    className="border bo"
                     id="hasChildren"
                     checked={hasChildren}
                     onCheckedChange={(checked) =>
@@ -225,7 +251,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   required
                   value={member_email}
                   onChange={(e) => setMemberEmail(e.target.value)}
-                  className="mt-1 block md:w-[296px]  rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                  className="mt-1 block md:w-[296px]  rounded-md border border-gray-300 px-3 py-2 text-sm "
                   placeholder="example@gmail.com"
                 />
               </div>
@@ -242,7 +268,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   value={church_id}
                   onValueChange={(val) => setChurchId(val)}
                 >
-                  <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                  <SelectTrigger className="mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm ">
                     <SelectValue placeholder="Select your church" />
                   </SelectTrigger>
                   <SelectContent className="z-50 max-h-64 overflow-y-auto">
@@ -276,7 +302,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                   id="address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="mt-1 block w-full min-h-[100px] rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700"
+                  className="mt-1 block w-full min-h-[100px] rounded-md border border-gray-300 px-3 py-2 text-sm "
                   placeholder="Brgy, Municipality, Province, State "
                 />
               </div>

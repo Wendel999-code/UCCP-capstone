@@ -58,7 +58,7 @@ function Header() {
               alt="Profile"
               width={40}
               height={40}
-              className="rounded-full h-10 w-10 object-cover"
+              className="rounded-full rounded-b-3xl dark:rounded-b-full h-11 dark:h-10 w-10 object-cover"
             />
           </div>
         </Link>

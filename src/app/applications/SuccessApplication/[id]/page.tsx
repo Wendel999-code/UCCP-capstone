@@ -17,7 +17,7 @@ export default async function SuccessApplicationPage({
   if (!res.success) return notFound();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-amber-100 ">
+    <div className="min-h-screen flex items-center justify-center ">
       <div className="bg-amber-50 dark:bg-red-950 shadow-lg rounded-2xl p-8 max-w-md w-full text-center border border-amber-300 dark:border-red-800 animate-fade-in-up">
         <div className="flex justify-center mb-4">
           <CheckCircle className="h-16 w-16 text-amber-500 dark:text-amber-400" />

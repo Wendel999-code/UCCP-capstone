@@ -1,15 +1,9 @@
 "use client";
 
-import Hero from "./landing/Hero";
-// import WelcomeMessage from "./landing/WelcomeMessage";
 import About from "./landing/About";
-// import Services from "./landing/Services";
-// import Event from "./landing/Event";
-// import Testimonials from "./landing/Testimonials";
-// import Contact from "./landing/Contact";
-// import NewsLetter from "./landing/NewsLetter";
 import Footer from "./landing/Footer";
 import Header from "./landing/Header";
+import Hero from "./landing/Hero";
 import Testimonials from "./landing/Testimonials";
 
 export default function Home() {
