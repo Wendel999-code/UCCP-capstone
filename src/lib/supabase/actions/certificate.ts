@@ -1,5 +1,6 @@
 import { GetReqCertificateResponse } from "@/global/type";
-import { ReqCertUpdate } from "@/lib/resend";
+import { InsertActivity } from "@/lib/utils/activity";
+import { ReqCertUpdate } from "@/lib/utils/resend";
 import supabase from "../client";
 import { certificateRequestSchema } from "../validation/certificate";
 import { getChurchAdmin } from "./dal";
@@ -254,6 +255,16 @@ export async function GeneratedCertificate(reqID: string) {
     };
 
     await ReqCertUpdate(reqData);
+
+    await InsertActivity({
+      action: `Issued certificate for ${certificate.firstName} ${certificate.lastName}`,
+      metadata: {
+        requestId: reqID,
+        memberId: certificate.member_id,
+        email: certificate.email,
+        brgy: baptismalRecord?.circuit,
+      },
+    });
 
     return {
       success: true,

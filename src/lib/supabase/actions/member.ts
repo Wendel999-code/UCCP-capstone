@@ -1,6 +1,7 @@
 import { Member } from "@/global/type";
 
-import { ResendEmail } from "@/lib/resend";
+import { InsertActivity } from "@/lib/utils/activity";
+import { ResendEmail } from "@/lib/utils/resend";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
@@ -309,6 +310,17 @@ export async function ApproveMembership(
 
     const res = await ResendEmail(member);
 
+    await InsertActivity({
+      action: "Approved Membership",
+      metadata: {
+        memberId: updatedMember.id,
+        memberName: `${updatedMember.firstName} ${updatedMember.lastName}`,
+        baptismDate: acceptanceOfDate,
+        officiant,
+        church: church.brgy,
+      },
+    });
+
     console.log("Membership approved:", updatedMember, data, res.message);
 
     return {
@@ -341,12 +353,20 @@ export async function DeleteMember(memberID: string) {
         .delete()
         .eq("id", memberID)
         .eq("church_id", admin.church_id)
+        .select("id, firstName, lastName")
         .single();
 
       if (error) throw error;
 
       console.log("Deleted member (church_admin):", deletedMember);
 
+      await InsertActivity({
+        action: "Deleted Member",
+        metadata: {
+          memberId: deletedMember.id,
+          memberName: `${deletedMember.firstName} ${deletedMember.lastName}`,
+        },
+      });
       return {
         success: true,
         message: "Member deleted successfully",
@@ -411,64 +431,79 @@ export async function UpdateMemberByID(
   updatedData: Record<string, any>
 ) {
   try {
-    const {
-      firstName,
-      lastName,
-      age,
-      date_of_birth,
-      gender,
-      category,
-      address,
-      baptism_status,
-      baptism_date,
-      officiant,
-      marital_status,
-    } = updatedData;
+    const { churchAdmin: admin } = await getChurchAdmin();
 
-    const { error: updateError } = await supabase
+    // Construct member update object, skipping undefined fields
+    const memberUpdate: Record<string, any> = {
+      firstName: updatedData.firstName,
+      lastName: updatedData.lastName,
+      age: updatedData.age,
+      gender: updatedData.gender,
+      category: updatedData.category,
+      address: updatedData.address,
+      baptism_status: updatedData.baptism_status,
+      marital_status: updatedData.marital_status,
+    };
+
+    if ("date_of_birth" in updatedData)
+      memberUpdate.date_of_birth = updatedData.date_of_birth || null;
+
+    const { data: updatedMember, error: updateError } = await supabase
       .from("member")
-      .update({
-        firstName,
-        lastName,
-        age,
-        date_of_birth: date_of_birth || null,
-        gender,
-        category,
-        address,
-        baptism_status,
-        marital_status,
-      })
-      .eq("id", memberID);
+      .update(memberUpdate)
+      .eq("id", memberID)
+      .eq("church_id", admin.church_id)
+      .select("id, firstName, lastName") // fetch for logging
+      .single();
 
     if (updateError) throw updateError;
 
-    const { data: baptismExists } = await supabase
+    // Handle baptismal record
+    const { data: baptismExists, error: baptismCheckError } = await supabase
       .from("baptismal_record")
       .select("id")
       .eq("member_id", memberID)
+      .eq("church_id", admin.church_id)
       .maybeSingle();
 
+    if (baptismCheckError) throw baptismCheckError;
+
     if (baptismExists) {
+      // Update baptismal record
       const { error: baptismUpdateError } = await supabase
         .from("baptismal_record")
         .update({
-          baptism_date: baptism_date || null,
-          officiant,
+          baptism_date: updatedData.baptism_date || null,
+          officiant: updatedData.officiant || null,
         })
-        .eq("member_id", memberID);
+        .eq("member_id", memberID)
+        .eq("church_id", admin.church_id);
 
       if (baptismUpdateError) throw baptismUpdateError;
-    } else if (baptism_date || officiant) {
+    } else if (updatedData.baptism_date || updatedData.officiant) {
+      // Insert baptismal record
       const { error: baptismInsertError } = await supabase
         .from("baptismal_record")
         .insert({
           member_id: memberID,
-          baptism_date: baptism_date || null,
-          officiant,
+          baptism_date: updatedData.baptism_date || null,
+          officiant: updatedData.officiant || null,
+          church_id: admin.church_id,
         });
 
       if (baptismInsertError) throw baptismInsertError;
     }
+
+    // Insert activity log
+    await InsertActivity({
+      action: "Updated Member",
+      metadata: {
+        memberId: updatedMember.id,
+        memberName: `${updatedMember.firstName} ${updatedMember.lastName}`,
+        prevData: prevState,
+        newData: updatedData,
+      },
+    });
 
     return {
       success: true,
@@ -628,7 +663,6 @@ export async function addMemberAction(
         marital_status,
         member_email,
       })
-      .eq("church_id", admin.church_id)
       .select("id")
       .single();
 
@@ -644,10 +678,20 @@ export async function addMemberAction(
         officiant,
         fullName: `${lastName}  ${firstName}`,
       })
-      .eq("church_id", admin.church_id)
+
       .single();
 
     if (CertError) throw CertError;
+
+    await InsertActivity({
+      action: "Add Member",
+      metadata: {
+        member_id: memberData.id,
+        church_id: admin.church_id,
+        firstName,
+        lastName,
+      },
+    });
 
     return { success: true };
   } catch (error) {

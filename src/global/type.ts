@@ -122,3 +122,23 @@ export type Testimonial = {
   fullName?: string;
   description?: string;
 };
+
+export type ActivityLogPayload = {
+  action: string;
+  metadata?: Record<string, any>;
+};
+
+export type ActivityLogResult = {
+  success: boolean;
+  message: string;
+};
+
+export type ActivityLog = {
+  id: string;
+  church_id: string;
+  brgy?: string;
+  admin_id: string;
+  action: string;
+  metadata: Record<string, any> | null;
+  created_at: string;
+};
