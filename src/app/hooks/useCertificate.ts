@@ -1,5 +1,6 @@
 import { CertificateDetails, CertificateRequest } from "@/global/type";
 import {
+  getCompletedCertificateRequestCount,
   GetReqCertificate,
   GetReqCertificateByID,
 } from "@/lib/supabase/actions/certificate";
@@ -27,4 +28,10 @@ export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+  });
+
+export const useCountCompletedReqCertificate = () =>
+  useQuery<number>({
+    queryKey: ["completed-req-certificate"],
+    queryFn: getCompletedCertificateRequestCount,
   });

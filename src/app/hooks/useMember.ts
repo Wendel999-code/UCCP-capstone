@@ -3,6 +3,7 @@ import {
   ApproveMembership,
   DeleteMember,
   DeleteMemberBySuperAdmin,
+  GetAllCountMembersByChurchId,
   GetAllMemberPerChurchCount,
   GetAllMembersByChurchId,
   GetAllMembersBySuperAdmin,
@@ -174,3 +175,17 @@ export const useUpdateMember = () => {
     },
   });
 };
+
+export const useCountMemPerChurchAdmin = () =>
+  useQuery<number>({
+    queryKey: ["count-members-per-church-admin"],
+
+    queryFn: async () => {
+      const count = await GetAllCountMembersByChurchId();
+
+      if (!count)
+        throw new Error("Failed to fetch members  count per church admin");
+
+      return count;
+    },
+  });

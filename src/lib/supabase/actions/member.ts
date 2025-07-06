@@ -186,6 +186,25 @@ export async function GetAllMembersByChurchId() {
   }
 }
 
+export async function GetAllCountMembersByChurchId() {
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { count, error } = await supabase
+      .from("member")
+      .select("id", { count: "exact", head: true })
+      .eq("church_id", admin.church_id)
+      .eq("activeStatus", "active");
+
+    if (error) throw error;
+
+    return count;
+  } catch (error) {
+    console.error("Error in GetAllCountMembersByChurchId:", error);
+    return null;
+  }
+}
+
 export async function GetPendingApplicationsCount() {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
@@ -406,7 +425,6 @@ export async function UpdateMemberByID(
       marital_status,
     } = updatedData;
 
-    // Update member table
     const { error: updateError } = await supabase
       .from("member")
       .update({
@@ -424,7 +442,6 @@ export async function UpdateMemberByID(
 
     if (updateError) throw updateError;
 
-    // Update baptismal_record table
     const { data: baptismExists } = await supabase
       .from("baptismal_record")
       .select("id")
@@ -432,7 +449,6 @@ export async function UpdateMemberByID(
       .maybeSingle();
 
     if (baptismExists) {
-      // Update existing baptismal record
       const { error: baptismUpdateError } = await supabase
         .from("baptismal_record")
         .update({
@@ -443,7 +459,6 @@ export async function UpdateMemberByID(
 
       if (baptismUpdateError) throw baptismUpdateError;
     } else if (baptism_date || officiant) {
-      // Insert if baptism info provided and no record exists
       const { error: baptismInsertError } = await supabase
         .from("baptismal_record")
         .insert({

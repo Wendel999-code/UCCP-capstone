@@ -1,6 +1,6 @@
 import supabase from "../client";
 
-export const logVisitor = async () => {
+export const LogVisitor = async () => {
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
     const ipData = await ipRes.json();
@@ -37,7 +37,7 @@ export const getVisitorCount = async () => {
   try {
     const { count, error } = await supabase
       .from("visitors")
-      .select("*", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true });
 
     if (error) {
       console.error("Error fetching visitor count:", error.message);

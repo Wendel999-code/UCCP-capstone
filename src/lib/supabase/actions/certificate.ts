@@ -267,3 +267,22 @@ export async function GeneratedCertificate(reqID: string) {
     };
   }
 }
+
+export async function getCompletedCertificateRequestCount() {
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { count, error } = await supabase
+      .from("req_certificate")
+      .select("id", { count: "exact", head: true })
+      .eq("church_id", admin.church_id)
+      .eq("status", "Completed");
+
+    if (error) throw error;
+
+    return count ?? 0;
+  } catch (error) {
+    console.error("Error in getCompletedCertificateRequestCount:", error);
+    return 0;
+  }
+}

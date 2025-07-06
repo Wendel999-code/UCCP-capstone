@@ -70,7 +70,7 @@ const SideBar = () => {
     >
       <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
         {isLoading ? (
-          <Skeleton className="rounded-2xl dark:bg-gray-900 text-center w-[180px] h-[24px]" />
+          <Skeleton className="rounded-2xl bg-neutral-300 dark:bg-neutral-700 text-center w-[180px] h-[24px]" />
         ) : (
           data?.church?.brgy
         )}
