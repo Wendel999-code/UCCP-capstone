@@ -2,6 +2,7 @@
 import { useVisitCount } from "@/app/hooks/visit";
 import { AnimatePresence, motion } from "framer-motion";
 import { Eye } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
 const Visits = () => {
   const { data: count, isLoading } = useVisitCount();
@@ -25,7 +26,7 @@ const Visits = () => {
           animate={{ opacity: 1 }}
           className="text-sm text-gray-500 italic mt-4"
         >
-          Loading visitor count...
+          <Skeleton className="h-10 w-30 bg-gray-300 dark:bg-slate-800     rounded-md" />
         </motion.div>
       )}
     </AnimatePresence>

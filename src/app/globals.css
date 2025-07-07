@@ -121,3 +121,29 @@
      @apply font-sans;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+/* For Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+  width: 2px; /* adjust as needed */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* or any fallback color */
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(rgb(61, 2, 2), rgb(146, 146, 32));
+  border-radius: 6px;
+}
+
+/* For Firefox */
+html {
+  scrollbar-width:2px;
+  scrollbar-color: rgb(59, 2, 2) rgb(63, 63, 5); /* fallback, gradient is not fully supported in Firefox */
+}
+

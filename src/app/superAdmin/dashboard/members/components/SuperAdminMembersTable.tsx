@@ -38,6 +38,10 @@ import {
 import { useGetAllChurches } from "@/app/hooks/useChurch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Member } from "@/global/type";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import Pagination from "./SuperAdminPagination";
 import { SuperAdminTablesData } from "./SuperAdminTablesData";
 
@@ -48,6 +52,71 @@ export default function SuperAdminMembersTable({
 }) {
   const { table, columns } = SuperAdminTablesData({ members });
   const { data: churches, isLoading } = useGetAllChurches();
+
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPDF = () => {
+    setIsExporting(true);
+    try {
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      doc.setFontSize(12);
+      doc.text("Member Profile Directory", 14, 15);
+
+      // Get visible headers
+      const headers = table
+        .getVisibleLeafColumns()
+        .filter((col) => col.id !== "actions")
+        .map((col) =>
+          typeof col.columnDef.header === "string"
+            ? col.columnDef.header
+            : col.id
+        );
+
+      // Get visible rows with truncated strings
+      const dataRows = table.getRowModel().rows.map((row) =>
+        row.getVisibleCells().map((cell) => {
+          let value = cell.getValue();
+          if (typeof value === "string" && value.length > 40) {
+            value = value.substring(0, 37) + "...";
+          }
+          return typeof value === "string" || typeof value === "number"
+            ? value
+            : JSON.stringify(value);
+        })
+      );
+
+      autoTable(doc, {
+        head: [headers],
+        body: dataRows,
+        startY: 20,
+        styles: {
+          fontSize: 8,
+          cellPadding: 1,
+          overflow: "linebreak",
+          textColor: [40, 40, 40],
+        },
+        headStyles: {
+          fillColor: [255, 204, 0],
+          textColor: 20,
+          fontSize: 8,
+        },
+        margin: { top: 20, left: 10, right: 10, bottom: 10 },
+      });
+
+      doc.save("member_directory.pdf");
+      toast.success("PDF exported successfully");
+    } catch (error) {
+      console.log("Error exporting PDF:", error);
+      toast.error("Error exporting PDF");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <div className="space-y-2 w-full">
@@ -214,11 +283,13 @@ export default function SuperAdminMembersTable({
               </DropdownMenu>
 
               <Button
-                variant={"outline"}
-                className="h-7 px-2 text-xs hover:bg-amber-500 cursor-pointer "
+                disabled={isExporting}
+                onClick={handleExportPDF}
+                variant={"ghost"}
+                className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
               >
-                <Download className="mr-1 h-2.5 w-2.5" />
-                Export
+                <Download className="mr-1 h-2.5 w-2.5 " />
+                {isExporting ? "Exporting..." : "Export PDF"}
               </Button>
             </div>
           </div>

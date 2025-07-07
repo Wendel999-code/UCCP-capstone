@@ -58,6 +58,23 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
 
   const columns: ColumnDef<Member>[] = [
     {
+      accessorKey: "lastName",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          LASTNAME
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <p className="lowercase text-[14px] ml-3">{row.getValue("lastName")}</p>
+      ),
+    },
+
+    {
       accessorKey: "firstName",
       header: ({ column }) => {
         return (
@@ -76,26 +93,6 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
           <p className=" ml-3 text-[14px]  ">{row.getValue("firstName")}</p>
         );
       },
-    },
-    {
-      accessorKey: "lastName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] px-2"
-          >
-            LASTNAME
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <p className="lowercase text-[14px]  ml-3 ">
-          {row.getValue("lastName")}
-        </p>
-      ),
     },
     {
       accessorKey: "age",

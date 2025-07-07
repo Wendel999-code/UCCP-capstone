@@ -57,26 +57,6 @@ export function TablesData({ members }: { members: Member[] }) {
 
   const columns: ColumnDef<Member>[] = [
     {
-      accessorKey: "firstName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] "
-          >
-            Firstname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <p className=" ml-3 text-[14px] ">{row.getValue("firstName")}</p>
-        );
-      },
-    },
-    {
       accessorKey: "lastName",
       header: ({ column }) => {
         return (
@@ -95,6 +75,27 @@ export function TablesData({ members }: { members: Member[] }) {
           {row.getValue("lastName")}
         </p>
       ),
+    },
+
+    {
+      accessorKey: "firstName",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-[12px] "
+          >
+            Firstname
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <p className=" ml-3 text-[14px] ">{row.getValue("firstName")}</p>
+        );
+      },
     },
     {
       accessorKey: "age",
@@ -228,12 +229,12 @@ export function TablesData({ members }: { members: Member[] }) {
     // },
 
     {
-      accessorKey: "circuit",
+      accessorFn: (row) => row.Church?.brgy ?? "",
+      id: "circuit",
       header: "Local Church",
-      cell: ({ row }) => {
-        const circuit = row.original.Church?.brgy as string;
-        return <p className="text-[14px] text-amber-500"> {circuit}</p>;
-      },
+      cell: ({ getValue }) => (
+        <p className="text-[14px] text-amber-500">{getValue() as string}</p>
+      ),
     },
 
     {
