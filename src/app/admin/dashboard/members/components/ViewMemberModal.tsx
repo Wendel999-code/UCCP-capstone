@@ -75,10 +75,7 @@ export function ViewMemberModal({
               />
               <RenderField label="Gender" value={member.gender} />
               <RenderField label="Category" value={member.category} />
-              <div className="sm:col-span-2">
-                <Label className="text-xs text-gray-600">Address</Label>
-                <Input readOnly className="mt-1" value={member.address} />
-              </div>
+
               <div>
                 <Label className="text-xs text-gray-600">Member Status</Label>
                 <div className="mt-1">
@@ -121,6 +118,19 @@ export function ViewMemberModal({
                 label="Officiant"
                 value={member.officiant ?? "N/A"}
               />
+              <RenderField
+                label="Email Address"
+                value={member.member_email ?? "N/A"}
+              />
+
+              <div className="sm:col-span-2">
+                <Label className="text-xs text-gray-600">Address</Label>
+                <Input
+                  readOnly
+                  className="mt-1"
+                  value={member.address ?? "N/A"}
+                />
+              </div>
             </>
           ) : (
             <p className="col-span-2 text-center text-sm text-gray-500">

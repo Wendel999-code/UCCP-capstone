@@ -394,7 +394,7 @@ export async function GetMemberByID(MemberID: string) {
       .from("member")
       .select("*, Church:church_id(brgy)")
       .eq("id", MemberID)
-      .eq("activeStatus", "active");
+      .neq("activeStatus", "pending");
 
     if (admin.role === "church_admin") {
       query = query.eq("church_id", admin.church_id);
@@ -443,10 +443,19 @@ export async function UpdateMemberByID(
       address: updatedData.address,
       baptism_status: updatedData.baptism_status,
       marital_status: updatedData.marital_status,
+      activeStatus: updatedData.activeStatus,
+      member_email: updatedData.member_email,
     };
 
     if ("date_of_birth" in updatedData)
       memberUpdate.date_of_birth = updatedData.date_of_birth || null;
+
+    if ("church_id" in updatedData)
+      memberUpdate.church_id = updatedData.church_id || null;
+
+    Object.keys(memberUpdate).forEach(
+      (key) => memberUpdate[key] === undefined && delete memberUpdate[key]
+    );
 
     const { data: updatedMember, error: updateError } = await supabase
       .from("member")
@@ -473,6 +482,7 @@ export async function UpdateMemberByID(
       const { error: baptismUpdateError } = await supabase
         .from("baptismal_record")
         .update({
+          fullName: `${updatedMember.lastName} ${updatedMember.firstName}`,
           baptism_date: updatedData.baptism_date || null,
           officiant: updatedData.officiant || null,
         })
@@ -486,6 +496,7 @@ export async function UpdateMemberByID(
         .from("baptismal_record")
         .insert({
           member_id: memberID,
+          fullName: `${updatedMember.lastName} ${updatedMember.firstName}`,
           baptism_date: updatedData.baptism_date || null,
           officiant: updatedData.officiant || null,
           church_id: admin.church_id,
