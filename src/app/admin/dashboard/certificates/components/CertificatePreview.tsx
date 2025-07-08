@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GeneratedCertificate } from "@/lib/supabase/actions/certificate";
-import { getAgeAtBaptism } from "@/utils/dateHelper";
+import { getAgeAtBaptism } from "@/lib/utils/dateHelper";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import domtoimage from "dom-to-image-more";

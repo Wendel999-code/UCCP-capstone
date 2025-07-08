@@ -38,8 +38,7 @@ import {
 import { useGetAllChurches } from "@/app/hooks/useChurch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Member } from "@/global/type";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "./SuperAdminPagination";
@@ -55,60 +54,14 @@ export default function SuperAdminMembersTable({
 
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     setIsExporting(true);
     try {
-      const doc = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
+      await exportToPDF(table, {
+        title: "Cana Circuit Members",
+        filename: "Cana Circuit Members.pdf",
       });
 
-      doc.setFontSize(12);
-      doc.text("Member Profile Directory", 14, 15);
-
-      // Get visible headers
-      const headers = table
-        .getVisibleLeafColumns()
-        .filter((col) => col.id !== "actions")
-        .map((col) =>
-          typeof col.columnDef.header === "string"
-            ? col.columnDef.header
-            : col.id
-        );
-
-      // Get visible rows with truncated strings
-      const dataRows = table.getRowModel().rows.map((row) =>
-        row.getVisibleCells().map((cell) => {
-          let value = cell.getValue();
-          if (typeof value === "string" && value.length > 40) {
-            value = value.substring(0, 37) + "...";
-          }
-          return typeof value === "string" || typeof value === "number"
-            ? value
-            : JSON.stringify(value);
-        })
-      );
-
-      autoTable(doc, {
-        head: [headers],
-        body: dataRows,
-        startY: 20,
-        styles: {
-          fontSize: 8,
-          cellPadding: 1,
-          overflow: "linebreak",
-          textColor: [40, 40, 40],
-        },
-        headStyles: {
-          fillColor: [255, 204, 0],
-          textColor: 20,
-          fontSize: 8,
-        },
-        margin: { top: 20, left: 10, right: 10, bottom: 10 },
-      });
-
-      doc.save("member_directory.pdf");
       toast.success("PDF exported successfully");
     } catch (error) {
       console.log("Error exporting PDF:", error);
