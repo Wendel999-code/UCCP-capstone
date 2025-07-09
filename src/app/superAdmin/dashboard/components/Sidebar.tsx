@@ -2,7 +2,7 @@
 
 import { Home, Loader, LogOut, Logs, Users } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,21 +12,17 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const SuperAdminSideBar = () => {
-  const router = useRouter();
   const pathname = usePathname();
-
   const [isLoading, setLoading] = useState(false);
-
   const handleLogout = async () => {
     setLoading(true);
     try {
       const res = await Logout();
-      if (!res.success) {
-        toast.error(res.message);
-        return;
+      toast[res.success ? "success" : "error"](res.message);
+
+      if (res.success) {
+        window.location.href = "/";
       }
-      toast.success(res.message);
-      router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

@@ -9,13 +9,10 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const Header = () => {
   const { user, loading } = useUser();
-
-  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -23,7 +20,7 @@ const Header = () => {
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {
-        router.replace("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Logout error:", error);
@@ -39,7 +36,7 @@ const Header = () => {
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex h-18 items-center px-4 justify-between ">
-        <Link href="/admin/dashboard" className="flex items-center">
+        <Link href="/superAdmin/dashboard" className="flex items-center">
           <Image
             src="/uccp.jpg"
             alt="Profile"

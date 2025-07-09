@@ -17,8 +17,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, File, Home, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 const navItems = [
@@ -39,31 +39,19 @@ const Nav = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const router = useRouter();
-
   const handleLogout = async () => {
     try {
       const res = await Logout();
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {
-        router.replace("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("An unexpected error occurred during logout.");
     }
   };
-
-  useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push("/");
-      } else if (user.role !== "member") {
-        router.push("/");
-      }
-    }
-  }, [loading, user, router]);
 
   if (loading) return <Skeleton className="h-10 w-full" />;
 

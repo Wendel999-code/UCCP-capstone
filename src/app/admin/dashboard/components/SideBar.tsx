@@ -2,8 +2,7 @@
 
 import { File, Home, Loader, LogOut, UserCheck, Users } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-
+import { usePathname } from "next/navigation";
 import { useSidebarData } from "@/app/hooks/useSideBar";
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,6 @@ import { toast } from "react-toastify";
 
 const SideBar = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const { data, isLoading, refetch } = useSidebarData();
 
@@ -48,12 +46,11 @@ const SideBar = () => {
     setLoading(true);
     try {
       const res = await Logout();
-      if (!res.success) {
-        toast.error(res.message);
-        return;
+      toast[res.success ? "success" : "error"](res.message);
+
+      if (res.success) {
+        window.location.href = "/";
       }
-      toast.success(res.message);
-      router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

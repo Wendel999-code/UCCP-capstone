@@ -9,13 +9,10 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const Header = () => {
   const { user, loading } = useUser();
-
-  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -23,7 +20,7 @@ const Header = () => {
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {
-        router.replace("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Logout error:", error);

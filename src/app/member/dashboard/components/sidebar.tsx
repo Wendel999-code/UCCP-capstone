@@ -6,13 +6,12 @@ import { Logout } from "@/lib/supabase/actions/auth";
 import { motion } from "framer-motion";
 import { File, Home, Loader, LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 const SideBar = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
@@ -20,18 +19,13 @@ const SideBar = () => {
     setLoading(true);
     try {
       const res = await Logout();
+      toast[res.success ? "success" : "error"](res.message);
 
-      if (!res.success) {
-        toast.error(res.message);
-        return;
+      if (res.success) {
+        window.location.href = "/";
       }
-
-      toast.success(res.message);
-
-      router.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
-      toast.error("An unexpected error occurred during logout.");
     } finally {
       setLoading(false);
     }
