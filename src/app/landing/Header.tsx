@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Logout } from "@/lib/supabase/actions/auth";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
 import { ArrowRight, Menu } from "lucide-react";
 import Image from "next/image";
@@ -35,7 +35,7 @@ function Header() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const res = await Logout();
+    const res = await LogoutV2();
     toast[res.success ? "success" : "error"](res.message);
     if (res.success) {
       setOpen(false);

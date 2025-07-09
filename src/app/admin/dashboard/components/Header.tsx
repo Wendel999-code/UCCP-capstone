@@ -5,6 +5,7 @@ import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Logout } from "@/lib/supabase/actions/auth";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -16,7 +17,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await Logout();
+      const res = await LogoutV2();
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {

@@ -5,7 +5,7 @@ import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SignUp } from "@/lib/supabase/actions/auth";
+import { SignUpV2 } from "@/lib/supabase/actions/authV2";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,7 +44,7 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-      const res = await SignUp(email, password);
+      const res = await SignUpV2(email, password);
 
       if (!res.success) {
         console.error("Sign up failed:", res.message);

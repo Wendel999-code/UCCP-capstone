@@ -2,7 +2,7 @@
 
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Logout } from "@/lib/supabase/actions/auth";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
 import { File, Home, Loader, LogOut } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const SideBar = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const res = await Logout();
+      const res = await LogoutV2();
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {

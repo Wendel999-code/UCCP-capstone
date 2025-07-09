@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Logout } from "@/lib/supabase/actions/auth";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ const SuperAdminSideBar = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const res = await Logout();
+      const res = await LogoutV2();
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {

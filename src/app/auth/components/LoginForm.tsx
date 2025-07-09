@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { roleRedirectMap, UserRole } from "@/constant";
-import { Login } from "@/lib/supabase/actions/auth";
+// import { Login } from "@/lib/supabase/actions/auth";
+import { LoginV2 } from "@/lib/supabase/actions/authV2";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,7 +41,7 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const res = await Login(email, password);
+      const res = await LoginV2(email, password);
 
       if (!res.success) {
         toast.error(res.message);

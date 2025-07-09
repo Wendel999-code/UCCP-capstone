@@ -1,6 +1,11 @@
-import supabase from "../client";
+"use server";
+
+import { createSupabaseServer } from "../server";
+
+// import supabase from "../client";
 
 export async function getChurchAdmin() {
+  const supabase = await createSupabaseServer();
   try {
     const { data: currentUser, error: userError } =
       await supabase.auth.getUser();
@@ -35,6 +40,8 @@ export async function getChurchAdmin() {
 }
 
 export async function SuperAdmin() {
+  const supabase = await createSupabaseServer();
+
   try {
     const { data: currentUser, error: userError } =
       await supabase.auth.getUser();

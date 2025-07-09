@@ -1,15 +1,15 @@
 "use client";
 
-import { File, Home, Loader, LogOut, UserCheck, Users } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useSidebarData } from "@/app/hooks/useSideBar";
 import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Logout } from "@/lib/supabase/actions/auth";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import supabase from "@/lib/supabase/client";
 import { motion } from "framer-motion";
+import { File, Home, Loader, LogOut, UserCheck, Users } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -28,7 +28,7 @@ const SideBar = () => {
         {
           event: "*",
           schema: "public",
-          table: "Member",
+          table: "member",
           filter: "activeStatus=eq.pending",
         },
         () => {
@@ -45,7 +45,7 @@ const SideBar = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const res = await Logout();
+      const res = await LogoutV2();
       toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {

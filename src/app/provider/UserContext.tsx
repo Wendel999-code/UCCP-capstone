@@ -9,7 +9,8 @@ import {
   useMemo,
 } from "react";
 
-import { fetchCurrentUser } from "@/lib/supabase/actions/auth";
+// import { fetchCurrentUser } from "@/lib/supabase/actions/auth";
+import { fetchCurrentUserV2 } from "@/lib/supabase/actions/authV2";
 import supabase from "@/lib/supabase/client";
 
 type User = {
@@ -34,7 +35,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     refetch,
   } = useQuery({
     queryKey: ["currentUser"],
-    queryFn: fetchCurrentUser,
+    queryFn: fetchCurrentUserV2,
     staleTime: 60 * 60 * 1000,
   });
 
