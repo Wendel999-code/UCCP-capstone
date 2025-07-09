@@ -14,13 +14,14 @@ export default function SuperAdminLayoutGuard({
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return;
-    if (!user || user.role !== "super_admin") {
+    if (!loading && (!user || user.role !== "super_admin")) {
       router.replace("/");
     }
   }, [user, loading, router]);
 
-  if (loading) return <LogoLoader />;
+  if (loading || !user || user.role !== "super_admin") {
+    return <LogoLoader />;
+  }
 
   return <>{children}</>;
 }

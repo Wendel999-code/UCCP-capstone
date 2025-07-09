@@ -5,7 +5,7 @@ import LogoLoader from "@/components/LogoLoader";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function AdminAuthGuard({
+export default function MemberLayoutGuard({
   children,
 }: {
   children: React.ReactNode;
@@ -14,12 +14,12 @@ export default function AdminAuthGuard({
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== "church_admin")) {
+    if (!loading && (!user || user.role !== "member")) {
       router.replace("/");
     }
   }, [user, loading, router]);
 
-  if (loading || !user || user.role !== "church_admin") {
+  if (loading || !user || user.role !== "member") {
     return <LogoLoader />;
   }
 
