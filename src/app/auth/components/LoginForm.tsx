@@ -31,7 +31,6 @@ export default function LoginForm() {
   if (userLoading || user) {
     return <LogoLoader />;
   }
-
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -39,27 +38,24 @@ export default function LoginForm() {
       toast.error("Please fill out all fields.");
       return;
     }
+
     setLoading(true);
 
     try {
       const res = await LoginV2(email, password);
+      const { success, message, role } = res || {};
 
-      if (!res?.success) {
-        toast.error(res?.message);
+      if (!success) {
+        toast.error(message || "Login failed");
         return;
       }
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
-      const role = res.role as UserRole | undefined;
-      const redirectPath = role ? roleRedirectMap[role] : "/";
+      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
-      if (redirectPath) {
-        router.replace(redirectPath);
-      } else {
-        router.replace("/");
-      }
+      const redirectPath = roleRedirectMap[role as UserRole] || "/";
+      router.replace(redirectPath);
 
-      toast.success(res?.message);
+      toast.success(message || "Login successful");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");

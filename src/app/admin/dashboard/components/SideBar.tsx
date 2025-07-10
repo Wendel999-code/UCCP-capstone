@@ -46,9 +46,9 @@ const SideBar = () => {
     setLoading(true);
     try {
       const res = await LogoutV2();
-      toast[res.success ? "success" : "error"](res.message);
 
       if (res.success) {
+        toast.success("Logout successfully");
         window.location.href = "/";
       }
     } catch (error) {
