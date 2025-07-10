@@ -23,6 +23,11 @@ export const usePendingMembers = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });
 
 export const useApproveMember = () => {
@@ -45,6 +50,9 @@ export const useApproveMember = () => {
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
       queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
+      queryClient.invalidateQueries({
+        queryKey: ["count-members-per-church-admin"],
+      });
     },
   });
 };
@@ -57,6 +65,10 @@ export const useGetAllmemberByChurchId = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });
 
 export const useApplicationDetails = (memberID: string, open: boolean) =>
@@ -69,6 +81,9 @@ export const useApplicationDetails = (memberID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   });
 
 export const useDeleteMember = () => {
@@ -86,6 +101,9 @@ export const useDeleteMember = () => {
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
       queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
+      queryClient.invalidateQueries({
+        queryKey: ["count-members-per-church-admin"],
+      });
     },
   });
 };
@@ -104,6 +122,9 @@ export const useDeleteMemberBySuperAdmin = () => {
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
       queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
+      queryClient.invalidateQueries({
+        queryKey: ["count-members-per-church-admin"],
+      });
     },
   });
 };
@@ -118,6 +139,9 @@ export const useMemberDetails = (memberID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   });
 
 export const useMemberDetailsBySuperAdmin = (memberID: string, open: boolean) =>
@@ -130,6 +154,9 @@ export const useMemberDetailsBySuperAdmin = (memberID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   });
 
 export const useGetAllmemberBySuperAdmin = () =>
@@ -140,6 +167,10 @@ export const useGetAllmemberBySuperAdmin = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });
 
 export const useCountMemPerChurch = () =>
@@ -150,6 +181,10 @@ export const useCountMemPerChurch = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });
 
 export const useUpdateMember = () => {
@@ -180,6 +215,10 @@ export const useUpdateMember = () => {
 export const useCountMemPerChurchAdmin = () =>
   useQuery<number>({
     queryKey: ["count-members-per-church-admin"],
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
 
     queryFn: async () => {
       const count = await GetAllCountMembersByChurchId();

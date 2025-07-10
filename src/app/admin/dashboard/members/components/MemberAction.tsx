@@ -57,14 +57,13 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
       deleteMember(memberID, {
         onSuccess: () => {
           toast.success("Member deleted successfully");
-          setOpenDeleteDialog(false);
         },
         onError: (error) => {
           toast.error(error.message);
-          setOpenDeleteDialog(false);
         },
       });
     } catch (error) {
+      console.log("error in deleting member", error);
       toast.error("Something went wrong upon deletions");
     } finally {
       setOpenDeleteDialog(false);
