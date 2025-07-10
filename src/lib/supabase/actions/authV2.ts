@@ -1,10 +1,16 @@
 "use server";
 
 import { createSupabaseServer } from "../server";
+import { LoginSchema } from "../validation/auth";
 
 export async function LoginV2(email: string, password: string) {
-  if (!email || !password) {
-    return { success: false, message: "Fill out the input fields first" };
+  const parseResult = LoginSchema.safeParse({ email, password });
+
+  if (!parseResult.success) {
+    const message = parseResult.error.errors
+      .map((err) => err.message)
+      .join(", ");
+    return { success: false, message };
   }
 
   const supabase = await createSupabaseServer();
@@ -67,8 +73,8 @@ export async function LoginV2(email: string, password: string) {
 }
 
 export const fetchCurrentUserV2 = async () => {
-  const supabase = await createSupabaseServer();
   try {
+    const supabase = await createSupabaseServer();
     const {
       data: { user: authUser },
       error: authError,
@@ -94,9 +100,8 @@ export const fetchCurrentUserV2 = async () => {
 };
 
 export async function LogoutV2() {
-  const supabase = await createSupabaseServer();
-
   try {
+    const supabase = await createSupabaseServer();
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Supabase Logout error:", error.message);
@@ -113,12 +118,18 @@ export async function LogoutV2() {
 }
 
 export async function SignUpV2(email: string, password: string) {
-  if (!email || !password) {
-    return { success: false, message: "Fill out the input fields first" };
+  const parseResult = LoginSchema.safeParse({ email, password });
+
+  if (!parseResult.success) {
+    const message = parseResult.error.errors
+      .map((err) => err.message)
+      .join(", ");
+    return { success: false, message };
   }
-  const supabase = await createSupabaseServer();
 
   try {
+    const supabase = await createSupabaseServer();
+
     const { error } = await supabase.auth.signUp({
       email,
       password,

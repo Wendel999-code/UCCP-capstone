@@ -1,16 +1,14 @@
 "use client";
 
 import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
-import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { roleRedirectMap, UserRole } from "@/constant";
-// import { Login } from "@/lib/supabase/actions/auth";
 import { LoginV2 } from "@/lib/supabase/actions/authV2";
 import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -29,7 +27,7 @@ export default function LoginForm() {
   const { loading: userLoading, user } = useRedirectIfAuthenticated();
 
   if (userLoading || user) {
-    return <LogoLoader />;
+    return;
   }
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -55,7 +53,7 @@ export default function LoginForm() {
       const redirectPath = roleRedirectMap[role as UserRole] || "/";
       router.replace(redirectPath);
 
-      toast.success(message || "Login successful");
+      toast.success(message || "Login successfully");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
@@ -65,30 +63,41 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center ">
-      {/* Left: Form */}
-      <div className="flex ">
-        <div className="w-full border md:w-1/2 px-8 py-16 space-y-6 shadow-xl rounded-md   ">
-          {/* <Link
-            href="/"
-            className="flex items-center  gap-1 text-red-900 hover:underline mb-12"
-          >
-            <ArrowLeft size={18} />
-            <span className="font-medium text-xs dark:text-gray-600">
-              Back to Home
-            </span>
-          </Link> */}
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl  font-bold text-red-900">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex items-center justify-center px-4 py-12"
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="w-full max-w-md md:max-w-2xl flex flex-col md:flex-row bg-white dark:bg-neutral-900 rounded-lg shadow-xl overflow-hidden"
+      >
+        {/* Left: Welcome Section */}
+        <div className="hidden md:flex flex-col justify-center items-center bg-red-900 text-white w-1/2 p-8">
+          <h2 className="text-3xl font-bold text-center">
+            Welcome to Cana Circuit
+          </h2>
+          <p className="text-amber-300 text-lg mt-2 italic text-center">
+            "Turning Water into Wine"
+          </p>
+        </div>
+
+        {/* Right: Form */}
+        <div className="flex-1 p-8 sm:p-10 space-y-6">
+          <div className="md:hidden text-center">
+            <h2 className="text-3xl font-bold text-red-900">
               Welcome to Cana Circuit
             </h2>
-            <p className="text-amber-600 text-lg mt-2 italic md:text-center">
+            <p className="text-amber-600 text-lg mt-2 italic">
               "Turning Water into Wine"
             </p>
           </div>
 
-          <form className="space-y-6 max-w-md mx-auto md:mx-0">
-            {/* Email Field */}
+          <form className="space-y-6" onSubmit={handleLogin}>
+            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-red-900">
                 Email
@@ -104,7 +113,7 @@ export default function LoginForm() {
               />
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-red-900">
                 Password
@@ -129,9 +138,10 @@ export default function LoginForm() {
               </div>
             </div>
 
+            {/* Submit */}
             <Button
+              type="submit"
               disabled={loading}
-              onClick={handleLogin}
               className="w-full bg-red-900 cursor-pointer text-white hover:bg-red-800 text-lg font-semibold"
               size="lg"
             >
@@ -145,6 +155,7 @@ export default function LoginForm() {
               )}
             </Button>
 
+            {/* Signup */}
             <p className="text-center text-sm text-red-900">
               Don’t have an account?{" "}
               <Link
@@ -156,22 +167,7 @@ export default function LoginForm() {
             </p>
           </form>
         </div>
-
-        {/* Right: Logo */}
-        <div className="hidden md:flex items-center justify-center w-1/2 p-8">
-          <div className="relative w-full  max-w-md">
-            <Link href={"/"}>
-              <Image
-                src={"/logo.jpg"}
-                alt="Cana Circuit Logo"
-                width={400}
-                height={500}
-                className="object-contain rounded-full shadow-xl "
-              />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RequestCertificate } from "@/lib/supabase/actions/certificate";
+import { RequestCertificateV2 } from "@/lib/supabase/actions/certificateV2";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
@@ -24,22 +24,19 @@ const RequestPage = () => {
   const { data: churches, isLoading: isChurchLoading } = useGetAllChurches();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [state, formAction, pending] = useActionState(RequestCertificate, {
+  const [state, formAction, pending] = useActionState(RequestCertificateV2, {
     success: false,
   });
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success === true) {
       toast.success("Request submitted successfully");
       queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
-
       formRef.current?.reset();
     } else if (state?.errors) {
       toast.error("Request failed");
-    } else if (state?.success === false) {
-      toast.error("Invalid member ID!");
     }
   }, [state, queryClient]);
 
@@ -76,101 +73,97 @@ const RequestPage = () => {
           action={formAction}
           className="space-y-4 flex flex-col justify-center"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <fieldset disabled={pending}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InputBlock
+                name="firstName"
+                label="First Name"
+                error={state?.errors?.firstName}
+              />
+              <InputBlock
+                name="lastName"
+                label="Last Name"
+                error={state?.errors?.lastName}
+              />
+            </div>
+
             <InputBlock
-              name="firstName"
-              label="First Name"
-              placeholder="Juan"
-              error={state?.errors?.firstName}
+              name="date_of_birth"
+              label="Date of Birth"
+              type="date"
+              error={state?.errors?.date_of_birth}
             />
+
             <InputBlock
-              name="lastName"
-              label="Last Name"
-              placeholder="Dela Cruz"
-              error={state?.errors?.lastName}
+              name="father_fn"
+              label="Father's Full Name"
+              error={state?.errors?.father_fn}
             />
-          </div>
 
-          <InputBlock
-            name="date_of_birth"
-            label="Date of Birth"
-            type="date"
-            error={state?.errors?.date_of_birth}
-          />
+            <InputBlock
+              name="mother_fn"
+              label="Mother's Full Name"
+              error={state?.errors?.mother_fn}
+            />
 
-          <InputBlock
-            name="father_fn"
-            label="Father's Full Name"
-            placeholder="Jose Dela Cruz"
-            error={state?.errors?.father_fn}
-          />
+            <InputBlock
+              name="email"
+              label="Email"
+              type="email"
+              error={state?.errors?.email}
+            />
 
-          <InputBlock
-            name="mother_fn"
-            label="Mother's Full Name"
-            placeholder="Maria Dela Cruz"
-            error={state?.errors?.mother_fn}
-          />
+            {/* Church Selection */}
+            <div>
+              <Label htmlFor="church_id" className="text-xs mt-1 text-gray-600">
+                Select Church
+              </Label>
+              {isChurchLoading ? (
+                <Skeleton className="h-10 w-full mt-1 rounded-md" />
+              ) : (
+                <Select name="church_id" required>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Choose your church" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {churches
+                      ?.slice()
+                      .sort((a, b) => a.brgy.localeCompare(b.brgy))
+                      .map((church) => (
+                        <SelectItem key={church.id} value={church.id}>
+                          {church.brgy}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              )}
+              {state?.errors?.church_id && (
+                <p className="text-red-500 text-xs mt-1">
+                  {state.errors.church_id.join(", ")}
+                </p>
+              )}
+            </div>
 
-          <InputBlock
-            name="email"
-            label="Email"
-            type="email"
-            placeholder="juan@example.com"
-            error={state?.errors?.email}
-          />
+            <InputBlock
+              name="member_id"
+              label="Member ID"
+              error={state?.errors?.member_id}
+            />
 
-          {/* Church Selection */}
-          <div>
-            <Label htmlFor="church_id" className="text-xs text-gray-600">
-              Select Church
-            </Label>
-            {isChurchLoading ? (
-              <Skeleton className="h-10 w-full mt-1 rounded-md" />
-            ) : (
-              <Select name="church_id" required>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Choose your church" />
-                </SelectTrigger>
-                <SelectContent>
-                  {churches
-                    ?.slice()
-                    .sort((a, b) => a.brgy.localeCompare(b.brgy))
-                    .map((church) => (
-                      <SelectItem key={church.id} value={church.id}>
-                        {church.brgy}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            )}
-            {state?.errors?.church_id && (
-              <p className="text-red-500 text-xs mt-1">
-                {state.errors.church_id.join(", ")}
-              </p>
-            )}
-          </div>
-
-          <InputBlock
-            name="member_id"
-            label="Member ID"
-            placeholder="1234567890"
-            error={state?.errors?.member_id}
-          />
-
-          <Button
-            type="submit"
-            disabled={pending}
-            className="w-full bg-amber-500 hover:bg-amber-600 cursor-pointer text-white mt-2"
-          >
-            {pending ? (
-              <>
-                <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
-              </>
-            ) : (
-              "Submit Request"
-            )}
-          </Button>
+            <Button
+              type="submit"
+              disabled={pending}
+              className="w-full bg-amber-600 hover:bg-amber-700 cursor-pointer text-white mt-2"
+            >
+              {pending ? (
+                <>
+                  <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
+                </>
+              ) : (
+                "Submit Request"
+              )}
+            </Button>
+          </fieldset>
         </form>
       </div>
     </motion.div>
@@ -186,27 +179,21 @@ function InputBlock({
   name,
   label,
   type = "text",
-  placeholder,
+
   error,
 }: {
   name: string;
   label: string;
   type?: string;
-  placeholder?: string;
+
   error?: string[];
 }) {
   return (
     <div>
-      <Label htmlFor={name} className="text-xs text-gray-600">
+      <Label htmlFor={name} className="text-xs mt-3 text-gray-600">
         {label}
       </Label>
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        className="mt-1"
-      />
+      <Input id={name} name={name} type={type} className="" />
       {error && <p className="text-red-500 text-xs mt-1">{error.join(", ")}</p>}
     </div>
   );

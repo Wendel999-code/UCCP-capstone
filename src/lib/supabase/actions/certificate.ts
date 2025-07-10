@@ -38,6 +38,7 @@ export async function RequestCertificate(
   } = parsed?.data;
 
   try {
+    
     const { data: currentUser, error: userError } =
       await supabase.auth.getUser();
 
