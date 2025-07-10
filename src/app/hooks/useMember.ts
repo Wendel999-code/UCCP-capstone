@@ -81,6 +81,7 @@ export const useDeleteMember = () => {
       return res;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pending-members"] });
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
