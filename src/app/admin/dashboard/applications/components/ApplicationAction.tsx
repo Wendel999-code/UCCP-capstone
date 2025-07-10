@@ -21,17 +21,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Loader, MoreHorizontal, Trash } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
 
 const ApplicationAction = ({ memberID }: { memberID: string }) => {
-  const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
+  const { mutateAsync: deleteMember, isPending: isDeleting } =
+    useDeleteMember();
+  const [open, setOpen] = useState(false);
 
   const handleDeleteApplication = async () => {
-    deleteMember(memberID, {
-      onSuccess: () => toast.success("Application deleted successfully"),
-      onError: (error) => toast.error(error.message),
-    });
+    try {
+      await deleteMember(memberID);
+      toast.success("Application deleted successfully");
+      setOpen(false);
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to delete application");
+    }
   };
 
   return (
@@ -48,51 +54,16 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
 
         <ApplicationDetailsModal memberID={memberID} />
 
-        {/* <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <div>
-              {" "}
-              <Button
-                variant={"outline"}
-                className="text-green-600 cursor-pointer border-none"
-              >
-                Approve member
-              </Button>
-            </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Approve this member?</AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-600">
-                This will mark the application as approved and grant access to
-                the member.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="text-black font-medium"
-                onClick={handleApprove}
-              >
-                {isPending ? "Approving..." : "Confirm"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog> */}
-
         <DropdownMenuSeparator />
 
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
-            <div>
-              {" "}
-              <Button
-                variant={"outline"}
-                className="text-red-600 border-none   w-full cursor-pointer"
-              >
-                <Trash className="text-red-600" /> Delete
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="text-red-600 border-none w-full cursor-pointer"
+            >
+              <Trash className="text-red-600 mr-2" /> Delete
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -113,8 +84,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
               >
                 {isDeleting ? (
                   <>
-                    {" "}
-                    <Loader className="animate-spin " /> "Deleting..."{" "}
+                    <Loader className="animate-spin mr-2" /> Deleting...
                   </>
                 ) : (
                   "Delete"

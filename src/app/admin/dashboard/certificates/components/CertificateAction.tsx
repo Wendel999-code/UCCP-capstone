@@ -31,7 +31,7 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
       const res = await DeleteReqCertificate(reqID);
       if (res.success) {
         toast.success(res.message);
-        queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
+        await queryClient.invalidateQueries({ queryKey: ["req-certificate"] });
       } else if (!res.success) {
         toast.error(res.message);
       }

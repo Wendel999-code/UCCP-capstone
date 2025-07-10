@@ -26,8 +26,8 @@ import { Edit, Eye, Loader, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { ViewMemberModal } from "./ViewMemberModal";
 import { UpdateMember } from "./UpdateMember";
+import { ViewMemberModal } from "./ViewMemberModal";
 
 const MemberAction = ({ memberID }: { memberID: string }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -52,16 +52,23 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
   };
 
   const handleDeleteConfirmed = () => {
-    deleteMember(memberID, {
-      onSuccess: () => {
-        toast.success("Member deleted successfully");
-        setOpenDeleteDialog(false);
-      },
-      onError: (error) => {
-        toast.error(error.message);
-        setOpenDeleteDialog(false);
-      },
-    });
+    setOpenDeleteDialog(true);
+    try {
+      deleteMember(memberID, {
+        onSuccess: () => {
+          toast.success("Member deleted successfully");
+          setOpenDeleteDialog(false);
+        },
+        onError: (error) => {
+          toast.error(error.message);
+          setOpenDeleteDialog(false);
+        },
+      });
+    } catch (error) {
+      toast.error("Something went wrong upon deletions");
+    } finally {
+      setOpenDeleteDialog(false);
+    }
   };
 
   return (
