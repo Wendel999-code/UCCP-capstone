@@ -195,7 +195,7 @@ export async function GetAllCountMembersByChurchId() {
       .from("member")
       .select("id", { count: "exact", head: true })
       .eq("church_id", admin.church_id)
-      .eq("activeStatus", "active");
+      .neq("activeStatus", "pending");
 
     if (error) throw error;
 

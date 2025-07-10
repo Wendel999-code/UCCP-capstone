@@ -3,12 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useState } from "react";
-
 import { useGetTestimonial } from "@/app/hooks/testimonial";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { PostTestimonial } from "@/lib/supabase/actions/testimonial";
+import { PostTestimonialV2 } from "@/lib/supabase/actions/testimonialV2";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -25,7 +24,7 @@ const Welcome = () => {
     if (!testimonial.trim()) return;
     setIsPosting(true);
     try {
-      const res = await PostTestimonial(testimonial);
+      const res = await PostTestimonialV2(testimonial);
       if (!res.success) {
         toast.error(res.message);
       }

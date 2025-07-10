@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { roleRedirectMap, UserRole } from "@/constant";
 // import { Login } from "@/lib/supabase/actions/auth";
 import { LoginV2 } from "@/lib/supabase/actions/authV2";
+import { useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,6 +22,7 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const queryClient = useQueryClient();
 
   const router = useRouter();
 
@@ -37,26 +39,27 @@ export default function LoginForm() {
       toast.error("Please fill out all fields.");
       return;
     }
-
     setLoading(true);
 
     try {
       const res = await LoginV2(email, password);
 
-      if (!res.success) {
-        toast.error(res.message);
+      if (!res?.success) {
+        toast.error(res?.message);
         return;
       }
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
-      const redirectPath = roleRedirectMap[res.role as UserRole];
+      const role = res.role as UserRole | undefined;
+      const redirectPath = role ? roleRedirectMap[role] : "/";
 
       if (redirectPath) {
         router.replace(redirectPath);
       } else {
-        router.push("/");
+        router.replace("/");
       }
 
-      toast.success(res.message);
+      toast.success(res?.message);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
@@ -133,7 +136,7 @@ export default function LoginForm() {
             <Button
               disabled={loading}
               onClick={handleLogin}
-              className="w-full bg-red-900 text-white hover:bg-red-800 text-lg font-semibold"
+              className="w-full bg-red-900 cursor-pointer text-white hover:bg-red-800 text-lg font-semibold"
               size="lg"
             >
               {loading ? (

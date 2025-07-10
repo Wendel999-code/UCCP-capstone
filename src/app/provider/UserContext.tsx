@@ -1,17 +1,10 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 
 // import { fetchCurrentUser } from "@/lib/supabase/actions/auth";
 import { fetchCurrentUserV2 } from "@/lib/supabase/actions/authV2";
-import supabase from "@/lib/supabase/client";
 
 type User = {
   role: string;
@@ -27,8 +20,6 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const queryClient = useQueryClient();
-
   const {
     data: user,
     isLoading: loading,
@@ -38,16 +29,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     queryFn: fetchCurrentUserV2,
     staleTime: 60 * 60 * 1000,
   });
-
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [queryClient]);
 
   const value = useMemo(
     () => ({ user: user ?? null, loading, refetch }),

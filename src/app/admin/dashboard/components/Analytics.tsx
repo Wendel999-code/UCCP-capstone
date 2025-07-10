@@ -36,8 +36,6 @@ function Analytics() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const totalMembers = 77;
-
   const {
     data: completedCertificates,
     isLoading,

@@ -131,7 +131,7 @@ export async function SignUpV2(email: string, password: string) {
 
     return {
       success: true,
-      message: "Account created. Please log in.",
+      message: "Account created. Please  log in.",
     };
   } catch (error) {
     console.error("Unexpected error in signup:", error);

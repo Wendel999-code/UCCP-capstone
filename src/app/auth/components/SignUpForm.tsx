@@ -51,9 +51,9 @@ export default function SignupForm() {
         toast.error(res.message);
         return;
       }
-      toast.success(res.message);
+      router.push("/auth/login");
 
-      router.push("/");
+      toast.success(res.message);
     } catch (error) {
       console.error("Sign up error:", error);
       toast.error("Sign up failed");
