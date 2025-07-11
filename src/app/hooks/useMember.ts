@@ -218,7 +218,7 @@ export const useCountMemPerChurchAdmin = () =>
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 1,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
 
     queryFn: async () => {
       const count = await GetAllCountMembersByChurchId();

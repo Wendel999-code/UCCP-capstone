@@ -11,4 +11,9 @@ export const useVisitCount = () =>
 
       return count;
     },
+
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });

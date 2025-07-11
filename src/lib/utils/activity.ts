@@ -39,9 +39,19 @@ export async function GetAllActivity() {
       return [];
     }
 
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    const start = `${year}-${month}-${day}T07:00:00`;
+    const end = `${year}-${month}-${day}T16:00:00`;
+
     const { data, error } = await supabase
       .from("activity_log")
-      .select("*,  Church:church_id(brgy)")
+      .select("*, Church:church_id(brgy)")
+      .gte("created_at", start)
+      .lte("created_at", end)
       .order("created_at", { ascending: false });
 
     if (error) throw error;

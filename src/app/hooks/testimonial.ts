@@ -10,4 +10,8 @@ export const useGetTestimonial = () =>
       if (!res.success) throw new Error(res.message);
       return res?.data;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });

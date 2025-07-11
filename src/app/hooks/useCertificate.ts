@@ -14,6 +14,10 @@ export const useGetReqCertificate = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });
 
 export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
@@ -28,10 +32,17 @@ export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   });
 
 export const useCountCompletedReqCertificate = () =>
   useQuery<number>({
     queryKey: ["completed-req-certificate"],
     queryFn: getCompletedCertificateRequestCount,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: true,
   });

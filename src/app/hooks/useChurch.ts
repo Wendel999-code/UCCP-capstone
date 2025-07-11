@@ -10,4 +10,8 @@ export const useGetAllChurches = () =>
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
+    staleTime: Infinity,
+    gcTime: 30 * 60 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: false,
   });

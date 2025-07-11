@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { churchType } from "@/global/type";
 import { ApplyForMembership } from "@/lib/supabase/actions/member";
+import { useQueryClient } from "@tanstack/react-query";
 import { Heart, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -31,9 +32,11 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [marital_status, setMaritalStatus] = useState("")
+  const [marital_status, setMaritalStatus] = useState("");
 
   const router = useRouter();
+
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +64,8 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
         setMessage(result.message);
         return;
       }
+
+      await queryClient.invalidateQueries({ queryKey: ["pending-members"] });
 
       toast.success("Application submitted successfully!");
       router.push(`/applications/SuccessApplication/${result.id}`);

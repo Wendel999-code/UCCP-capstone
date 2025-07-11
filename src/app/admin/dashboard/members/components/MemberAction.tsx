@@ -3,7 +3,6 @@
 import { useDeleteMember } from "@/app/hooks/useMember";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -52,11 +51,11 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
   };
 
   const handleDeleteConfirmed = () => {
-    setOpenDeleteDialog(true);
     try {
       deleteMember(memberID, {
         onSuccess: () => {
           toast.success("Member deleted successfully");
+          setOpenDeleteDialog(false);
         },
         onError: (error) => {
           toast.error(error.message);
@@ -65,8 +64,6 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
     } catch (error) {
       console.log("error in deleting member", error);
       toast.error("Something went wrong upon deletions");
-    } finally {
-      setOpenDeleteDialog(false);
     }
   };
 
@@ -125,7 +122,7 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+            <Button
               onClick={handleDeleteConfirmed}
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700 text-white"
@@ -138,7 +135,7 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
               ) : (
                 "Delete"
               )}
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

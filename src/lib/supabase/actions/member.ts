@@ -169,7 +169,7 @@ export async function GetAllMembersByChurchId() {
       .select("*, Church:church_id(brgy)")
       .eq("church_id", admin.church_id) // dapat makuha la an same church both admin and member
       .neq("activeStatus", "pending")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: true });
 
     if (error) throw error;
 

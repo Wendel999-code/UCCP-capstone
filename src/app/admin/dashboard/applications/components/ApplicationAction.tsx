@@ -3,7 +3,6 @@
 import { useDeleteMember } from "@/app/hooks/useMember";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -32,7 +31,11 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
 
   const handleDeleteApplication = async () => {
     try {
-      await deleteMember(memberID);
+      const res = await deleteMember(memberID);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
       toast.success("Application deleted successfully");
       setOpen(false);
     } catch (error: any) {
@@ -77,7 +80,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
               <AlertDialogCancel disabled={isDeleting}>
                 Cancel
               </AlertDialogCancel>
-              <AlertDialogAction
+              <Button
                 className="bg-red-600 hover:bg-red-700 text-white"
                 disabled={isDeleting}
                 onClick={handleDeleteApplication}
@@ -89,7 +92,7 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
                 ) : (
                   "Delete"
                 )}
-              </AlertDialogAction>
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
