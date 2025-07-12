@@ -1,6 +1,7 @@
 "use client";
 
 import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
+import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +25,7 @@ export default function SignupForm() {
   const { loading: userLoading, user } = useRedirectIfAuthenticated();
 
   if (userLoading || user) {
-    return;
+    return <LogoLoader />;
   }
 
   const handleSignUp = async (e: FormEvent) => {

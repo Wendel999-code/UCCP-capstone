@@ -2,7 +2,6 @@ import { ApproveMemberInput, CountMemPerChurch, Member } from "@/global/type";
 import {
   ApproveMembership,
   DeleteMember,
-  DeleteMemberBySuperAdmin,
   GetAllCountMembersByChurchId,
   GetAllMemberPerChurchCount,
   GetAllMembersByChurchId,
@@ -108,26 +107,26 @@ export const useDeleteMember = () => {
   });
 };
 
-export const useDeleteMemberBySuperAdmin = () => {
-  const queryClient = useQueryClient();
+// export const useDeleteMemberBySuperAdmin = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (memberID: string) => {
-      const res = await DeleteMemberBySuperAdmin(memberID);
-      if (!res.success) throw new Error(res.message);
-      return res;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
-      queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
-      queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
-      queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
-      queryClient.invalidateQueries({
-        queryKey: ["count-members-per-church-admin"],
-      });
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: async (memberID: string) => {
+//       const res = await DeleteMemberBySuperAdmin(memberID);
+//       if (!res.success) throw new Error(res.message);
+//       return res;
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
+//       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
+//       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+//       queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
+//       queryClient.invalidateQueries({
+//         queryKey: ["count-members-per-church-admin"],
+//       });
+//     },
+//   });
+// };
 
 export const useMemberDetails = (memberID: string, open: boolean) =>
   useQuery<Member>({

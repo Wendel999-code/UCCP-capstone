@@ -18,7 +18,6 @@ const Page = () => {
           event: "INSERT",
           schema: "public",
           table: "member",
-          filter: "activeStatus=eq.pending",
         },
         () => {
           refetch();

@@ -22,14 +22,13 @@ const SideBar = () => {
 
   useEffect(() => {
     const channel = supabase
-      .channel("pending-applications")
+      .channel("pending-applications-count")
       .on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "public",
           table: "member",
-          filter: "activeStatus=eq.pending",
         },
         () => {
           refetch();

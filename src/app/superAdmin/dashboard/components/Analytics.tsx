@@ -21,11 +21,46 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import supabase from "@/lib/supabase/client";
 import { useTheme } from "next-themes";
+import { useEffect } from "react";
 
 export function Analytics() {
-  const { data, isLoading, error } = useCountMemPerChurch();
+  const { data, isLoading, error, refetch } = useCountMemPerChurch();
   const { theme } = useTheme();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("new-members-count-super-admin")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "member",
+          filter: "activeStatus=eq.active",
+        },
+        () => {
+          refetch();
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "member",
+        },
+        () => {
+          refetch();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [refetch]);
 
   const chartData = data
     ? data.map((item) => ({

@@ -160,11 +160,7 @@ function Header() {
             </Sheet>
           </div>
         </div>
-
-        {/* Mobile menu toggle button */}
       </div>
-
-      {/* Mobile Menu */}
     </motion.header>
   );
 }
