@@ -26,7 +26,7 @@ const SideBar = () => {
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "INSERT",
           schema: "public",
           table: "member",
           filter: "activeStatus=eq.pending",
