@@ -65,7 +65,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
         return;
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["pending-members"] });
+      await queryClient.refetchQueries({ queryKey: ["pending-members"] });
 
       toast.success("Application submitted successfully!");
       router.push(`/applications/SuccessApplication/${result.id}`);
