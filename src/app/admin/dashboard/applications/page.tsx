@@ -11,7 +11,7 @@ const Page = () => {
 
   useEffect(() => {
     const channel = supabase
-      .channel("pending-applications")
+      .channel("new-applications")
       .on(
         "postgres_changes",
         {
