@@ -142,3 +142,8 @@ export type ActivityLog = {
   metadata: Record<string, any> | null;
   created_at: string;
 };
+
+export type MemberQueryResponse = {
+  data: Member[];
+  count: number;
+};

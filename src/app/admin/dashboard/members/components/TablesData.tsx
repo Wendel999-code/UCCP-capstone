@@ -1,20 +1,18 @@
 "use client";
 
+import { useGetMembersByChurchId } from "@/app/hooks/useMember";
 import { Button } from "@/components/ui/button";
 import { Member } from "@/global/type";
 import {
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  SortingState,
   useReactTable,
   type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
+  type PaginationState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import MemberAction from "./MemberAction";
 
 const getCategoryColor = (category: string) => {
@@ -34,88 +32,80 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-// const getStatusColor = (status: string) => {
-//   switch (status?.toLowerCase()) {
-//     case "active":
-//       return " text-green-800 px-2 py-1 rounded-md font-medium w-full";
-//     case "pending":
-//       return " text-orange-500 px-2 py-1 rounded-md font-medium w-full";
-//     case "inactive":
-//       return " text-red-800 px-2 py-1 rounded-md font-medium w-full";
-//     default:
-//       return " text-gray-800 px-2 py-1 rounded-md font-medium w-full";
-//   }
-// };
+export function TablesData() {
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
-export function TablesData({ members }: { members: Member[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+  const [globalFilter, setGlobalFilter] = useState({
+    search: "",
+    category: "",
+  });
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const sortBy = sorting[0]?.id ?? "";
+  const sortOrder = sorting[0]?.desc ? "desc" : "asc";
+
+  const { data: membersData, isLoading } = useGetMembersByChurchId(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+    globalFilter.search,
+    sortBy,
+    sortOrder,
+    globalFilter.category
   );
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const columns: ColumnDef<Member>[] = [
     {
       accessorKey: "lastName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] px-2"
-          >
-            Lastname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          LASTNAME
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
-        <p className="lowercase ml-3 text-[14px] ">
-          {row.getValue("lastName")}
-        </p>
+        <p className="ml-3 text-[14px]">{row.getValue("lastName")}</p>
       ),
     },
-
     {
       accessorKey: "firstName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] "
-          >
-            Firstname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <p className=" ml-3 text-[14px] ">{row.getValue("firstName")}</p>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          FIRSTNAME
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <p className="ml-3 text-[14px]">{row.getValue("firstName")}</p>
+      ),
     },
     {
       accessorKey: "age",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] px-2"
-          >
-            Age
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-[12px] px-2"
+        >
+          AGE
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <p className="ml-3 text-[14px]">{row.getValue("age")}</p>
       ),
     },
-
     {
       accessorKey: "date_of_birth",
       header: ({ column }) => (
@@ -134,51 +124,20 @@ export function TablesData({ members }: { members: Member[] }) {
           rawDate && typeof rawDate === "string"
             ? new Date(rawDate)
             : undefined;
-
         const formatted =
           parsedDate && !isNaN(parsedDate.getTime())
             ? format(parsedDate, "MMMM d, yyyy")
             : "N/A";
-
         return <p className="ml-3 text-[14px]">{formatted}</p>;
       },
     },
-
     {
       accessorKey: "gender",
-      header: ({ column }) => {
-        return (
-          <span
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] cursor-pointer"
-          >
-            Gender
-          </span>
-        );
-      },
+      header: "GENDER",
       cell: ({ row }) => (
         <p className="text-[14px]">{row.getValue("gender")}</p>
       ),
     },
-
-    // {
-    //   accessorKey: "date_of_birth",
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button
-    //         variant="ghost"
-    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //         className="h-8 px-2"
-    //       >
-    //         Date of Birth
-    //         <ArrowUpDown className="ml-2 h-4 w-4" />
-    //       </Button>
-    //     );
-    //   },
-    //   cell: ({ row }) => (
-    //     <p className="ml-3 w-[20px]">{row.getValue("date_of_birth")}</p>
-    //   ),
-    // },
 
     {
       accessorKey: "category",
@@ -194,40 +153,6 @@ export function TablesData({ members }: { members: Member[] }) {
         );
       },
     },
-    // {
-    //   accessorKey: "activeStatus",
-    //   header: "Status",
-    //   cell: ({ row }) => {
-    //     const status = row.getValue("activeStatus") as string;
-    //     return (
-    //       <p className={`${getStatusColor(status)} text-[14px]`}>
-    //         {status
-    //           ? status.charAt(0).toUpperCase() + status.slice(1)
-    //           : "Unknown"}
-    //       </p>
-    //     );
-    //   },
-    // },
-    // {
-    //   accessorKey: "baptism_status",
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button
-    //         variant="ghost"
-    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //         className="h-8 px-2"
-    //       >
-    //         Baptism
-    //         <ArrowUpDown className="ml-2 h-4 w-4" />
-    //       </Button>
-    //     );
-    //   },
-    //   cell: ({ row }) => {
-    //     const baptism = row.getValue("baptism_status") as string;
-    //     return <p className="text-[14px]"> {baptism}</p>;
-    //   },
-    // },
-
     {
       accessorFn: (row) => row.Church?.brgy ?? "",
       id: "circuit",
@@ -240,32 +165,23 @@ export function TablesData({ members }: { members: Member[] }) {
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => {
-        const member = row.original;
-
-        return <MemberAction memberID={member.id} />;
-      },
+      cell: ({ row }) => <MemberAction memberID={row.original.id} />,
     },
   ];
 
   const table = useReactTable({
-    data: members,
+    data: membersData?.data ?? [],
     columns,
+    pageCount: Math.ceil((membersData?.count ?? 0) / pagination.pageSize),
+    state: { pagination, globalFilter, sorting },
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   });
 
-  return { table, columns };
+  return { table, columns, isLoading, globalFilter, setGlobalFilter };
 }

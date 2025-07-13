@@ -1,14 +1,19 @@
-import { ApproveMemberInput, CountMemPerChurch, Member } from "@/global/type";
+import {
+  ApproveMemberInput,
+  CountMemPerChurch,
+  Member,
+  MemberQueryResponse,
+} from "@/global/type";
 import {
   ApproveMembership,
   DeleteMember,
   GetAllCountMembersByChurchId,
   GetAllMemberPerChurchCount,
-  GetAllMembersByChurchId,
   GetAllMembersBySuperAdmin,
   GetApplicationID,
   GetMemberByID,
   GetMemberByIDBySuperAdmin,
+  GetMembersByChurchId,
   GetPendingApplication,
   UpdateMemberByID,
 } from "@/lib/supabase/actions/member";
@@ -56,18 +61,41 @@ export const useApproveMember = () => {
   });
 };
 
-export const useGetAllmemberByChurchId = () =>
-  useQuery<Member[]>({
-    queryKey: ["membersByChurchId"],
-    queryFn: async () => {
-      const res = await GetAllMembersByChurchId();
-      if (!res.success) throw new Error(res.message);
-      return res.data;
+export const useGetMembersByChurchId = (
+  page: number,
+  pageSize: number,
+  search: string,
+  sortBy: string,
+  sortOrder: "asc" | "desc",
+  category: string
+) =>
+  useQuery<MemberQueryResponse, Error>({
+    queryKey: [
+      "membersByChurchId",
+      page,
+      pageSize,
+      search,
+      sortBy,
+      sortOrder,
+      category,
+    ],
+    queryFn: async (): Promise<MemberQueryResponse> => {
+      const res = await GetMembersByChurchId(
+        page,
+        pageSize,
+        search,
+        sortBy,
+        sortOrder,
+        category
+      );
+      if (!res.success) throw new Error("Failed to fetch members");
+      return { data: res.data, count: res.count };
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: 1,
-    refetchOnWindowFocus: true,
   });
 
 export const useApplicationDetails = (memberID: string, open: boolean) =>

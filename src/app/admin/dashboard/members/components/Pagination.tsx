@@ -6,10 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import { Member } from "@/global/type";
 import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Member } from "@/global/type";
 
 const Pagination = ({ table }: { table: Table<Member> }) => {
   return (

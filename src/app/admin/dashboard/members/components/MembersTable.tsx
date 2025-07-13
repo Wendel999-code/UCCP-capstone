@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -34,7 +33,7 @@ import { flexRender } from "@tanstack/react-table";
 import { ChevronDown, Download, Filter, Plus, Search } from "lucide-react";
 
 import { useSidebarData } from "@/app/hooks/useSideBar";
-import { Member } from "@/global/type";
+import DebouncedSearchInput from "@/components/DebounceInput";
 import { exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -42,19 +41,27 @@ import AddMemberModal from "./AddMemberModal";
 import Pagination from "./Pagination";
 import { TablesData } from "./TablesData";
 
-export default function MembersTable({ members }: { members: Member[] }) {
-  const { table, columns } = TablesData({ members });
-
+export default function MembersTable() {
   const [addModalOpen, setAddModalOpen] = useState(false);
 
   const [isExporting, setIsExporting] = useState(false);
 
   const { data, isLoading } = useSidebarData();
 
+  const {
+    table,
+    columns,
+    isLoading: isLoadingTable,
+    globalFilter,
+    setGlobalFilter,
+  } = TablesData();
+
+  console.log("category here", globalFilter);
+
   const handleExportPDF = async () => {
     setIsExporting(true);
     try {
-      if (isLoading) return;
+      if (isLoading || isLoadingTable) return;
 
       await exportToPDF(table, {
         title: `${data?.church?.brgy} Local Church Members`,
@@ -99,30 +106,25 @@ export default function MembersTable({ members }: { members: Member[] }) {
               {/* Search Input */}
               <div className="relative">
                 <Search className="absolute left-2 top-[8px] h-5 w-3 text-muted-foreground" />
-                <Input
-                  placeholder="Search..."
-                  value={
-                    (table
-                      .getColumn("firstName")
-                      ?.getFilterValue() as string) ?? ""
+                <DebouncedSearchInput
+                  defaultValue={globalFilter.search}
+                  searchMember={(searchValue) =>
+                    setGlobalFilter((prev) => ({
+                      ...prev,
+                      search: searchValue,
+                    }))
                   }
-                  onChange={(e) =>
-                    table.getColumn("firstName")?.setFilterValue(e.target.value)
-                  }
-                  className="pl-6 w-[200px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 
               {/* Category Filter */}
               <Select
-                value={
-                  (table.getColumn("category")?.getFilterValue() as string) ??
-                  ""
-                }
+                value={globalFilter.category}
                 onValueChange={(val) =>
-                  table
-                    .getColumn("category")
-                    ?.setFilterValue(val === "all" ? "" : val)
+                  setGlobalFilter((prev) => ({
+                    ...prev,
+                    category: val,
+                  }))
                 }
               >
                 <SelectTrigger className="w-[110px] h-7 text-xs">
@@ -138,31 +140,6 @@ export default function MembersTable({ members }: { members: Member[] }) {
                   )}
                 </SelectContent>
               </Select>
-
-              {/* Status Filter */}
-              {/* <Select
-                value={
-                  (table
-                    .getColumn("activeStatus")
-                    ?.getFilterValue() as string) ?? ""
-                }
-                onValueChange={(val) =>
-                  table
-                    .getColumn("activeStatus")
-                    ?.setFilterValue(val === "all" ? "" : val)
-                }
-              >
-                <SelectTrigger className="w-[100px] h-7 text-xs">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {["all", "active", "pending", "inactive"].map((val) => (
-                    <SelectItem key={val} className="text-[10px]" value={val}>
-                      {val.charAt(0).toUpperCase() + val.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select> */}
             </div>
 
             {/* Column Toggle + Export */}
@@ -207,6 +184,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
           </div>
 
           {/* Table */}
+
           <div className="rounded-md border overflow-auto bg-white dark:bg-black">
             <Table className="min-w-[800px] text-sm">
               <TableHeader className="sticky top-0 z-10 bg-muted dark:bg-neutral-900 shadow-sm">
@@ -230,7 +208,17 @@ export default function MembersTable({ members }: { members: Member[] }) {
               </TableHeader>
 
               <TableBody>
-                {table.getRowModel().rows?.length ? (
+                {isLoadingTable ? (
+                  Array.from({ length: 10 }).map((_, idx) => (
+                    <TableRow key={`skeleton-${idx}`}>
+                      {table.getVisibleFlatColumns().map((column) => (
+                        <TableCell key={column.id}>
+                          <div className="h-4 w-full rounded bg-muted animate-pulse" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : table.getRowModel().rows.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
