@@ -57,7 +57,23 @@ export function TablesData() {
     globalFilter.category
   );
 
+  const totalMember = membersData?.count ?? 0;
+
   const columns: ColumnDef<Member>[] = [
+    {
+      id: "rowNumber",
+      header: "#",
+      cell: ({ row, table }) => {
+        const pageIndex = table.getState().pagination.pageIndex ?? 0;
+        const pageSize = table.getState().pagination.pageSize ?? 10;
+        return (
+          <span className="text-[12px] text-muted-foreground">
+            {pageIndex * pageSize + row.index + 1}
+          </span>
+        );
+      },
+      size: 10,
+    },
     {
       accessorKey: "lastName",
       header: ({ column }) => (
@@ -183,5 +199,12 @@ export function TablesData() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  return { table, columns, isLoading, globalFilter, setGlobalFilter };
+  return {
+    table,
+    columns,
+    isLoading,
+    globalFilter,
+    setGlobalFilter,
+    totalMember,
+  };
 }

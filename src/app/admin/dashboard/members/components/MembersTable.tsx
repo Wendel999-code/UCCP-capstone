@@ -54,9 +54,8 @@ export default function MembersTable() {
     isLoading: isLoadingTable,
     globalFilter,
     setGlobalFilter,
+    totalMember,
   } = TablesData();
-
-  console.log("category here", globalFilter);
 
   const handleExportPDF = async () => {
     setIsExporting(true);
@@ -123,7 +122,7 @@ export default function MembersTable() {
                 onValueChange={(val) =>
                   setGlobalFilter((prev) => ({
                     ...prev,
-                    category: val,
+                    category: val === "all" ? "" : val,
                   }))
                 }
               >
@@ -134,7 +133,7 @@ export default function MembersTable() {
                   {["all", "UCM", "CWA", "CYAF", "CYF", "CHILDREN"].map(
                     (val) => (
                       <SelectItem key={val} className="text-[10px]" value={val}>
-                        {val === "all" ? "All" : val}
+                        {val === "all" ? "ALL" : val}
                       </SelectItem>
                     )
                   )}
@@ -253,7 +252,7 @@ export default function MembersTable() {
           </div>
 
           {/* Pagination */}
-          <Pagination table={table} />
+          <Pagination table={table} totalMember={totalMember} />
         </CardContent>
       </Card>
 

@@ -10,12 +10,18 @@ import { Member } from "@/global/type";
 import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Pagination = ({ table }: { table: Table<Member> }) => {
+const Pagination = ({
+  table,
+  totalMember,
+}: {
+  table: Table<Member>;
+  totalMember: number;
+}) => {
   return (
     <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
       <div className="flex-1 text-[12px] text-muted-foreground">
         <div className="flex-1 text-[12px] text-muted-foreground">
-          Total members: {table.getPrePaginationRowModel().rows.length}
+          Total members: {totalMember}
         </div>
       </div>
 
@@ -48,22 +54,22 @@ const Pagination = ({ table }: { table: Table<Member> }) => {
       {/* Pagination controls */}
       <div className="flex items-center gap-1">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="h-4 px-2 cursor-pointer disabled:cursor-not-allowed"
+          className="h-7 px-2 cursor-pointer disabled:cursor-not-allowed  border hover:border-red-900  dark:hover:border-yellow-400"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-7 w-7" />
         </Button>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="h-4 px-2 cursor-pointer"
+          className="h-7 px-2 cursor-pointer border hover:border-red-900  dark:hover:border-yellow-400"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-7 w-7" />
         </Button>
       </div>
     </div>
