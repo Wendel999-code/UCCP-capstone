@@ -139,7 +139,7 @@ export function CertificateTableData({
       },
       cell: ({ row }) => {
         const date = new Date(row.getValue("created_at"));
-        return <p className="text-xs ml-4">{date.toLocaleDateString()}</p>;
+        return <p className="text-xs ml-4 ">{date.toLocaleDateString()}</p>;
       },
     },
 

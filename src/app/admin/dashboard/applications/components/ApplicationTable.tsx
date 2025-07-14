@@ -40,8 +40,10 @@ import { ApplicationTableData } from "./ApplicationTableData";
 
 export default function ApplicationTable({
   pendingMember,
+  isLoading,
 }: {
   pendingMember: Member[];
+  isLoading: boolean;
 }) {
   const { table, columns } = ApplicationTableData({ pendingMember });
 
@@ -57,10 +59,10 @@ export default function ApplicationTable({
               <div>
                 {" "}
                 <CardTitle className="text-xl">
-                  Applied for membership
+                  Pending Member Applications
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  A comprehensive list of all pending members
+                  Review and manage all pending member requests.
                 </CardDescription>
               </div>
             </div>
@@ -174,8 +176,19 @@ export default function ApplicationTable({
                     </TableRow>
                   ))}
                 </TableHeader>
+
                 <TableBody>
-                  {table.getRowModel().rows?.length ? (
+                  {isLoading ? (
+                    Array.from({ length: 10 }).map((_, idx) => (
+                      <TableRow key={`skeleton-${idx}`}>
+                        {table.getVisibleFlatColumns().map((column) => (
+                          <TableCell key={column.id}>
+                            <div className="h-4 w-full rounded bg-muted animate-pulse" />
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
                         key={row.id}
@@ -197,7 +210,7 @@ export default function ApplicationTable({
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        No results.
+                        No applicant
                       </TableCell>
                     </TableRow>
                   )}

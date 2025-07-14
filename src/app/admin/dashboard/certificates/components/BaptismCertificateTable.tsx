@@ -34,8 +34,10 @@ import { CertificateTableData } from "./CertificateTableData";
 
 export default function BaptismCertificateTable({
   certificates,
+  isLoading,
 }: {
   certificates: CertificateRequest[];
+  isLoading: boolean;
 }) {
   const { table, columns } = CertificateTableData({ certificates });
 
@@ -137,7 +139,17 @@ export default function BaptismCertificateTable({
                   ))}
                 </TableHeader>
                 <TableBody>
-                  {table.getRowModel().rows?.length ? (
+                  {isLoading ? (
+                    Array.from({ length: 10 }).map((_, idx) => (
+                      <TableRow key={`skeleton-${idx}`}>
+                        {table.getVisibleFlatColumns().map((column) => (
+                          <TableCell key={column.id}>
+                            <div className="h-4 w-full rounded bg-muted animate-pulse" />
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
                         key={row.id}

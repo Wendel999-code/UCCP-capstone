@@ -1,7 +1,6 @@
 "use client";
 
 import { usePendingMembers } from "@/app/hooks/useMember";
-import { TableSkeleton } from "@/components/TableSkeleton";
 import supabase from "@/lib/supabase/client";
 import { useEffect } from "react";
 import ApplicationTable from "./components/ApplicationTable";
@@ -30,10 +29,9 @@ const Page = () => {
     };
   }, [refetch]);
 
-  if (isLoading) return <TableSkeleton />;
   if (isError) return <p className="text-red-500">{error.message}</p>;
 
-  return <ApplicationTable pendingMember={data || []} />;
+  return <ApplicationTable pendingMember={data || []} isLoading={isLoading} />;
 };
 
 export default Page;
