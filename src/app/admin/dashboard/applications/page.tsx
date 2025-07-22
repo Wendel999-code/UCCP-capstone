@@ -22,6 +22,22 @@ const Page = () => {
           refetch();
         }
       )
+
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "member",
+        },
+
+        (payload) => {
+          if (payload.new?.activeStatus === "active") {
+            refetch();
+          }
+        }
+      )
+
       .subscribe();
 
     return () => {

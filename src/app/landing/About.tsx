@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -33,6 +34,8 @@ function About() {
     amount: 0.3,
   });
 
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <section
       id="about"
@@ -53,27 +56,66 @@ function About() {
           >
             About Our Church
           </motion.h2>
-          <motion.p
-            variants={itemVariants}
-            className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
+
+          {/* Collapsible Text */}
+          <motion.div
+            layout
+            initial={{ height: "auto" }}
+            animate={{ height: "auto" }}
+            className="overflow-hidden space-y-4"
           >
-            Founded in 1985,{" "}
-            <span className="font-semibold text-red-800 dark:text-amber-500">
-              Lester Lou's Church
-            </span>{" "}
-            has been a pillar of spiritual guidance and community support for
-            over three decades. Our congregation has grown from a small group of
-            dedicated believers to a thriving community of faith.
-          </motion.p>
-          <motion.p
-            variants={itemVariants}
-            className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
-          >
-            We are committed to serving our community through various outreach
-            programs, educational initiatives, and spiritual guidance. Our doors
-            are always open to those seeking connection, purpose, and spiritual
-            growth.
-          </motion.p>
+            <motion.p
+              variants={itemVariants}
+              className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
+            >
+              The United Church of Christ in the Philippines (UCCP) is a
+              mainline Protestant denomination that traces its origins to the
+              1898 meeting of American Protestant mission boards in New York,
+              which planned cooperative missionary work in the newly-acquired
+              Philippines.
+            </motion.p>
+
+            <AnimatePresence>
+              {expanded && (
+                <>
+                  <motion.p
+                    variants={itemVariants}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
+                  >
+                    It was formally organized on May 25, 1948, from the union of
+                    several Protestant denominations, including the Evangelical
+                    Church of the Philippines, the Philippine Methodist Church,
+                    the Disciples of Christ, the United Evangelical Church, and
+                    several independent congregations.
+                  </motion.p>
+                  <motion.p
+                    variants={itemVariants}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed"
+                  >
+                    The UCCP's traditions are rooted in the Protestant
+                    Reformation, emphasizing the "Five Solas" and the primacy of
+                    Scripture in matters of faith, doctrine, and morals.
+                  </motion.p>
+                </>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <Button
+              variant="ghost"
+              onClick={() => setExpanded((prev) => !prev)}
+              className=" border hover:border-yellow-500 cursor-pointer "
+            >
+              {expanded ? "View Less" : "View More"}
+            </Button>
+          </motion.div>
         </motion.div>
 
         {/* Image */}
@@ -93,7 +135,7 @@ function About() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            whileHover={{ scale: 2 }}
+            whileHover={{ scale: 1.05 }}
             className="w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72"
           >
             <Image

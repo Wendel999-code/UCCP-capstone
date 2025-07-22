@@ -91,7 +91,6 @@ export const useGetMembersByChurchId = (
       if (!res.success) throw new Error("Failed to fetch members");
       return { data: res.data, count: res.count };
     },
-    placeholderData: (previousData) => previousData,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     refetchOnMount: false,

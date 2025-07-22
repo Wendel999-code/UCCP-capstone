@@ -6,6 +6,7 @@ interface ExportTableToPDFOptions {
   filename?: string;
   title?: string;
 }
+
 export const exportToPDF = (
   table: Table<any>,
   options: ExportTableToPDFOptions = {}
@@ -22,24 +23,20 @@ export const exportToPDF = (
     doc.setFontSize(12);
     doc.text(title, 14, 15);
 
-    // Get visible headers
-    const headers = [
-      "#", // Numbering column
-      ...table
-        .getVisibleLeafColumns()
-        .filter((col) => col.id !== "actions")
-        .map((col) =>
-          typeof col.columnDef.header === "string"
-            ? col.columnDef.header
-            : col.id
-        ),
-    ];
+    const filteredColumns = table
+      .getVisibleLeafColumns()
+      .filter((header) => header.id !== "actions" && header.id !== "rowNumber");
 
-    // Get visible rows with truncated strings, adding numbering
-    const dataRows = table.getRowModel().rows.map((row, index) => [
-      (index + 1).toString(), // numbering
-      ...row.getVisibleCells().map((cell) => {
-        let value = cell.getValue();
+    const headers = ["#"].concat(
+      filteredColumns.map((col) =>
+        typeof col.columnDef.header === "string" ? col.columnDef.header : col.id
+      )
+    );
+
+    const dataRows = table.getRowModel().rows.map((row, idx) => [
+      idx + 1,
+      ...filteredColumns.map((col) => {
+        let value = row.getValue(col.id);
         if (typeof value === "string" && value.length > 40) {
           value = value.substring(0, 37) + "...";
         }

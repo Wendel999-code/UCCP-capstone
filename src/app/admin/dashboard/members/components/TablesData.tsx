@@ -61,7 +61,7 @@ export function TablesData() {
 
   const columns: ColumnDef<Member>[] = [
     {
-      id: "rowNumber",
+      accessorKey: "rowNumber",
       header: "#",
       cell: ({ row, table }) => {
         const pageIndex = table.getState().pagination.pageIndex ?? 0;

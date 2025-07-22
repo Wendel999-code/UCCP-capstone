@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { churchType } from "@/global/type";
 import { ApplyForMembership } from "@/lib/supabase/actions/member";
+import { calculateAge } from "@/lib/utils/age";
 import { Heart, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -19,7 +20,7 @@ import { toast } from "react-toastify";
 const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState<number | "">("");
+  const [age, setAge] = useState<string | "">("");
   const [gender, setGender] = useState("");
   // const [hasChildren, setHasChildren] = useState(false);
   const [address, setAddress] = useState("");
@@ -144,26 +145,6 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label
-                    htmlFor="age"
-                    className="block text-sm font-medium text-gray-500 text-[12px]"
-                  >
-                    Age
-                  </label>
-                  <input
-                    id="age"
-                    type="number"
-                    value={age}
-                    onChange={(e) =>
-                      setAge(
-                        e.target.value === "" ? "" : Number(e.target.value)
-                      )
-                    }
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
-                    placeholder="0"
-                  />
-                </div>
-                <div>
-                  <label
                     htmlFor="Date of Birth"
                     className="block text-sm font-medium text-gray-500 text-[12px]"
                   >
@@ -173,7 +154,30 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     id="Date of Birth"
                     type="date"
                     value={date_of_birth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    onChange={(e) => {
+                      const dob = e.target.value;
+                      setDateOfBirth(dob);
+                      const computedAge = calculateAge(dob);
+                      setAge(computedAge as string);
+                    }}
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="age"
+                    className="block text-sm font-medium text-gray-500 text-[12px]"
+                  >
+                    Age
+                  </label>
+                  <input
+                    id="age"
+                    type="text"
+                    value={age}
+                    readOnly
+                    onChange={(e) => setAge(e.target.value)}
                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm "
                     placeholder="0"
                   />

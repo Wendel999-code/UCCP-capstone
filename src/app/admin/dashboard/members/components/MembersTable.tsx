@@ -62,7 +62,7 @@ export default function MembersTable() {
     try {
       if (isLoading || isLoadingTable) return;
 
-      await exportToPDF(table, {
+      exportToPDF(table, {
         title: `${data?.church?.brgy} Local Church Members`,
         filename: `${data?.church?.brgy} Local Church.pdf`,
       });

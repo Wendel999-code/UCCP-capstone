@@ -37,19 +37,18 @@ export default function ApplicationDetailsModal({
 
   const { mutate: approveMember, isPending } = useApproveMember();
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     if (!memberID || !acceptanceDate || !officiant) {
-      toast.error("All fields is required");
+      toast.error("All fields are required");
       return;
     }
 
-    approveMember(
-      { memberID, acceptanceDate, officiant },
-      {
-        onSuccess: () => toast.success("Member approved!"),
-        onError: (error) => toast.error(error.message),
-      }
-    );
+    try {
+      approveMember({ memberID, acceptanceDate, officiant });
+      toast.success("Member approved!");
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong during approval");
+    }
   };
 
   const queryClient = useQueryClient();
@@ -177,7 +176,7 @@ export default function ApplicationDetailsModal({
         <Button
           onClick={handleApprove}
           disabled={isPending}
-          className="w-full mt-4 text-medium text-black cursor-pointer hover:bg-amber-700"
+          className="w-full mt-4 text-medium text-white cursor-pointer bg-amber-700 hover:bg-amber-800"
         >
           {isPending ? (
             <span className="flex items-center gap-1">

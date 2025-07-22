@@ -93,10 +93,9 @@ function Header() {
               <Button
                 variant="outline"
                 size="sm"
-                className="group h-[30px] dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
+                className="group cursor-pointer h-[30px] dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
               >
                 Sign in
-                <ArrowRight className="ml-2 h-2 w-2 group-hover:translate-x-1" />
               </Button>
             </Link>
           )}
@@ -151,7 +150,6 @@ function Header() {
                         className="group h-[30px] dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
                       >
                         Sign in
-                        <ArrowRight className="ml-2 h-2 w-2 group-hover:translate-x-1" />
                       </Button>
                     </Link>
                   )}
