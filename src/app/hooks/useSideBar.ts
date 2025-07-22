@@ -1,4 +1,4 @@
-import { GetReqCertCount } from "@/lib/supabase/actions/certificateV2";
+import { GetReqCertCount } from "@/lib/supabase/actions/certificate";
 import { ManageChurchById } from "@/lib/supabase/actions/church";
 import { GetPendingApplicationsCount } from "@/lib/supabase/actions/member";
 import { useQuery } from "@tanstack/react-query";

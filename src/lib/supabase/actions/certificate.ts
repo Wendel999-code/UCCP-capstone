@@ -38,7 +38,6 @@ export async function RequestCertificate(
   } = parsed?.data;
 
   try {
-    
     const { data: currentUser, error: userError } =
       await supabase.auth.getUser();
 
@@ -296,5 +295,30 @@ export async function getCompletedCertificateRequestCount() {
   } catch (error) {
     console.error("Error in getCompletedCertificateRequestCount:", error);
     return 0;
+  }
+}
+
+export async function GetReqCertCount() {
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { count, error: countError } = await supabase
+      .from("req_certificate")
+      .select("*", { count: "exact", head: true })
+      .eq("church_id", admin.church_id)
+      .eq("status", "Pending");
+
+    if (countError) throw countError;
+
+    return {
+      success: true,
+      count: count || 0,
+    };
+  } catch (error) {
+    console.error("Error getting req cert count:", error);
+    return {
+      success: false,
+      count: 0,
+    };
   }
 }

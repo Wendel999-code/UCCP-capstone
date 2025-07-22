@@ -3,6 +3,7 @@
 import { useGetMembersByChurchId } from "@/app/hooks/useMember";
 import { Button } from "@/components/ui/button";
 import { Member } from "@/global/type";
+import supabase from "@/lib/supabase/client";
 import {
   getCoreRowModel,
   SortingState,
@@ -12,7 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MemberAction from "./MemberAction";
 
 const getCategoryColor = (category: string) => {
@@ -48,7 +49,11 @@ export function TablesData() {
   const sortBy = sorting[0]?.id ?? "";
   const sortOrder = sorting[0]?.desc ? "desc" : "asc";
 
-  const { data: membersData, isLoading } = useGetMembersByChurchId(
+  const {
+    data: membersData,
+    isLoading,
+    refetch,
+  } = useGetMembersByChurchId(
     pagination.pageIndex + 1,
     pagination.pageSize,
     globalFilter.search,
@@ -56,6 +61,28 @@ export function TablesData() {
     sortOrder,
     globalFilter.category
   );
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("new-member")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "member",
+        },
+        () => {
+          refetch();
+        }
+      )
+
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [refetch]);
 
   const totalMember = membersData?.count ?? 0;
 

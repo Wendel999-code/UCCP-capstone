@@ -13,10 +13,10 @@ import {
   GetApplicationID,
   GetMemberByID,
   GetMemberByIDBySuperAdmin,
-  GetMembersByChurchId,
   GetPendingApplication,
   UpdateMemberByID,
 } from "@/lib/supabase/actions/member";
+import { GetMembersByChurchId } from "@/lib/supabase/actions/memberV2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePendingMembers = () =>
@@ -94,7 +94,7 @@ export const useGetMembersByChurchId = (
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     retry: 1,
   });
 

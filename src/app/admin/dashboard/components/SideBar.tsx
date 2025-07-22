@@ -26,7 +26,7 @@ const SideBar = () => {
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "member",
         },
@@ -37,7 +37,7 @@ const SideBar = () => {
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "req_certificate",
         },
