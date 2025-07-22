@@ -22,7 +22,7 @@ const SideBar = () => {
 
   useEffect(() => {
     const channel = supabase
-      .channel("pending-applications-count")
+      .channel("application-count & cert-count")
       .on(
         "postgres_changes",
         {
@@ -34,6 +34,18 @@ const SideBar = () => {
           refetch();
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "req_certificate",
+        },
+        () => {
+          refetch();
+        }
+      )
+
       .subscribe();
 
     return () => {
@@ -98,22 +110,12 @@ const SideBar = () => {
             href: "/admin/dashboard/certificates",
             label: "Certificates",
             icon: <File className="h-4 w-4" />,
+            extra: (data?.certCount ?? 0) > 0 && (
+              <span className="ml-auto h-5 w-5 text-xs font-bold text-red-500">
+                {data?.certCount}
+              </span>
+            ),
           },
-          // {
-          //   href: "/admin/dashboard/events",
-          //   label: "Events",
-          //   icon: <Calendar className="h-4 w-4" />,
-          // },
-          // {
-          //   href: "/admin/dashboard/announcements",
-          //   label: "Announcements",
-          //   icon: <Bell className="h-4 w-4" />,
-          //   extra: (
-          //     <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-yellow-200 text-xs font-medium text-yellow-900">
-          //       3
-          //     </span>
-          //   ),
-          // },
         ].map(({ href, label, icon, extra }) => {
           const isActive = pathname === href;
           return (

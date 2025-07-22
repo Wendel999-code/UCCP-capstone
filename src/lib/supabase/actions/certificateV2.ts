@@ -1,7 +1,9 @@
 "use server";
 
+import supabase from "../client";
 import { createSupabaseServer } from "../server";
 import { certificateRequestSchema } from "../validation/certificate";
+import { getChurchAdmin } from "./dal";
 
 export async function RequestCertificateV2(
   initialState: unknown,
@@ -71,5 +73,29 @@ export async function RequestCertificateV2(
   } catch (error) {
     console.error("Error in request certificate:", error);
     return { success: false, error: error };
+  }
+}
+
+export async function GetReqCertCount() {
+  try {
+    const { churchAdmin: admin } = await getChurchAdmin();
+
+    const { count, error: countError } = await supabase
+      .from("req_certificate")
+      .select("*", { count: "exact", head: true })
+      .eq("church_id", admin.church_id);
+
+    if (countError) throw countError;
+
+    return {
+      success: true,
+      count: count || 0,
+    };
+  } catch (error) {
+    console.error("Error getting pending applications count:", error);
+    return {
+      success: false,
+      count: 0,
+    };
   }
 }

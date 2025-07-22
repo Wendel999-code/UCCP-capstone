@@ -1,11 +1,35 @@
 "use client";
 import { useVisitCount } from "@/app/hooks/visit";
+import supabase from "@/lib/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Eye } from "lucide-react";
+import { useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
 
 const Visits = () => {
-  const { data: count, isLoading } = useVisitCount();
+  const { data: count, isLoading, refetch } = useVisitCount();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("visitor-count")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "visitors",
+        },
+        () => {
+          refetch();
+        }
+      )
+
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [refetch]);
 
   return (
     <AnimatePresence>

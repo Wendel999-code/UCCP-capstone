@@ -1,5 +1,7 @@
 "use client";
 
+import { LogVisitor } from "@/lib/supabase/actions/visit";
+import { useEffect } from "react";
 import About from "./landing/About";
 import Footer from "./landing/Footer";
 import Header from "./landing/Header";
@@ -7,6 +9,10 @@ import Hero from "./landing/Hero";
 import Testimonials from "./landing/Testimonials";
 
 export default function Home() {
+  useEffect(() => {
+    LogVisitor();
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
