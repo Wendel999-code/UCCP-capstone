@@ -77,7 +77,7 @@ function Header() {
 
           <ModeToggle />
           {loading ? (
-            <Skeleton className="h-5 w-12 rounded-md" />
+            <Skeleton className="h-8 w-16 rounded-md" />
           ) : user ? (
             <Button
               onClick={handleLogout}

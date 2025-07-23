@@ -1,7 +1,5 @@
 "use client";
 
-import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
-import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,11 +23,6 @@ export default function LoginForm() {
 
   const router = useRouter();
 
-  const { loading: userLoading, user } = useRedirectIfAuthenticated();
-
-  if (userLoading || user) {
-    return <LogoLoader />;
-  }
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -49,7 +42,7 @@ export default function LoginForm() {
         return;
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
       const redirectPath = roleRedirectMap[role as UserRole] || "/";
       router.replace(redirectPath);
@@ -135,6 +128,15 @@ export default function LoginForm() {
                   className="absolute top-2.5 right-3 text-red-700 hover:text-red-900"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => router.push("/auth/reset-password")}
+                  className="text-sm cursor-pointer text-amber-600 hover:underline "
+                >
+                  Forgot Password?
                 </button>
               </div>
             </div>

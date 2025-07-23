@@ -149,3 +149,40 @@ export async function SignUpV2(email: string, password: string) {
     return { success: false, message: "Unexpected error in signup" };
   }
 }
+
+export async function ResetPassword(email: string) {
+  const supabase = await createSupabaseServer();
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+    if (error) {
+      console.error("Supabase reset password error:", error.message);
+      return { success: false, message: error.message };
+    }
+    return {
+      success: true,
+      message: "Password reset email sent! Please check your inbox.",
+    };
+  } catch (error) {
+    console.log("error in reset password", error);
+    return { success: false, message: "Failed to reset password" };
+  }
+}
+
+export async function UpdatePassword(password: string) {
+  const supabase = await createSupabaseServer();
+  try {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      console.error("Supabase update password error:", error.message);
+      return { success: false, message: error.message };
+    }
+    return {
+      success: true,
+      message: "Password updated successfully!",
+    };
+  } catch (error) {
+    console.log("error in update password", error);
+    return { success: false, message: "Failed to update password" };
+  }
+}
