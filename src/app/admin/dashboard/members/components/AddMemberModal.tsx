@@ -73,17 +73,19 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
             label="Last Name"
             error={state?.errors?.lastName}
           />
-          <InputBlock
-            name="age"
-            label="Age"
-            type="number"
-            error={state?.errors?.age}
-          />
+
           <InputBlock
             name="date_of_birth"
             label="Date of Birth"
             type="date"
             error={state?.errors?.date_of_birth}
+          />
+
+          <InputBlock
+            name="age"
+            label="Age"
+            type="number"
+            error={state?.errors?.age}
           />
 
           <div>
@@ -201,10 +203,10 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
           >
             {pending ? (
               <>
-                <Loader className="animate-spin" /> Saving Member
+                <Loader className="animate-spin" /> Adding Member
               </>
             ) : (
-              "Save Member"
+              "Add Member"
             )}
           </Button>
         </form>
