@@ -71,7 +71,7 @@ const Header = () => {
                   <div className="flex flex-col gap-4 text-start">
                     <div className="flex flex-col gap-1">
                       <label
-                        className="text-xs text-muted-foreground"
+                        className="text-xs text-gray-800 dark:text-gray-400 "
                         htmlFor="email"
                       >
                         Email
@@ -80,13 +80,13 @@ const Header = () => {
                         id="email"
                         value={user.email}
                         disabled
-                        className="bg-muted cursor-not-allowed border-amber-500  ring-amber-400 text-sm"
+                        className=" text-black font-bold dark:text-white cursor-not-allowed border-amber-500  ring-amber-400 "
                       />
                     </div>
 
                     <div className="flex flex-col gap-1">
                       <label
-                        className="text-xs text-muted-foreground"
+                        className="text-xs text-gray-800 dark:text-gray-400  "
                         htmlFor="role"
                       >
                         Role
@@ -95,7 +95,7 @@ const Header = () => {
                         id="role"
                         value={user.role}
                         disabled
-                        className="bg-muted ring-amber-400 border-amber-500 cursor-not-allowed capitalize text-sm"
+                        className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
                       />
                     </div>
                   </div>

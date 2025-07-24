@@ -5,6 +5,14 @@ import { useUser } from "@/app/provider/UserContext";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
   Sheet,
   SheetContent,
   SheetHeader,
@@ -14,7 +22,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import { ArrowRight, File, Home, Menu } from "lucide-react";
+import { ArrowRight, File, Home, Menu, UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,6 +46,7 @@ const Nav = () => {
 
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -86,15 +95,66 @@ const Nav = () => {
               {loading ? (
                 <Skeleton className="h-5 w-5 " />
               ) : user ? (
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  size="sm"
-                  className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-                >
-                  Logout
-                  <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
-                </Button>
+                <>
+                  <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="group h-7 border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                      >
+                        <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xs rounded-2xl">
+                      <DialogHeader>
+                        <DialogTitle className="text-center text-red-900 dark:text-yellow-500 text-2xl">
+                          Profile
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="flex flex-col gap-4 text-start">
+                        <div className="flex flex-col gap-1">
+                          <label
+                            className="text-xs text-gray-800 dark:text-gray-400 "
+                            htmlFor="email"
+                          >
+                            Email
+                          </label>
+                          <Input
+                            id="email"
+                            value={user.email}
+                            disabled
+                            className=" text-black font-bold dark:text-white cursor-not-allowed border-amber-500  ring-amber-400 "
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label
+                            className="text-xs text-gray-800 dark:text-gray-400  "
+                            htmlFor="role"
+                          >
+                            Role
+                          </label>
+                          <Input
+                            id="role"
+                            value={user.role}
+                            disabled
+                            className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
+                          />
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  {/* <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    size="sm"
+                    className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+                  >
+                    Logout
+                    <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
+                  </Button>{" "} */}
+                </>
               ) : (
                 ""
               )}
@@ -105,7 +165,7 @@ const Nav = () => {
               <SheetTrigger className="mr-2">
                 <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
               </SheetTrigger>
-              <SheetContent className="h-[250px] w-[260px]  rounded-md">
+              <SheetContent className="h-[270px] w-[260px]  rounded-md">
                 <SheetHeader>
                   <SheetTitle className="text-center">
                     {" "}
@@ -141,15 +201,67 @@ const Nav = () => {
                   {loading ? (
                     <Skeleton className="h-5 w-12 rounded-md" />
                   ) : user ? (
-                    <Button
-                      onClick={handleLogout}
-                      variant="outline"
-                      size="sm"
-                      className="group h-[30px] ml-4 dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-                    >
-                      Logout
-                      <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1" />
-                    </Button>
+                    <>
+                      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="group text-gray-500 dark:text-gray-400 h-7 hover:border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                          >
+                            <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />{" "}
+                            Profile
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xs rounded-2xl">
+                          <DialogHeader>
+                            <DialogTitle className="text-center text-red-900 dark:text-yellow-500 text-2xl">
+                              Profile
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-4 text-start">
+                            <div className="flex flex-col gap-1">
+                              <label
+                                className="text-xs text-gray-800 dark:text-gray-400 "
+                                htmlFor="email"
+                              >
+                                Email
+                              </label>
+                              <Input
+                                id="email"
+                                value={user.email}
+                                disabled
+                                className=" text-black text-xs font-bold dark:text-white cursor-not-allowed border-amber-500  ring-amber-400 "
+                              />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <label
+                                className="text-xs text-gray-800 dark:text-gray-400  "
+                                htmlFor="role"
+                              >
+                                Role
+                              </label>
+                              <Input
+                                id="role"
+                                value={user.role}
+                                disabled
+                                className=" text-black text-xs font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
+                              />
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      <Button
+                        onClick={handleLogout}
+                        variant="outline"
+                        size="sm"
+                        className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+                      >
+                        Logout
+                        <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
+                      </Button>{" "}
+                    </>
                   ) : (
                     <Link href="/auth/login">
                       <Button
