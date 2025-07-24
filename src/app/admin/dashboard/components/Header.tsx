@@ -3,30 +3,24 @@
 import { useUser } from "@/app/provider/UserContext";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "react-toastify";
+import { useState } from "react";
 
 const Header = () => {
   const { user, loading } = useUser();
-
-  const handleLogout = async () => {
-    try {
-      const res = await LogoutV2();
-
-      if (res.success) {
-        toast.success("Logout successfully");
-        window.location.href = "/";
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("An unexpected error occurred during logout.");
-    }
-  };
+  const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <motion.header
@@ -35,15 +29,17 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
-      <div className=" flex h-18 items-center px-6 justify-between ">
-        <Link href="/admin/dashboard" className="flex items-center">
-          <Image
-            src="/uccp.jpg"
-            alt="Profile"
-            width={40}
-            height={40}
-            className="rounded-full rounded-b-3xl dark:rounded-b-full h-11 dark:h-10  w-10 object-cover md:ml-22"
-          />
+      <div className="flex h-18 items-center px-6 justify-between">
+        <Link href="/admin/dashboard">
+          <div className="px-4 md:px-22">
+            <Image
+              src="/uccp.jpg"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full rounded-b-3xl dark:rounded-b-full h-11 dark:h-10 w-10 object-cover"
+            />
+          </div>
         </Link>
 
         <nav className="hidden md:flex gap-6">
@@ -54,20 +50,58 @@ const Header = () => {
             <ModeToggle />
 
             {loading ? (
-              <Skeleton className="h-5 w-5 " />
+              <Skeleton className="h-7 w-7 rounded-full" />
             ) : user ? (
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-              >
-                Logout
-                <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
-              </Button>
-            ) : (
-              ""
-            )}
+              <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="group h-7 border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                  >
+                    <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-xs rounded-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-center text-red-900 dark:text-yellow-500 text-2xl">
+                      Profile
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-4 text-start">
+                    <div className="flex flex-col gap-1">
+                      <label
+                        className="text-xs text-muted-foreground"
+                        htmlFor="email"
+                      >
+                        Email
+                      </label>
+                      <Input
+                        id="email"
+                        value={user.email}
+                        disabled
+                        className="bg-muted cursor-not-allowed border-amber-500  ring-amber-400 text-sm"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label
+                        className="text-xs text-muted-foreground"
+                        htmlFor="role"
+                      >
+                        Role
+                      </label>
+                      <Input
+                        id="role"
+                        value={user.role}
+                        disabled
+                        className="bg-muted ring-amber-400 border-amber-500 cursor-not-allowed capitalize text-sm"
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            ) : null}
           </motion.div>
         </nav>
       </div>

@@ -75,6 +75,7 @@ export async function LoginV2(email: string, password: string) {
 export const fetchCurrentUserV2 = async () => {
   try {
     const supabase = await createSupabaseServer();
+
     const {
       data: { user: authUser },
       error: authError,
@@ -84,15 +85,24 @@ export const fetchCurrentUserV2 = async () => {
       return null;
     }
 
-    const { data: roleData, error: roleError } = await supabase
+    const { data: user, error: roleError } = await supabase
       .from("User")
-      .select("id, role")
+      .select("id, role, email")
       .eq("id", authUser.id)
       .single();
 
     if (roleError) throw new Error(roleError.message);
 
-    return roleData;
+    //TODO PWEDE KA MAG LOGIN BISAN DIRI MEMBER
+    // const { data: member, error: memberError } = await supabase
+    //   .from("member")
+    //   .select("id, firstName, lastName, Church:church_id(brgy)")
+    //   .eq("id", user.id)
+    //   .maybeSingle();
+
+    // if (memberError) throw new Error(memberError.message);
+
+    return user;
   } catch (error) {
     console.log("Failed to fetch current user.", error);
     return null;
@@ -153,7 +163,7 @@ export async function SignUpV2(email: string, password: string) {
 export async function ResetPassword(email: string) {
   const supabase = await createSupabaseServer();
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
 
     if (error) {
       console.error("Supabase reset password error:", error.message);

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { roleRedirectMap, type UserRole } from "@/constant";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useUser } from "../provider/UserContext";
 
 export function useRedirectIfAuthenticated() {

@@ -31,7 +31,7 @@ function Certicates() {
   }, [refetch]);
 
   return (
-    <div className="p-4">
+    <div>
       <BaptismCertificateTable
         certificates={data || []}
         isLoading={isLoading}

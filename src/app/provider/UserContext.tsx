@@ -9,6 +9,7 @@ import { fetchCurrentUserV2 } from "@/lib/supabase/actions/authV2";
 type User = {
   role: string;
   id: string;
+  email: string;
 } | null;
 
 interface UserContextType {
