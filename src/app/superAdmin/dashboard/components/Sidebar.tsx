@@ -43,7 +43,7 @@ const SuperAdminSideBar = () => {
     },
     {
       href: "/superAdmin/dashboard/reports",
-      label: "Reports",
+      label: "Logs",
       icon: Logs,
     },
     // {

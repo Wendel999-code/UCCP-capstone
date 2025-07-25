@@ -1,5 +1,7 @@
 "use client";
 
+import { useRedirectIfAuthenticated } from "@/app/hooks/useRedirectIfAuthenticated";
+import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,12 +18,12 @@ import { toast } from "react-toastify";
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const queryClient = useQueryClient();
-
   const router = useRouter();
+
+  const { loading: authLoading } = useRedirectIfAuthenticated();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -44,7 +46,7 @@ export default function LoginForm() {
 
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
-      const redirectPath = roleRedirectMap[role as UserRole] || "/";
+      const redirectPath = roleRedirectMap[role as UserRole];
       router.replace(redirectPath);
 
       toast.success(message || "Login successfully");
@@ -55,6 +57,8 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
+
+  if (authLoading) return <LogoLoader />;
 
   return (
     <motion.div
@@ -151,7 +155,6 @@ export default function LoginForm() {
               {loading ? (
                 <div className="flex items-center gap-2">
                   <Loader className="animate-spin w-5 h-5" />
-                  <span>Signing In...</span>
                 </div>
               ) : (
                 "Sign In"

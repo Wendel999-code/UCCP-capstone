@@ -4,29 +4,28 @@ import { useUser } from "@/app/provider/UserContext";
 import { ModeToggle } from "@/components/ModeToogle";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "react-toastify";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Header = () => {
   const { user, loading } = useUser();
 
-  const handleLogout = async () => {
-    try {
-      const res = await LogoutV2();
-      toast[res.success ? "success" : "error"](res.message);
+  const [profileOpen, setProfileOpen] = useState(false);
 
-      if (res.success) {
-        window.location.href = "/";
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("An unexpected error occurred during logout.");
-    }
-  };
+  const router = useRouter();
 
   return (
     <motion.header
@@ -35,15 +34,17 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
-      <div className=" flex h-18 items-center px-4 justify-between ">
+      <div className=" flex h-18 items-center px-6 justify-between ">
         <Link href="/superAdmin/dashboard" className="flex items-center">
-          <Image
-            src="/uccp.jpg"
-            alt="Profile"
-            width={40}
-            height={40}
-            className="rounded-full h-12 w-12 object-cover md:ml-22"
-          />
+          <div className="px-4 md:px-22">
+            <Image
+              src="/uccp.jpg"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full rounded-b-3xl dark:rounded-b-full h-11 dark:h-10 w-10 object-cover"
+            />
+          </div>
         </Link>
 
         <nav className="hidden md:flex gap-6">
@@ -56,15 +57,65 @@ const Header = () => {
             {loading ? (
               <Skeleton className="h-5 w-5 " />
             ) : user ? (
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
-              >
-                Logout
-                <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
-              </Button>
+              <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="group h-7 border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                  >
+                    <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-xs rounded-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-center text-red-900 dark:text-yellow-500 text-2xl">
+                      Profile
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-4 text-start">
+                    <div className="flex flex-col gap-1">
+                      <label
+                        className="text-xs text-gray-800 dark:text-gray-400 "
+                        htmlFor="email"
+                      >
+                        Email
+                      </label>
+                      <Input
+                        id="email"
+                        value={user.email}
+                        disabled
+                        className=" text-black font-bold dark:text-white cursor-not-allowed border-amber-500  ring-amber-400 "
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label
+                        className="text-xs text-gray-800 dark:text-gray-400  "
+                        htmlFor="role"
+                      >
+                        Role
+                      </label>
+                      <Input
+                        id="role"
+                        value={user.role}
+                        disabled
+                        className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
+                      />
+                    </div>
+
+                    <div>
+                      <Button
+                        onClick={() => router.push("/auth/reset-password")}
+                        size={"sm"}
+                        className="cursor-pointer  text-black text-xs "
+                      >
+                        Change Password
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             ) : (
               ""
             )}

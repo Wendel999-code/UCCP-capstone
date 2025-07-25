@@ -67,7 +67,7 @@ function ReportsTable() {
     <Card>
       <CardHeader>
         <CardTitle className="text-center text-2xl text-red-900 dark:text-yellow-500">
-          Operational Reports for All Churches
+          Operational Logs for All Churches
         </CardTitle>
       </CardHeader>
       <CardContent>

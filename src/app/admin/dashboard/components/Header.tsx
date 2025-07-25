@@ -16,11 +16,14 @@ import { motion } from "framer-motion";
 import { User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Header = () => {
   const { user, loading } = useUser();
   const [profileOpen, setProfileOpen] = useState(false);
+
+  const router = useRouter();
 
   return (
     <motion.header
@@ -97,6 +100,16 @@ const Header = () => {
                         disabled
                         className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
                       />
+                    </div>
+
+                    <div>
+                      <Button
+                        onClick={() => router.push("/auth/reset-password")}
+                        size={"sm"}
+                        className="cursor-pointer  text-black text-xs "
+                      >
+                        Change Password
+                      </Button>
                     </div>
                   </div>
                 </DialogContent>

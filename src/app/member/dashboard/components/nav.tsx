@@ -25,7 +25,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, File, Home, Menu, UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -43,6 +43,8 @@ const navItems = [
 ];
 const Nav = () => {
   const { user, loading } = useUser();
+
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -141,6 +143,15 @@ const Nav = () => {
                             disabled
                             className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
                           />
+                        </div>
+                        <div>
+                          <Button
+                            onClick={() => router.push("/auth/reset-password")}
+                            size={"sm"}
+                            className="cursor-pointer  text-black text-xs "
+                          >
+                            Change Password
+                          </Button>
                         </div>
                       </div>
                     </DialogContent>
@@ -248,6 +259,17 @@ const Nav = () => {
                                 disabled
                                 className=" text-black text-xs font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
                               />
+                            </div>
+                            <div>
+                              <Button
+                                onClick={() =>
+                                  router.push("/auth/reset-password")
+                                }
+                                size={"sm"}
+                                className="cursor-pointer  text-black text-xs "
+                              >
+                                Change Password
+                              </Button>
                             </div>
                           </div>
                         </DialogContent>

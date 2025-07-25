@@ -191,7 +191,7 @@ export function ViewMemberModal({
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-red-900 dark:text-amber-400 text-2xl font-bold text-center">
-              Send Member ID
+              Retrieve Member ID
             </DialogTitle>
           </DialogHeader>
 

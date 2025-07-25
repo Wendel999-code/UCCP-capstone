@@ -1,10 +1,10 @@
 "use client";
 
-import Header from "@/app/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ResetPassword } from "@/lib/supabase/actions/authV2";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
@@ -43,14 +43,13 @@ export default function ResetPasswordPage() {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-lg shadow-md p-8">
           <h1 className="text-2xl font-bold text-red-900 mb-4 text-center">
             Reset Your Password
           </h1>
-          <form className="space-y-4 mt-5" onSubmit={handleResetPassword}>
-            <div>
+          <form className="space-y-4 mt-10" onSubmit={handleResetPassword}>
+            <div className="">
               <Label htmlFor="email" className="text-gray-700  text-[12px]">
                 Email Address
               </Label>
@@ -69,7 +68,7 @@ export default function ResetPasswordPage() {
               disabled={loading}
               className="w-full bg-red-900 mt-5 cursor-pointer text-white hover:bg-red-800 text-lg font-semibold"
             >
-              {loading ? "Sending..." : "Send Reset Email"}
+              {loading ? <Loader className="animate-spin" /> : "Reset Password"}
             </Button>
           </form>
         </div>
