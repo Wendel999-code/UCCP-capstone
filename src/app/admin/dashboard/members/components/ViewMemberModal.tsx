@@ -14,8 +14,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SendMemberID } from "@/lib/utils/resend";
 import { format } from "date-fns";
+import { Loader } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface ViewMemberModalProps {
   open: boolean;
@@ -47,6 +50,7 @@ export function ViewMemberModal({
   );
 
   const [isSending, setIsSending] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
 
@@ -54,6 +58,25 @@ export function ViewMemberModal({
     setIsSending(true);
     setEmail(email);
     setOpen(false);
+  };
+
+  const handleSendMemberID = async () => {
+    setLoading(true);
+    try {
+      const res = await SendMemberID({ email, memberID });
+
+      if (!res.success) {
+        toast.error(res.message);
+      }
+      toast.success(res.message);
+
+      setIsSending(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send member ID.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -186,8 +209,16 @@ export function ViewMemberModal({
             <Input readOnly className="mt-1" value={memberID} />
           </div>
           <DialogFooter className="sm:justify-start">
-            <Button className="w-full mt-5 bg-sky-600 cursor-pointer transition-all text-white hover:bg-sky-500">
-              Send
+            <Button
+              onClick={handleSendMemberID}
+              disabled={loading}
+              className="w-full mt-5 bg-sky-700 cursor-pointer transition-all text-white hover:bg-sky-600"
+            >
+              {loading ? (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Send Member ID"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

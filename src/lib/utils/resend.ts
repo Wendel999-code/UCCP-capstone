@@ -1,6 +1,10 @@
 "use server";
 
-import { EmailTemplate, UpdatesCertificate } from "@/components/EmailTemplate";
+import {
+  EmailTemplate,
+  SendID,
+  UpdatesCertificate,
+} from "@/components/EmailTemplate";
 import { MemberResend, ReqCertUpdateType } from "@/global/type";
 import { Resend } from "resend";
 
@@ -78,5 +82,42 @@ export async function ReqCertUpdate({
   return {
     success: true,
     message: "Email sent successfully.",
+  };
+}
+
+export async function SendMemberID({
+  email,
+  memberID,
+}: {
+  email: string;
+  memberID: string;
+}) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email || !emailRegex.test(email)) {
+    return {
+      success: false,
+      message: "Invalid member email address provided.",
+    };
+  }
+
+  const { error: resendError } = await resend.emails.send({
+    from: "UCCP <support@wndl.dev>",
+    to: [email],
+    subject: "Retrieve Member ID",
+    react: SendID(memberID),
+  });
+
+  if (resendError) {
+    console.error("Failed to send member id:", resendError.message);
+    return {
+      success: false,
+      message: `Failed to send mmeber id: ${resendError.message}`,
+    };
+  }
+
+  return {
+    success: true,
+    message: "Member ID sent successfully.",
   };
 }

@@ -93,3 +93,32 @@ export function UpdatesCertificate(
     </>
   );
 }
+
+export function SendID(memberID: string) {
+  return (
+    <>
+      <div className="font-serif text-neutral-900 max-w-md mx-auto p-6 leading-relaxed">
+        <h3 className="font-bold text-xl mb-4"> Your Member ID :</h3>
+
+        <h2 className="text-base mb-3">
+          <br /> <strong>{memberID}</strong>
+        </h2>
+
+        <p className="text-base mb-3">
+          If you have any questions or need further assistance, feel free to
+          contact us.
+        </p>
+
+        <p className="text-base mb-3">
+          Thank you, and may God bless you and your family abundantly.
+        </p>
+
+        <p className="text-base mt-6">
+          Blessings,
+          <br />
+          <strong>United Church of Christ in the Philippines</strong>
+        </p>
+      </div>
+    </>
+  );
+}
