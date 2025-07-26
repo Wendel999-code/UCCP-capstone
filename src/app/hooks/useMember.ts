@@ -9,14 +9,16 @@ import {
   DeleteMember,
   GetAllCountMembersByChurchId,
   GetAllMemberPerChurchCount,
-  GetAllMembersBySuperAdmin,
   GetApplicationID,
   GetMemberByID,
   GetMemberByIDBySuperAdmin,
   GetPendingApplication,
   UpdateMemberByID,
 } from "@/lib/supabase/actions/member";
-import { GetMembersByChurchId } from "@/lib/supabase/actions/memberV2";
+import {
+  GetAllMembersBySuperAdmin,
+  GetMembersByChurchId,
+} from "@/lib/supabase/actions/memberV2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePendingMembers = () =>
@@ -181,23 +183,65 @@ export const useMemberDetailsBySuperAdmin = (memberID: string, open: boolean) =>
     },
     enabled: open,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 1,
   });
 
-export const useGetAllmemberBySuperAdmin = () =>
-  useQuery<Member[]>({
-    queryKey: ["membersBySuperAdmin"],
-    queryFn: async () => {
-      const res = await GetAllMembersBySuperAdmin();
-      if (!res.success) throw new Error(res.message);
-      return res.data;
+// export const useGetAllmemberBySuperAdmin = () =>
+//   useQuery<Member[]>({
+//     queryKey: ["membersBySuperAdmin"],
+//     queryFn: async () => {
+//       const res = await GetAllMembersBySuperAdmin();
+//       if (!res.success) throw new Error(res.message);
+//       return res.data;
+//     },
+//     staleTime: 5 * 60 * 1000,
+//     gcTime: 30 * 60 * 1000,
+//     retry: 1,
+//     refetchOnWindowFocus: true,
+//   });
+
+export const useGetAllmemberBySuperAdmin = (
+  page: number,
+  pageSize: number,
+  search: string,
+  sortBy: string,
+  sortOrder: "asc" | "desc",
+  category: string,
+  circuit:string
+) =>
+  useQuery<MemberQueryResponse, Error>({
+    queryKey: [
+      "membersByChurchId",
+      page,
+      pageSize,
+      search,
+      sortBy,
+      sortOrder,
+      category,
+      circuit
+    ],
+    queryFn: async (): Promise<MemberQueryResponse> => {
+      const res = await GetAllMembersBySuperAdmin(
+        page,
+        pageSize,
+        search,
+        sortBy,
+        sortOrder,
+        category,
+        circuit
+      );
+      if (!res.success) throw new Error("Failed to fetch members");
+      return { data: res.data, count: res.count ?? 0 };
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    retry: 1,
+    refetchOnMount: false,
     refetchOnWindowFocus: true,
+    retry: 1,
+    // placeholderData:(data)=>  data
   });
 
 export const useCountMemPerChurch = () =>

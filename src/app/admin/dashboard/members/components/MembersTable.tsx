@@ -59,9 +59,10 @@ export default function MembersTable() {
 
   const handleExportPDF = async () => {
     setIsExporting(true);
-    try {
-      if (isLoading || isLoadingTable) return;
+    
+    if (isLoading || isLoadingTable) return;
 
+    try {
       exportToPDF(table, {
         title: `${data?.church?.brgy} Local Church Members`,
         filename: `${data?.church?.brgy} Local Church.pdf`,

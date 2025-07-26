@@ -34,6 +34,7 @@ const getCategoryColor = (category: string) => {
 };
 
 export function TablesData() {
+  
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -114,7 +115,7 @@ export function TablesData() {
         </Button>
       ),
       cell: ({ row }) => (
-        <p className="ml-3 text-[14px]">{row.getValue("lastName")}</p>
+        <p className="ml-3 text-[14px] ">{row.getValue("lastName")}</p>
       ),
     },
     {

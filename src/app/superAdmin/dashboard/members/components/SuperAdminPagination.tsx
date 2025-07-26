@@ -10,12 +10,18 @@ import { Member } from "@/global/type";
 import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const SuperAdminPagination = ({ table }: { table: Table<Member> }) => {
+const SuperAdminPagination = ({
+  table,
+  totalMember,
+}: {
+  table: Table<Member>;
+  totalMember: number;
+}) => {
   return (
     <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
       <div className="flex-1 text-[12px] text-muted-foreground">
         <div className="flex-1 text-[12px] text-muted-foreground">
-          Total members: {table.getPrePaginationRowModel().rows.length}
+          Total members: {totalMember}
         </div>
       </div>
 

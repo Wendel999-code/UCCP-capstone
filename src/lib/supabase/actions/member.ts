@@ -599,39 +599,39 @@ export async function GetMemberByIDBySuperAdmin(memberID: string) {
   }
 }
 
-export async function GetAllMembersBySuperAdmin() {
-  try {
-    const admin = await SuperAdmin();
+// export async function GetAllMembersBySuperAdmin() {
+//   try {
+//     const admin = await SuperAdmin();
 
-    if (admin.role === "super_admin") {
-      const { data, error } = await supabase
-        .from("member")
-        .select("*, Church:church_id(brgy)")
-        .neq("activeStatus", "pending")
-        .order("created_at", { ascending: true });
+//     if (admin.role === "super_admin") {
+//       const { data, error } = await supabase
+//         .from("member")
+//         .select("*, Church:church_id(brgy)")
+//         .neq("activeStatus", "pending")
+//         .order("created_at", { ascending: true });
 
-      if (error) throw error;
+//       if (error) throw error;
 
-      return {
-        success: true,
-        data,
-      };
-    }
+//       return {
+//         success: true,
+//         data,
+//       };
+//     }
 
-    return {
-      success: false,
-      message: "Unauthorized: insufficient permissions to get members",
-      data: [],
-    };
-  } catch (error) {
-    console.error("Error in GetAllMembers:", error);
-    return {
-      success: false,
-      message: "Failed to retrieve members",
-      data: [],
-    };
-  }
-}
+//     return {
+//       success: false,
+//       message: "Unauthorized: insufficient permissions to get members",
+//       data: [],
+//     };
+//   } catch (error) {
+//     console.error("Error in GetAllMembers:", error);
+//     return {
+//       success: false,
+//       message: "Failed to retrieve members",
+//       data: [],
+//     };
+//   }
+// }
 
 export async function addMemberAction(
   initialState: unknown,

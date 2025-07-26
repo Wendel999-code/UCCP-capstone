@@ -4,7 +4,6 @@ import { flexRender } from "@tanstack/react-table";
 import { ChevronDown, Download, Filter, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import {
   Card,
@@ -36,28 +35,37 @@ import {
 } from "@/components/ui/table";
 
 import { useGetAllChurches } from "@/app/hooks/useChurch";
+import DebouncedSearchInput from "@/components/DebounceInput";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Member } from "@/global/type";
 import { exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "./SuperAdminPagination";
 import { SuperAdminTablesData } from "./SuperAdminTablesData";
 
-export default function SuperAdminMembersTable({
-  members,
-}: {
-  members: Member[];
-}) {
-  const { table, columns } = SuperAdminTablesData({ members });
+export default function SuperAdminMembersTable() {
+  const {
+    table,
+    columns,
+    isLoading: isLoadingTable,
+    globalFilter,
+    setGlobalFilter,
+    totalMember,
+    circuit,
+    setcircuit,
+  } = SuperAdminTablesData();
+
   const { data: churches, isLoading } = useGetAllChurches();
 
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportPDF = async () => {
     setIsExporting(true);
+
+    if (isLoading || isLoadingTable) return;
+
     try {
-      await exportToPDF(table, {
+      exportToPDF(table, {
         title: "Cana Circuit Members",
         filename: "Cana Circuit Members.pdf",
       });
@@ -82,13 +90,6 @@ export default function SuperAdminMembersTable({
                 A comprehensive list of all church members
               </CardDescription>
             </div>
-            {/* <Button
-              size={"sm"}
-              className="h-7 px-3 text-[12px] cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black "
-            >
-              <Plus className="mr-1 h-3 w-3" />
-              Add Member
-            </Button> */}
           </div>
         </CardHeader>
 
@@ -99,30 +100,25 @@ export default function SuperAdminMembersTable({
               {/* Search Input */}
               <div className="relative">
                 <Search className="absolute left-2 top-[13px] h-3 w-3 text-muted-foreground" />
-                <Input
-                  placeholder="Search..."
-                  value={
-                    (table
-                      .getColumn("firstName")
-                      ?.getFilterValue() as string) ?? ""
+                <DebouncedSearchInput
+                  defaultValue={globalFilter.search}
+                  searchMember={(searchValue) =>
+                    setGlobalFilter((prev) => ({
+                      ...prev,
+                      search: searchValue,
+                    }))
                   }
-                  onChange={(e) =>
-                    table.getColumn("firstName")?.setFilterValue(e.target.value)
-                  }
-                  className="pl-6 w-[200px] h-[36px] text-[11px] text-muted-foreground"
                 />
               </div>
 
               {/* Category Filter */}
               <Select
-                value={
-                  (table.getColumn("category")?.getFilterValue() as string) ??
-                  ""
-                }
+                value={globalFilter.category}
                 onValueChange={(val) =>
-                  table
-                    .getColumn("category")
-                    ?.setFilterValue(val === "all" ? "" : val)
+                  setGlobalFilter((prev) => ({
+                    ...prev,
+                    category: val === "all" ? "" : val,
+                  }))
                 }
               >
                 <SelectTrigger className="w-[110px] h-7 text-xs">
@@ -131,52 +127,17 @@ export default function SuperAdminMembersTable({
                 <SelectContent>
                   {["all", "UCM", "CWA", "CYAF", "CYF", "CHILDREN"].map(
                     (val) => (
-                      <SelectItem
-                        key={val}
-                        className="text-[10px] "
-                        value={val}
-                      >
-                        {val === "all" ? "All" : val}
+                      <SelectItem key={val} className="text-[10px]" value={val}>
+                        {val === "all" ? "ALL" : val}
                       </SelectItem>
                     )
                   )}
                 </SelectContent>
               </Select>
 
-              {/* Status Filter */}
-              {/* <Select
-                value={
-                  (table
-                    .getColumn("activeStatus")
-                    ?.getFilterValue() as string) ?? ""
-                }
-                onValueChange={(val) =>
-                  table
-                    .getColumn("activeStatus")
-                    ?.setFilterValue(val === "all" ? "" : val)
-                }
-              >
-                <SelectTrigger className="w-[100px] h-7 text-xs">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {["all", "active", "pending", "inactive"].map((val) => (
-                    <SelectItem key={val} className="text-[10px]" value={val}>
-                      {val.charAt(0).toUpperCase() + val.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select> */}
-
               <Select
-                value={
-                  (table.getColumn("circuit")?.getFilterValue() as string) ?? ""
-                }
-                onValueChange={(val) =>
-                  table
-                    .getColumn("circuit")
-                    ?.setFilterValue(val === "all" ? "" : val)
-                }
+                value={circuit}
+                onValueChange={(val) => setcircuit(val === "all" ? "" : val)}
               >
                 <SelectTrigger className="w-[160px] h-8 text-xs">
                   <SelectValue placeholder="Select local church" />
@@ -195,7 +156,7 @@ export default function SuperAdminMembersTable({
                     churches?.map((church) => (
                       <SelectItem
                         key={church.id}
-                        value={church.brgy}
+                        value={church.id}
                         className="text-xs"
                       >
                         {church.brgy}
@@ -253,42 +214,57 @@ export default function SuperAdminMembersTable({
               <TableHeader className="sticky top-0 z-10 bg-muted dark:bg-neutral-900 shadow-sm">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        className="px-4 py-2 font-medium text-muted-foreground uppercase tracking-wide text-[11px]"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
+                    {headerGroup.headers
+                      .filter((head) => head.id !== "date_of_birth")
+                      .map((header) => (
+                        <TableHead
+                          key={header.id}
+                          className="px-4 py-2 font-medium text-muted-foreground uppercase tracking-wide text-[11px]"
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TableHead>
+                      ))}
                   </TableRow>
                 ))}
               </TableHeader>
 
               <TableBody>
-                {table.getRowModel().rows?.length ? (
+                {isLoadingTable ? (
+                  Array.from({ length: 10 }).map((_, idx) => (
+                    <TableRow key={`skeleton-${idx}`}>
+                      {table.getVisibleFlatColumns().map((column) => (
+                        <TableCell key={column.id}>
+                          <div className="h-4 w-full rounded bg-muted animate-pulse" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : table.getRowModel().rows.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       className="hover:bg-muted/50 transition-colors"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className="px-4 py-2 align-middle"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+                      {row
+                        .getVisibleCells()
+                        .filter((cell) => cell.column.id !== "date_of_birth")
+                        .map((cell) => (
+                          <TableCell
+                            key={cell.id}
+                            className="px-4 py-2 align-middle"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
                     </TableRow>
                   ))
                 ) : (
@@ -306,7 +282,7 @@ export default function SuperAdminMembersTable({
           </div>
 
           {/* Pagination */}
-          <Pagination table={table} />
+          <Pagination table={table} totalMember={totalMember} />
         </CardContent>
       </Card>
     </div>

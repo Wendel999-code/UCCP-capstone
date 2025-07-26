@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import { useGetAllmemberBySuperAdmin } from "@/app/hooks/useMember";
 import { Button } from "@/components/ui/button";
 import { Member } from "@/global/type";
+import supabase from "@/lib/supabase/client";
 import {
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  PaginationState,
   useReactTable,
   type ColumnDef,
-  type ColumnFiltersState,
   type SortingState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -48,15 +47,80 @@ const getCategoryColor = (category: string) => {
 //   }
 // };
 
-export function SuperAdminTablesData({ members }: { members: Member[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+export function SuperAdminTablesData() {
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const [globalFilter, setGlobalFilter] = useState({
+    search: "",
+    category: "",
+  });
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const sortBy = sorting[0]?.id ?? "";
+  
+  const sortOrder = sorting[0]?.desc ? "desc" : "asc";
+
+  const [circuit, setcircuit] = useState("");
+
+  const {
+    data: membersData,
+    isLoading,
+    refetch,
+  } = useGetAllmemberBySuperAdmin(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+    globalFilter.search,
+    sortBy,
+    sortOrder,
+    globalFilter.category,
+    circuit
   );
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
+
+  console.log("membersData", membersData);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("super_admin-member")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "member",
+        },
+        () => {
+          refetch();
+        }
+      )
+
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [refetch]);
+
+  const totalMember = membersData?.count ?? 0;
 
   const columns: ColumnDef<Member>[] = [
+    {
+      accessorKey: "rowNumber",
+      header: "#",
+      cell: ({ row, table }) => {
+        const pageIndex = table.getState().pagination.pageIndex ?? 0;
+        const pageSize = table.getState().pagination.pageSize ?? 10;
+        return (
+          <span className="text-[12px] text-muted-foreground">
+            {pageIndex * pageSize + row.index + 1}
+          </span>
+        );
+      },
+      size: 10,
+    },
     {
       accessorKey: "lastName",
       header: ({ column }) => (
@@ -69,63 +133,38 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => (
-        <p className="lowercase text-[14px] ml-3">{row.getValue("lastName")}</p>
-      ),
+      cell: ({ row }) => {
+        return (
+          <p className="ml-3 text-[14px] capitalize ">
+            {row.getValue("lastName")}
+          </p>
+        );
+      },
     },
 
     {
       accessorKey: "firstName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] "
-          >
-            FIRSTNAME
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: "firstName",
       cell: ({ row }) => {
         return (
-          <p className=" ml-3 text-[14px]  ">{row.getValue("firstName")}</p>
+          <p className=" ml-3 text-[14px] capitalize ">
+            {row.getValue("firstName")}
+          </p>
         );
       },
     },
     {
       accessorKey: "age",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] px-2"
-          >
-            AGE
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: "Age",
       cell: ({ row }) => (
-        <p className="ml-3 text-[14px] ">{row.getValue("age")}</p>
+        <p className="ml-3 capitalize text-[14px] ">{row.getValue("age")}</p>
       ),
     },
     {
       accessorKey: "gender",
-      header: ({ column }) => {
-        return (
-          <span
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[12px] cursor-pointer"
-          >
-            GENDER
-          </span>
-        );
-      },
+      header: "Gender",
       cell: ({ row }) => (
-        <p className="text-[14px] ">{row.getValue("gender")}</p>
+        <p className="text-[14px] capitalize">{row.getValue("gender")}</p>
       ),
     },
 
@@ -143,20 +182,7 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
         );
       },
     },
-    // {
-    //   accessorKey: "activeStatus",
-    //   header: "Status",
-    //   cell: ({ row }) => {
-    //     const status = row.getValue("activeStatus") as string;
-    //     return (
-    //       <p className={`${getStatusColor(status)} text-[14px] `}>
-    //         {status
-    //           ? status.charAt(0).toUpperCase() + status.slice(1)
-    //           : "Unknown"}
-    //       </p>
-    //     );
-    //   },
-    // },
+
     {
       accessorKey: "date_of_birth",
       header: ({ column }) => (
@@ -188,23 +214,12 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
     {
       accessorFn: (row) => row.Church?.brgy ?? "",
       id: "circuit",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2"
-        >
-          Local Church
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: "Local Church",
       cell: ({ row }) => (
-        <p className="capitalize text-[14px]  text-amber-500">
+        <p className="capitalize text-[14px] ml-4  text-amber-500">
           {row.original.Church?.brgy}
         </p>
       ),
-      enableSorting: true,
-      enableHiding: true,
     },
 
     {
@@ -218,23 +233,27 @@ export function SuperAdminTablesData({ members }: { members: Member[] }) {
   ];
 
   const table = useReactTable({
-    data: members,
+    data: membersData?.data ?? [],
     columns,
+    pageCount: Math.ceil((membersData?.count ?? 0) / pagination.pageSize),
+    state: { pagination, globalFilter, sorting },
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   });
 
-  return { table, columns };
+  return {
+    table,
+    columns,
+    isLoading,
+    globalFilter,
+    setGlobalFilter,
+    totalMember,
+    circuit,
+    setcircuit,
+  };
 }

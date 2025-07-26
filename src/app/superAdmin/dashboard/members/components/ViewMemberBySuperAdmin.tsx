@@ -38,12 +38,13 @@ export function ViewMemberBySuperAdmin({
   setOpen,
   memberID,
 }: ViewMemberModalProps) {
+  
   const { data: member, isLoading: isFetching } = useMemberDetailsBySuperAdmin(
     memberID,
     open
   );
 
-  console.log("member", member);
+  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
