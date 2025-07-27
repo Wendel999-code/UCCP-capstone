@@ -176,7 +176,7 @@ const Nav = () => {
               <SheetTrigger className="mr-2">
                 <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
               </SheetTrigger>
-              <SheetContent className="h-[270px] w-[260px]  rounded-md">
+              <SheetContent className="h-[300px] w-[260px]  rounded-md">
                 <SheetHeader>
                   <SheetTitle className="text-center">
                     {" "}
@@ -218,7 +218,7 @@ const Nav = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="group text-gray-500 dark:text-gray-400 h-7 hover:border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                            className="group ml-1  text-gray-500 dark:text-gray-400 h-7 hover:border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-sm cursor-pointer "
                           >
                             <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />{" "}
                             Profile
@@ -278,10 +278,9 @@ const Nav = () => {
                         onClick={handleLogout}
                         variant="outline"
                         size="sm"
-                        className="group h-7 px-3 text-[10px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
+                        className="group ml-4 h-7 px-3 text-[12px] cursor-pointer dark:bg-red-900 dark:hover:bg-red-700 bg-red-700 text-white hover:bg-red-600"
                       >
                         Logout
-                        <ArrowRight className="ml-1 h-[5px] w-[5px] transition-transform group-hover:translate-x-1" />
                       </Button>{" "}
                     </>
                   ) : (

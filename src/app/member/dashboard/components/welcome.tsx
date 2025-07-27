@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
-import { useState } from "react";
 import { useGetTestimonial } from "@/app/hooks/testimonial";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { PostTestimonialV2 } from "@/lib/supabase/actions/testimonialV2";
 import { useQueryClient } from "@tanstack/react-query";
+import { Loader, Send } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import TestimonialFeed from "./TestimonialFeed";
 
@@ -63,12 +63,19 @@ const Welcome = () => {
               />
               <div className="flex justify-end">
                 <Button
+                  disabled={isPosting}
                   onClick={handlePost}
                   size="sm"
                   className="bg-yellow-700 cursor-pointer hover:bg-yellow-600 text-white flex items-center gap-1"
                 >
-                  <Send className="h-4 w-4" />
-                  {isPosting ? "Posting..." : "Post"}
+                  {isPosting ? (
+                    <Loader className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      {" "}
+                      <Send className="h-4 w-4" /> Post
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
