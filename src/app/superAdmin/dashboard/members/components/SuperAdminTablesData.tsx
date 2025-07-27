@@ -61,7 +61,7 @@ export function SuperAdminTablesData() {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const sortBy = sorting[0]?.id ?? "";
-  
+
   const sortOrder = sorting[0]?.desc ? "desc" : "asc";
 
   const [circuit, setcircuit] = useState("");
@@ -157,14 +157,18 @@ export function SuperAdminTablesData() {
       accessorKey: "age",
       header: "Age",
       cell: ({ row }) => (
-        <p className="ml-3 capitalize text-[14px] ">{row.getValue("age")}</p>
+        <p className="mr-3 capitalize text-start text-[14px] ">
+          {row.getValue("age")}
+        </p>
       ),
     },
     {
       accessorKey: "gender",
       header: "Gender",
       cell: ({ row }) => (
-        <p className="text-[14px] capitalize">{row.getValue("gender")}</p>
+        <p className="text-[14px] text-start capitalize">
+          {row.getValue("gender")}
+        </p>
       ),
     },
 

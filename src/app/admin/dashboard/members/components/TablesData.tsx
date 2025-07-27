@@ -34,7 +34,6 @@ const getCategoryColor = (category: string) => {
 };
 
 export function TablesData() {
-  
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,

@@ -11,7 +11,9 @@ export function useRedirectIfAuthenticated() {
 
   useEffect(() => {
     if (!loading && user?.role) {
+      
       const redirectPath = roleRedirectMap[user.role as UserRole];
+
       if (redirectPath) {
         router.replace(redirectPath);
       }

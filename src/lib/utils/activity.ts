@@ -31,34 +31,28 @@ export async function InsertActivity({
   }
 }
 
-export async function GetAllActivity() {
+export async function GetAllActivity(page: number, pageSize: number) {
   try {
     const admin = await SuperAdmin();
 
     if (admin.role !== "super_admin") {
-      return [];
+      return { success: false, data: [], count: 0 };
     }
 
-    // const today = new Date();
-    // const year = today.getFullYear();
-    // const month = String(today.getMonth() + 1).padStart(2, "0");
-    // const day = String(today.getDate()).padStart(2, "0");
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
 
-    // const start = `${year}-${month}-${day}T07:00:00`;
-    // const end = `${year}-${month}-${day}T16:00:00`;
-
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("activity_log")
-      .select("*, Church:church_id(brgy)")
-      // .gte("created_at", start)
-      // .lte("created_at", end)
-      .order("created_at", { ascending: false });
+      .select("*, Church:church_id(brgy)", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
     if (error) throw error;
 
-    return data ?? [];
+    return { success: true, data, count: count ?? 0 };
   } catch (error) {
     console.error("Error in GetAllActivity:", error);
-    return [];
+    return { success: false, data: [], count: 0 };
   }
 }

@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetApplicationID } from "@/lib/supabase/actions/member";
 import { useQueryClient } from "@tanstack/react-query";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -176,15 +176,14 @@ export default function ApplicationDetailsModal({
         <Button
           onClick={handleApprove}
           disabled={isPending}
-          className="w-full mt-4 text-medium text-white cursor-pointer bg-amber-700 hover:bg-amber-800"
+          className="w-full mt-4 text-medium text-white cursor-pointer bg-amber-800 hover:bg-amber-600"
         >
           {isPending ? (
             <span className="flex items-center gap-1">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              Approving...
+              <Loader className="h-3 w-3 animate-spin" />
             </span>
           ) : (
-            "Approve application"
+            "Approve Membership"
           )}
         </Button>
       </DialogContent>

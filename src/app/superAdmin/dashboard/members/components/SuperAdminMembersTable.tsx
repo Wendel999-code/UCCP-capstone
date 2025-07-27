@@ -203,7 +203,7 @@ export default function SuperAdminMembersTable() {
                 className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
               >
                 <Download className="mr-1 h-2.5 w-2.5 " />
-                {isExporting ? "Exporting..." : "Export PDF"}
+                {isExporting ? "Exporting..." : "Export "}
               </Button>
             </div>
           </div>

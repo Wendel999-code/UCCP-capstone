@@ -23,7 +23,7 @@ export default function LoginForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { loading: authLoading } = useRedirectIfAuthenticated();
+  const { loading: authLoading, user } = useRedirectIfAuthenticated();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,7 +49,7 @@ export default function LoginForm() {
       const redirectPath = roleRedirectMap[role as UserRole];
       router.replace(redirectPath);
 
-      toast.success(message || "Login successfully");
+      toast.success(message || "Login successfully!");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
@@ -58,7 +58,7 @@ export default function LoginForm() {
     }
   };
 
-  if (authLoading) return <LogoLoader />;
+  if (authLoading || user) return <LogoLoader />;
 
   return (
     <motion.div

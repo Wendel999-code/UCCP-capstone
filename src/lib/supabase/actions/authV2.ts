@@ -48,7 +48,7 @@ export async function LoginV2(email: string, password: string) {
 
       return {
         success: true,
-        message: "Login successfully",
+        message: "Login successfully!",
         role: "member",
       };
     }

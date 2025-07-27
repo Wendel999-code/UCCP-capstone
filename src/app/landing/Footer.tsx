@@ -12,7 +12,7 @@ function Footer() {
               <span className="text-xl font-bold">CANA Circuit</span>
             </div>
             <p className="text-gray-400 text-sm">
-              A place of worship, community, and spiritual growth since 1000.
+              A place of worship, community, and spiritual growth since 1948.
             </p>
           </div>
           <div>
