@@ -147,3 +147,15 @@ export type MemberQueryResponse = {
   data: Member[];
   count: number;
 };
+
+export type User = {
+  id: string;
+  role: string;
+  email: string;
+  isBlock: boolean;
+};
+
+export type UserAccounts = {
+  user: User[];
+  count: number;
+};

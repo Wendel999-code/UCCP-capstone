@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Testimonial } from "@/global/type";
-import { Heart } from "lucide-react";
+import { User2Icon } from "lucide-react";
 import React from "react";
 
 interface TestimonialFeedProps {
@@ -21,7 +21,7 @@ const TestimonialFeed: React.FC<TestimonialFeedProps> = ({
         <Card key={t.id}>
           <CardContent className="p-4 flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Heart className="h-4 w-4 text-yellow-600" />
+              <User2Icon className="h-4 w-4 text-yellow-600" />
               <h4 className="font-semibold text-sm text-yellow-600">
                 {loading ? <Skeleton className="h-4 w-10" /> : t.fullName}
               </h4>

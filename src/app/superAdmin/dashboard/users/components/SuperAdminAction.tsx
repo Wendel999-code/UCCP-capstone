@@ -1,6 +1,5 @@
 "use client";
-
-import { useDeleteMember } from "@/app/hooks/useMember";
+import { useDeleteUser } from "@/app/hooks/useUserAccount";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -19,43 +18,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GetMemberByID } from "@/lib/supabase/actions/member";
-import { useQueryClient } from "@tanstack/react-query";
-import { Edit, Eye, Loader, MoreHorizontal, Trash } from "lucide-react";
+import { Eye, Loader, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { UpdateMember } from "./UpdateMember";
-import { ViewMemberModal } from "./ViewMemberModal";
-
-const MemberAction = ({ memberID }: { memberID: string }) => {
-  
+export function SuperAdminAction({ userId }: { userId: string }) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const [openViewMember, setOpenViewMember] = useState(false);
-
-  const [openEditMember, setOpenEditMember] = useState(false);
-
-  const { mutate: deleteMember, isPending: isDeleting } = useDeleteMember();
-
-  const queryClient = useQueryClient();
-
-  const handlePrefetch = () => {
-    queryClient.prefetchQuery({
-      queryKey: ["member-details", memberID],
-      queryFn: async () => {
-        const res = await GetMemberByID(memberID);
-        if (!res.success) throw new Error(res.message);
-        return res.data;
-      },
-    });
-  };
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const handleDeleteConfirmed = () => {
     try {
-      deleteMember(memberID, {
+      deleteUser(userId, {
         onSuccess: () => {
-          toast.success("Member deleted successfully");
+          toast.success("User deleted successfully");
           setOpenDeleteDialog(false);
         },
         onError: (error) => {
@@ -63,11 +38,10 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
         },
       });
     } catch (error) {
-      console.log("error in deleting member", error);
+      console.log("error in deleting user", error);
       toast.error("Something went wrong upon deletions");
     }
   };
-
   return (
     <>
       <DropdownMenu>
@@ -84,21 +58,12 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
 
           <DropdownMenuItem
             className="text-sky-500 cursor-pointer"
-            onClick={() => setOpenViewMember(true)}
-            onMouseEnter={handlePrefetch}
+            // onClick={() => setOpenViewMember(true)}
+            // onMouseEnter={handlePrefetch}
           >
             <Eye className="text-sky-500" /> View
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onMouseEnter={handlePrefetch}
-            onClick={() => setOpenEditMember(true)}
-            className="text-amber-500 cursor-pointer"
-          >
-            {" "}
-            <Edit className="text-amber-500" /> Edit{" "}
-          </DropdownMenuItem>
-          {/* <DropdownMenuItem>Send message</DropdownMenuItem> */}
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
@@ -114,11 +79,11 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to delete this member?
+              Are you sure you want to delete this user?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. It will permanently remove this
-              member’s data from the database.
+              user’s data from the database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -140,20 +105,6 @@ const MemberAction = ({ memberID }: { memberID: string }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <ViewMemberModal
-        open={openViewMember}
-        setOpen={setOpenViewMember}
-        memberID={memberID}
-      />
-
-      <UpdateMember
-        open={openEditMember}
-        setOpen={setOpenEditMember}
-        memberID={memberID}
-      />
     </>
   );
-};
-
-export default MemberAction;
+}

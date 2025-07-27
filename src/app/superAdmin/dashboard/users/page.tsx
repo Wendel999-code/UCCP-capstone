@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetAllActivity } from "@/app/hooks/useActivity";
+import { useUserAccounts } from "@/app/hooks/useUserAccount";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -19,9 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ActivityLog } from "@/global/type";
+import { User } from "@/global/type";
 import supabase from "@/lib/supabase/client";
-import { exportToPDF } from "@/lib/utils/exportPDF";
 import {
   ColumnDef,
   flexRender,
@@ -29,34 +28,32 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Download } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useMemo } from "react";
+import { SuperAdminAction } from "./components/SuperAdminAction";
 
-function ReportsTable() {
+function UserAccounts() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
   const {
-    data: membersData,
+    data: user,
     isLoading,
     isError,
     error,
     refetch,
-  } = useGetAllActivity(pagination.pageIndex + 1, pagination.pageSize);
-
-  const [exporting, setExporting] = useState(false);
+  } = useUserAccounts(pagination.pageIndex + 1, pagination.pageSize);
 
   useEffect(() => {
     const channel = supabase
-      .channel("log-events")
+      .channel("user-accounts")
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
-          table: "activity_log",
+          table: "User",
         },
         () => {
           refetch();
@@ -70,7 +67,7 @@ function ReportsTable() {
     };
   }, [refetch]);
 
-  const columns = useMemo<ColumnDef<ActivityLog>[]>(
+  const columns = useMemo<ColumnDef<User>[]>(
     () => [
       {
         accessorKey: "rowNumber",
@@ -87,53 +84,40 @@ function ReportsTable() {
         size: 10,
       },
       {
-        accessorKey: "action",
+        accessorKey: "email",
+        header: "Email Address",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "role",
+        header: "Role",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "isBlock",
+        header: "Status",
+        cell: (info) => (info.getValue() ? "Blocked" : "Active"),
+      },
+      {
+        id: "actions",
         header: "Action",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "Church.brgy",
-        header: "Local Church",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "created_at",
-        header: "Date & Time",
-        cell: (info) => new Date(info.getValue() as string).toLocaleString(),
+        enableHiding: false,
+        cell: ({ row }) => <SuperAdminAction userId={row.original.id} />,
       },
     ],
     []
   );
 
   const table = useReactTable({
-    data: membersData?.data ?? [],
+    data: user?.user ?? [],
     columns,
-    pageCount: Math.ceil((membersData?.count ?? 0) / pagination.pageSize),
+    pageCount: Math.ceil((user?.count ?? 0) / pagination.pageSize),
     state: { pagination },
     manualPagination: true,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleExportPDF = async () => {
-    setExporting(true);
-
-    if (isLoading) return;
-
-    try {
-      exportToPDF(table, {
-        title: `Cana Circuit Event Logs`,
-        filename: `Cana Circuit Event Logs.pdf`,
-      });
-
-      toast.success("PDF exported successfully");
-    } catch (error) {
-      console.log("Error exporting PDF:", error);
-      toast.error("Error exporting PDF");
-    } finally {
-      setExporting(false);
-    }
-  };
   if (isError) {
     return (
       <div className="p-4 text-sm text-red-500">Error: {error.message}</div>
@@ -144,16 +128,8 @@ function ReportsTable() {
     <Card>
       <CardHeader className="flex items-center justify-between gap-2">
         <CardTitle className="ml-90  text-xl text-red-900 dark:text-yellow-500">
-          Log Events for All Churches
+          User Account Management
         </CardTitle>
-        <Button
-          onClick={handleExportPDF}
-          variant={"ghost"}
-          className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
-        >
-          <Download className="mr-1 h-2.5 w-2.5 " />
-          {exporting ? "Exporting..." : "Export "}
-        </Button>
       </CardHeader>
       <CardContent className="mt-5">
         <Table>
@@ -206,7 +182,7 @@ function ReportsTable() {
         <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
           <div className="flex-1 text-[12px] text-muted-foreground">
             <div className="flex-1 text-[12px] text-muted-foreground">
-              Total Logs : {membersData?.count ?? 0}
+              Total Users : {user?.count ?? 0}
             </div>
           </div>
 
@@ -263,4 +239,4 @@ function ReportsTable() {
   );
 }
 
-export default ReportsTable;
+export default UserAccounts;

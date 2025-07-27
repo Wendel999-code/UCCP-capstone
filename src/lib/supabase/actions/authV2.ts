@@ -1,7 +1,8 @@
 "use server";
 
-import { createSupabaseServer } from "../server";
+import { createSupabaseServer, createSupabaseServiceRole } from "../server";
 import { LoginSchema } from "../validation/auth";
+import { SuperAdmin } from "./dal";
 
 export async function LoginV2(email: string, password: string) {
   const parseResult = LoginSchema.safeParse({ email, password });
@@ -32,9 +33,18 @@ export async function LoginV2(email: string, password: string) {
 
     const { data: existingUser, error: fetchError } = await supabase
       .from("User")
-      .select("role")
+      .select("role, isBlock")
       .eq("id", authData.user.id)
       .single();
+
+    //TODO implement block in useUser session kay naka login ka bago ka i block cuz it will affect only after logout
+
+    if (existingUser?.isBlock) {
+      return {
+        success: false,
+        message: "Your account has been blocked. Please contact support.",
+      };
+    }
 
     if (fetchError && fetchError.code === "PGRST116") {
       const { error: insertError } = await supabase
@@ -194,5 +204,77 @@ export async function UpdatePassword(password: string) {
   } catch (error) {
     console.log("error in update password", error);
     return { success: false, message: "Failed to update password" };
+  }
+}
+
+export async function UserAccounts(page: number, pageSize: number) {
+  const supabase = await createSupabaseServer();
+
+  const admin = await SuperAdmin();
+
+  if (admin?.role !== "super_admin") {
+    return { success: false, message: "Unauthorized access", user: [] };
+  }
+
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  try {
+    const {
+      data: user,
+      error,
+      count,
+    } = await supabase
+      .from("User")
+      .select("id,role,email,isBlock", { count: "exact" })
+      .neq("role", "super_admin")
+      .range(from, to)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error(error.message);
+
+    return {
+      success: true,
+      message: "User accounts fetched successfully",
+      user,
+      count,
+    };
+  } catch (error) {
+    console.log("error in fetching user account", error);
+    return {
+      success: false,
+      message: "Failed to fetch user account",
+      user: [],
+    };
+  }
+}
+
+export async function DeleteUser(userId: string) {
+  const supabase = await createSupabaseServiceRole();
+
+  if (!userId) return { success: false, message: "User Id is required" };
+
+  try {
+    const admin = await SuperAdmin();
+
+    if (admin?.role !== "super_admin") {
+      return { success: false, message: "Unauthorized access" };
+    }
+
+    const [authRes, tableRes] = await Promise.all([
+      supabase.auth.admin.deleteUser(userId),
+      supabase.from("User").delete().eq("id", userId),
+    ]);
+
+    if (authRes.error) throw new Error(authRes.error.message);
+    if (tableRes.error) throw new Error(tableRes.error.message);
+
+    return {
+      success: true,
+      message: "User account deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error in deleting user account", error);
+    return { success: false, message: "Error in deleting user account" };
   }
 }

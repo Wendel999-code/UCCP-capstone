@@ -210,18 +210,18 @@ export const useGetAllmemberBySuperAdmin = (
   sortBy: string,
   sortOrder: "asc" | "desc",
   category: string,
-  circuit:string
+  circuit: string
 ) =>
   useQuery<MemberQueryResponse, Error>({
     queryKey: [
-      "membersByChurchId",
+      "membersBySuperAdmin",
       page,
       pageSize,
       search,
       sortBy,
       sortOrder,
       category,
-      circuit
+      circuit,
     ],
     queryFn: async (): Promise<MemberQueryResponse> => {
       const res = await GetAllMembersBySuperAdmin(
@@ -276,6 +276,9 @@ export const useUpdateMember = () => {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
+      queryClient.invalidateQueries({
+        queryKey: ["member-details-super-admin", variables.memberID],
+      });
       queryClient.invalidateQueries({
         queryKey: ["member-details", variables.memberID],
       });

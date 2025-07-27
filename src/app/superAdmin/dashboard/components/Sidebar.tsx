@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Loader, LogOut, Logs, Users } from "lucide-react";
+import { Home, Loader, LogOut, Logs, UserCog2, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -45,6 +45,11 @@ const SuperAdminSideBar = () => {
       href: "/superAdmin/dashboard/reports",
       label: "Logs",
       icon: Logs,
+    },
+    {
+      href: "/superAdmin/dashboard/users",
+      label: "Users",
+      icon: UserCog2,
     },
     // {
     //   href: "/admin/dashboard/announcements",
