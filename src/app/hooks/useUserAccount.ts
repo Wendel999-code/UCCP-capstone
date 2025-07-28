@@ -1,5 +1,9 @@
 import { UserAccounts as UserType } from "@/global/type";
-import { DeleteUser, UserAccounts } from "@/lib/supabase/actions/authV2";
+import {
+  DeleteUser,
+  ToggleBlock,
+  UserAccounts,
+} from "@/lib/supabase/actions/authV2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useUserAccounts = (page: number, pageSize: number) =>
@@ -25,6 +29,27 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: async (userId: string) => {
       const res = await DeleteUser(userId);
+      if (!res.success) throw new Error(res.message);
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userAccounts"] });
+    },
+  });
+};
+
+export const useUserToggleBlock = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      isBlock,
+    }: {
+      userId: string;
+      isBlock: boolean;
+    }) => {
+      const res = await ToggleBlock(userId, isBlock);
       if (!res.success) throw new Error(res.message);
       return res;
     },

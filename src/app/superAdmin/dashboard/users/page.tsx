@@ -91,18 +91,49 @@ function UserAccounts() {
       {
         accessorKey: "role",
         header: "Role",
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          const role = info.getValue() as string;
+          return (
+            <span
+              className={
+                role?.toLowerCase() === "member"
+                  ? "text-orange-800 font-medium"
+                  : "text-sky-500 font-medium"
+              }
+            >
+              {role}
+            </span>
+          );
+        },
       },
       {
         accessorKey: "isBlock",
         header: "Status",
-        cell: (info) => (info.getValue() ? "Blocked" : "Active"),
+        cell: (info) => {
+          const isBlocked = info.getValue() as boolean;
+          return (
+            <span
+              className={
+                isBlocked
+                  ? "text-red-600 font-medium"
+                  : "text-green-600 font-medium"
+              }
+            >
+              {isBlocked ? "Blocked" : "Active"}
+            </span>
+          );
+        },
       },
       {
         id: "actions",
         header: "Action",
         enableHiding: false,
-        cell: ({ row }) => <SuperAdminAction userId={row.original.id} />,
+        cell: ({ row }) => (
+          <SuperAdminAction
+            userId={row.original.id}
+            isBlock={row.original.isBlock}
+          />
+        ),
       },
     ],
     []

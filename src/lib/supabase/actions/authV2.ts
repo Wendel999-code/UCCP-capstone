@@ -1,6 +1,7 @@
 "use server";
 
-import { createSupabaseServer, createSupabaseServiceRole } from "../server";
+import { createSupabaseServiceRole } from "@/lib/utils/serviceRole";
+import { createSupabaseServer } from "../server";
 import { LoginSchema } from "../validation/auth";
 import { SuperAdmin } from "./dal";
 
@@ -250,7 +251,7 @@ export async function UserAccounts(page: number, pageSize: number) {
 }
 
 export async function DeleteUser(userId: string) {
-  const supabase = await createSupabaseServiceRole();
+  const supabase = createSupabaseServiceRole();
 
   if (!userId) return { success: false, message: "User Id is required" };
 
@@ -276,5 +277,46 @@ export async function DeleteUser(userId: string) {
   } catch (error) {
     console.error("Error in deleting user account", error);
     return { success: false, message: "Error in deleting user account" };
+  }
+}
+
+export async function ToggleBlock(userId: string, isBlock: boolean) {
+  if (!userId) {
+    return { success: false, message: "User ID is required." };
+  }
+
+  const supabase = createSupabaseServiceRole();
+
+  try {
+    const admin = await SuperAdmin();
+
+    if (admin?.role !== "super_admin") {
+      return { success: false, message: "Unauthorized access." };
+    }
+
+    const { error: updateError } = await supabase
+      .from("User")
+      .update({ isBlock })
+      .eq("id", userId);
+
+    if (updateError) {
+      throw new Error(`Database update failed: ${updateError.message}`);
+    }
+
+    //TODO SIGNOUT USER UPON BLOCKING kay pwede pag block mo naka login pa siya
+    if (isBlock) {
+      await supabase.auth.admin.signOut(userId).catch(() => {});
+    }
+
+    return {
+      success: true,
+      message: `User successfully ${isBlock ? "blocked" : "unblocked"}.`,
+    };
+  } catch (error) {
+    console.error("Error toggling block state:", error);
+    return {
+      success: false,
+      message: "An error occurred while toggling block state.",
+    };
   }
 }
