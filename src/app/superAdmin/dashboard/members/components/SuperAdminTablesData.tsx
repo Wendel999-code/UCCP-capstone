@@ -80,7 +80,7 @@ export function SuperAdminTablesData() {
     circuit
   );
 
-  console.log("membersData", membersData);
+ 
 
   useEffect(() => {
     const channel = supabase

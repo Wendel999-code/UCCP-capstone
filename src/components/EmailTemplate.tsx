@@ -23,7 +23,9 @@ export function EmailTemplate(
       </p>
 
       <div className="text-lg font-bold bg-neutral-100 px-4 py-2 rounded-md inline-block select-all break-words">
-        {memberID}
+        <h2>
+          <strong> {memberID}</strong>
+        </h2>
       </div>
 
       <p className="text-base mt-5">

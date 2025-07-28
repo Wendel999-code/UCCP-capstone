@@ -25,7 +25,7 @@ export async function ResendEmail({
     };
   }
 
-  console.log("Sending membership email to:", member_email);
+ 
 
   const { error: resendError } = await resend.emails.send({
     from: "UCCP <support@wndl.dev>",

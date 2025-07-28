@@ -159,3 +159,16 @@ export type UserAccounts = {
   user: User[];
   count: number;
 };
+
+
+export type LocationAbbreviation =
+  | "PLN"  // Palanit
+  | "SJ"   // San Juan
+  | "SLV"  // Salvacion
+  | "ALG"  // Alegria
+  | "SI"   // San Isidro
+  | "VIC"  // Victoria
+  | "ALN"  // Allen
+  | "LPT"  // Lipata
+  | "CBC"; // Cabacungan
+

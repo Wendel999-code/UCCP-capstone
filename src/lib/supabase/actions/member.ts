@@ -290,25 +290,55 @@ export async function ApproveMembership(
     };
   }
 
+  const churches = [
+    { name: "palanit", abbr: "PLN" },
+    { name: "san Juan", abbr: "SJ" },
+    { name: "salvacion", abbr: "SLV" },
+    { name: "alegria", abbr: "ALG" },
+    { name: "san Isidro", abbr: "SI" },
+    { name: "victoria", abbr: "VIC" },
+    { name: "allen", abbr: "ALN" },
+    { name: "lipata", abbr: "LPT" },
+    { name: "cabacungan", abbr: "CBC" },
+  ];
+
   try {
     const { churchAdmin, church } = await getChurchAdmin();
 
+    if (churchAdmin?.role !== "church_admin")
+      return {
+        success: false,
+        message: "Unauthorized access",
+      };
+
+    const brgy = churches.find(
+      (c) => c.name.toLowerCase() === church.brgy.toLowerCase()
+    );
+
+    const randomSuffix = Math.floor(100000 + Math.random() * 900000);
+
+    const newMemberID = `${brgy?.abbr}-${randomSuffix}`;
+
     const { data: updatedMember, error } = await supabase
       .from("member")
-      .update({ activeStatus: "active", baptism_status: "Baptized" })
+      .update({
+        activeStatus: "active",
+        baptism_status: "Baptized",
+        member_id: newMemberID,
+      })
       .eq("id", memberID)
       .eq("church_id", churchAdmin.church_id)
-      .select("id, firstName, lastName, member_email")
+      .select("id, firstName, lastName, member_email, member_id")
       .single();
 
     if (error) throw error;
 
-    const { data, error: baptismError } = await supabase
+    const { error: baptismError } = await supabase
       .from("baptismal_record")
       .insert([
         {
           fullName: `${updatedMember.lastName} ${updatedMember.firstName}`,
-          member_id: updatedMember.id,
+          member_id: updatedMember.member_id,
           baptism_date: acceptanceOfDate,
           officiant,
           circuit: church.brgy,
@@ -324,24 +354,22 @@ export async function ApproveMembership(
       firstName: updatedMember.firstName,
       lastName: updatedMember.lastName,
       church: church.brgy,
-      memberID: updatedMember.id,
+      memberID: updatedMember.member_id,
       member_email: updatedMember.member_email,
     };
 
-    const res = await ResendEmail(member);
+    await ResendEmail(member);
 
     await InsertActivity({
       action: "Approved Membership",
       metadata: {
-        memberId: updatedMember.id,
+        memberId: updatedMember.member_id,
         memberName: `${updatedMember.firstName} ${updatedMember.lastName}`,
         baptismDate: acceptanceOfDate,
         officiant,
         church: church.brgy,
       },
     });
-
-    console.log("Membership approved:", updatedMember, data, res.message);
 
     return {
       success: true,

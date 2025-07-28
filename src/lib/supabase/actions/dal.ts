@@ -16,7 +16,7 @@ export async function getChurchAdmin() {
 
     const { data: churchAdmin, error: adminError } = await supabase
       .from("User")
-      .select("id, role, church_id")
+      .select("id, role, church_id, Church:church_id(brgy)")
       .eq("id", currentUser.user.id)
       .single();
 
@@ -26,7 +26,7 @@ export async function getChurchAdmin() {
 
     const { data: church, error: churchError } = await supabase
       .from("Church")
-      .select("brgy")
+      .select("brgy,id")
       .eq("id", churchAdmin?.church_id)
       .single();
 

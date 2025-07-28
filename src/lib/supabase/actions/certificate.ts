@@ -74,7 +74,6 @@ export async function RequestCertificate(
   }
 }
 
-//TODO IMPLMENT LATER FILTER STATUS
 export async function GetReqCertificate() {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
@@ -104,10 +103,10 @@ export async function GetReqCertificate() {
 }
 
 export async function GetReqCertificateByID(
-  reqId: string
+  member_id: string
 ): Promise<GetReqCertificateResponse> {
-  if (!reqId) {
-    return { success: false, error: "Request ID is required", data: null };
+  if (!member_id) {
+    return { success: false, error: "Member ID is required", data: null };
   }
 
   try {
@@ -116,9 +115,9 @@ export async function GetReqCertificateByID(
     const { data: certificate, error: certError } = await supabase
       .from("req_certificate")
       .select("member_id, father_fn, mother_fn")
-      .eq("id", reqId)
+      .eq("member_id", member_id)
       .eq("church_id", admin.church_id)
-      .single();
+      .maybeSingle();
 
     if (certError) {
       console.error("Error fetching certificate:", certError);
@@ -136,7 +135,7 @@ export async function GetReqCertificateByID(
     const { data: member, error: memberError } = await supabase
       .from("member")
       .select("firstName, lastName, date_of_birth,gender")
-      .eq("id", certificate.member_id)
+      .eq("member_id", certificate.member_id)
       .single();
 
     if (memberError) {
@@ -167,8 +166,6 @@ export async function GetReqCertificateByID(
       gender: member?.gender ?? "",
     };
 
-    console.log("GetReqCertificateByID success:", responseData);
-
     return { success: true, data: responseData, error: null };
   } catch (error) {
     console.error("Unhandled error in GetReqCertificateByID:", error);
@@ -191,7 +188,7 @@ export async function DeleteReqCertificate(reqId: string) {
     const { error } = await supabase
       .from("req_certificate")
       .delete()
-      .eq("id", reqId)
+      .eq("member_id", reqId)
       .eq("church_id", admin.church_id)
       .single();
 
@@ -220,7 +217,7 @@ export async function GeneratedCertificate(reqID: string) {
     const { data: certificate, error: certError } = await supabase
       .from("req_certificate")
       .update({ status: "Completed" })
-      .eq("id", reqID)
+      .eq("member_id", reqID)
       .eq("church_id", admin.church_id)
       .select("email,firstName,lastName, member_id ")
       .single();

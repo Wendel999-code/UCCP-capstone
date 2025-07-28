@@ -44,8 +44,9 @@ export async function RequestCertificateV2(
     if (userError || !currentUser) {
       throw userError;
     }
+    
 
-    //Todo fix this kasi pwede login kala pero diri ka member
+   
     const { error } = await supabase
       .from("req_certificate")
       .insert([

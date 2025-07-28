@@ -42,8 +42,6 @@ export async function GetMembersByChurchId(
     if (error) throw error;
 
     return { success: true, data, count: count ?? 0 };
-
-    
   } catch (error) {
     console.error("GetMembersByChurchId error:", error);
     return { success: false, data: [], count: 0 };
@@ -59,8 +57,6 @@ export async function GetAllMembersBySuperAdmin(
   category: string,
   circuit: string
 ) {
-  console.log("params", category, page, pageSize, search, sortBy, sortOrder);
-
   try {
     const admin = await SuperAdmin();
 
@@ -97,8 +93,6 @@ export async function GetAllMembersBySuperAdmin(
     }
 
     const { data, error, count } = await query.range(from, to);
-
-    console.log("data", data);
 
     if (error) throw error;
 
