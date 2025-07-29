@@ -74,6 +74,8 @@ export async function RequestCertificate(
   }
 }
 
+
+//TODO fix SAME MEMBER ID when fetched not found 
 export async function GetReqCertificate() {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();

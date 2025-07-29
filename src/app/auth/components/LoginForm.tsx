@@ -5,7 +5,6 @@ import LogoLoader from "@/components/LogoLoader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { roleRedirectMap, UserRole } from "@/constant";
 import { LoginV2 } from "@/lib/supabase/actions/authV2";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -23,7 +22,7 @@ export default function LoginForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { loading: authLoading, user } = useRedirectIfAuthenticated();
+  const { loading: authLoading } = useRedirectIfAuthenticated();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +36,7 @@ export default function LoginForm() {
 
     try {
       const res = await LoginV2(email, password);
-      const { success, message, role } = res || {};
+      const { success, message } = res || {};
 
       if (!success) {
         toast.error(message || "Login failed");
@@ -45,11 +44,6 @@ export default function LoginForm() {
       }
 
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-
-      const redirectPath = roleRedirectMap[role as UserRole];
-      router.replace(redirectPath);
-
-      toast.success(message || "Login successfully!");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
@@ -58,7 +52,7 @@ export default function LoginForm() {
     }
   };
 
-  if (authLoading || user) return <LogoLoader />;
+  if (authLoading) return <LogoLoader />;
 
   return (
     <motion.div

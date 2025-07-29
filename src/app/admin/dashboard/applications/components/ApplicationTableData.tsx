@@ -64,7 +64,7 @@ export function ApplicationTableData({
       },
       cell: ({ row }) => {
         return (
-          <div className="font-medium ml-3">{row.getValue("firstName")}</div>
+          <p className="font-medium ml-3 capitalize">{row.getValue("firstName")}</p>
         );
       },
     },
@@ -83,7 +83,7 @@ export function ApplicationTableData({
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase ml-3 ">{row.getValue("lastName")}</div>
+        <p className="capitalize ml-3 ">{row.getValue("lastName")}</p>
       ),
     },
     {
