@@ -34,6 +34,7 @@ export const usePendingMembers = () =>
     gcTime: 30 * 60 * 1000,
     retry: 1,
     refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 
 export const useApproveMember = () => {
@@ -95,7 +96,7 @@ export const useGetMembersByChurchId = (
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: true,
     retry: 1,
   });

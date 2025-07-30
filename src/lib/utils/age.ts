@@ -21,8 +21,22 @@ export const calculateAge = (dob: string) => {
 
     months = Math.max(months, 0);
 
-    return `${months} month${months === 0 ? "" : "s"}`;
+    return `${months} month${months <= 1 ? "" : "s"}`;
   }
 
   return age;
 };
+
+export function parseAgeToYears(age: string | number): number {
+  if (typeof age === "number") return age;
+
+  const str = age.trim().toLowerCase();
+
+  if (str.includes("month")) {
+    const months = parseFloat(str);
+    return months / 12;
+  }
+
+  const years = parseFloat(str);
+  return isNaN(years) ? 0 : years;
+}

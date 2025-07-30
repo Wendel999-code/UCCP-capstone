@@ -2,7 +2,7 @@ export interface Member {
   id: string;
   firstName: string;
   lastName: string;
-  age: number;
+  age: string;
   date_of_birth: string;
   member_email: string;
   address: string;

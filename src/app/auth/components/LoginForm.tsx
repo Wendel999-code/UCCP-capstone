@@ -44,6 +44,7 @@ export default function LoginForm() {
       }
 
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      toast.success(message);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");

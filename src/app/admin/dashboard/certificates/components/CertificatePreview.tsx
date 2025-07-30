@@ -158,7 +158,7 @@ const CertificatePreview = ({
                   baptized
                 </p>
                 <p>
-                  at the age of <span>{ageAtBaptism}</span> yr. old.
+                  at the age of <span>{ageAtBaptism}</span>.
                 </p>
                 <p className="mt-2 text-[14px]">
                   According to the baptismal rites of the UNITED CHURCH OF
@@ -168,7 +168,7 @@ const CertificatePreview = ({
                 <p className="mt-2 text-[14px]">
                   Baptized on {baptizedDate} at the UNITED CHURCH OF CHRIST IN
                   THE PHILIPPINES,
-                  {data.circuit} local church, province of Northern Samar,
+                  {""} {data.circuit} local church, province of Northern Samar,
                   Philippines.
                 </p>
                 <div className="flex justify-between gap-4 text-sm mt-8 px-4">

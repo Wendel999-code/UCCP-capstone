@@ -62,10 +62,11 @@ const ApplicationAction = ({ memberID }: { memberID: string }) => {
         <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
             <Button
-              variant="outline"
-              className="text-red-600 border-none w-full cursor-pointer"
+              className="cursor-pointer w-full bg-red-900 hover:bg-red-500 text-white"
+              size={"sm"}
             >
-              <Trash className="text-red-600 mr-2" /> Delete
+              {" "}
+              <Trash className="text-white" /> Delete
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>

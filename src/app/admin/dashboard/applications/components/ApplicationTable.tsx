@@ -210,7 +210,7 @@ export default function ApplicationTable({
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        No applicant
+                        No pending member
                       </TableCell>
                     </TableRow>
                   )}

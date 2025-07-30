@@ -45,7 +45,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
       const membershipData = {
         firstName,
         lastName,
-        age: Number(age),
+        age,
         address,
         gender,
         // hasChildren,

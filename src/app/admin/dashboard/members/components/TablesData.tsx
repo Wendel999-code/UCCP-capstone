@@ -114,7 +114,9 @@ export function TablesData() {
         </Button>
       ),
       cell: ({ row }) => (
-        <p className="ml-3 text-[14px] ">{row.getValue("lastName")}</p>
+        <p className="ml-3 text-[14px] capitalize ">
+          {row.getValue("lastName")}
+        </p>
       ),
     },
     {
@@ -130,7 +132,9 @@ export function TablesData() {
         </Button>
       ),
       cell: ({ row }) => (
-        <p className="ml-3 text-[14px]">{row.getValue("firstName")}</p>
+        <p className="ml-3 capitalize text-[14px]">
+          {row.getValue("firstName")}
+        </p>
       ),
     },
     {

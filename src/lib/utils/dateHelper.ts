@@ -1,13 +1,18 @@
-export function getAgeAtBaptism(
-  birthDateStr: string,
-  baptismDateStr: string
-): number {
-  const birthDate = new Date(birthDateStr);
-  const baptismDate = new Date(baptismDateStr);
-  let age = baptismDate.getFullYear() - birthDate.getFullYear();
-  const m = baptismDate.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && baptismDate.getDate() < birthDate.getDate())) {
-    age--;
+import { differenceInMonths, differenceInYears } from "date-fns";
+
+export function getAgeAtBaptism(dob: string, baptismDate: string): string {
+  const birth = new Date(dob);
+  const baptism = new Date(baptismDate);
+
+  if (isNaN(birth.getTime()) || isNaN(baptism.getTime())) return "N/A";
+  if (baptism < birth) return "Invalid";
+
+  const months = differenceInMonths(baptism, birth);
+
+  if (months < 12) {
+    return `${months} month${months <= 1 ? "" : "s"} old`;
   }
-  return age > 0 ? age : 1;
+
+  const years = differenceInYears(baptism, birth);
+  return `${years} year${years <= 1 ? "" : "s"} old`;
 }

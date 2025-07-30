@@ -5,6 +5,7 @@ import { ResendEmail } from "@/lib/utils/resend";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
+import { parseAgeToYears } from "@/lib/utils/age";
 
 export async function ApplyForMembership(
   data: Omit<
@@ -52,23 +53,24 @@ export async function ApplyForMembership(
     };
   }
 
+ const Category = {
+  CHILDREN: "CHILDREN",
+  CYF: "CYF",
+  CYAF: "CYAF",
+  CWA: "CWA",
+  UCM: "UCM",
+} as const;
+
   let category = "";
+  const ageInYears = parseAgeToYears(age);
 
-  const Category = {
-    CHILDREN: "CHILDREN",
-    CYAF: "CYAF",
-    CYF: "CYF",
-    CWA: "CWA",
-    UCM: "UCM",
-  };
-
-  if (age < 17) {
+  if (ageInYears < 17) {
     category = Category.CHILDREN;
-  } else if (age < 25) {
+  } else if (ageInYears < 25) {
     category = Category.CYF;
-  } else if (age < 60) {
+  } else if (ageInYears < 60) {
     category = Category.CYAF;
-  } else if (age >= 60) {
+  } else {
     category = gender === "female" ? Category.CWA : Category.UCM;
   }
 
