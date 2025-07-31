@@ -10,7 +10,7 @@ const Page = () => {
 
   return (
     <>
-      <AdminDashb />
+      <AdminDas />
     </>
   );
 };
