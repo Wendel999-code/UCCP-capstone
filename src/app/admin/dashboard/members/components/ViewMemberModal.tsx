@@ -175,7 +175,10 @@ export function ViewMemberModal({
                 <div className="mt-5 w-full">
                   <Button
                     onClick={() =>
-                      handleOpenSendEmail(member.member_email, member.member_id)
+                      handleOpenSendEmail(
+                        member.member_email,
+                        member.member_id ?? ""
+                      )
                     }
                     className="w-full cursor-pointer hover:bg-yellow-700 text-black"
                   >
