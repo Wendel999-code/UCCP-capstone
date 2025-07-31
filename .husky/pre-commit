@@ -1,1 +1,12 @@
-npm test
+#!/usr/bin/env sh
+
+echo "✅ Husky pre-commit hook running..."
+
+if ! npm run build; then
+  echo ""
+  echo "❌ Build failed. Fix errors above and try again."
+  echo "💡 Tip: To skip this hook: git commit --no-verify"
+  exit 1
+fi
+
+echo "✅ Build passed. Proceeding..."

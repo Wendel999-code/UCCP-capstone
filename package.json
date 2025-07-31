@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "test": "echo 'no tests yet' && exit 0"
+    "add .": "git add . && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
