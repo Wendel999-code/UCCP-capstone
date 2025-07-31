@@ -5,7 +5,7 @@ export interface Member {
   age: string;
   date_of_birth: string;
   member_email: string;
-  member_id: string;
+  member_id?: string;
   address: string;
   category: string;
   hasChildren?: boolean;
