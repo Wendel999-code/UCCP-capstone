@@ -53,10 +53,12 @@ export function ViewMemberModal({
   const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
+  const [member_id, setMember_id] = useState("");
 
-  const handleOpenSendEmail = (email: string) => {
+  const handleOpenSendEmail = (email: string, memberId: string) => {
     setIsSending(true);
     setEmail(email);
+    setMember_id(memberId);
     setOpen(false);
   };
 
@@ -172,7 +174,9 @@ export function ViewMemberModal({
 
                 <div className="mt-5 w-full">
                   <Button
-                    onClick={() => handleOpenSendEmail(member.member_email)}
+                    onClick={() =>
+                      handleOpenSendEmail(member.member_email, member.member_id)
+                    }
                     className="w-full cursor-pointer hover:bg-yellow-700 text-black"
                   >
                     Send Member ID
@@ -206,7 +210,7 @@ export function ViewMemberModal({
             />
 
             <Label className="text-xs text-gray-600 mt-3">Member ID</Label>
-            <Input readOnly className="mt-1" value={memberID} />
+            <Input readOnly className="mt-1" value={member_id ?? ""} />
           </div>
           <DialogFooter className="sm:justify-start">
             <Button

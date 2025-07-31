@@ -5,6 +5,7 @@ export interface Member {
   age: string;
   date_of_birth: string;
   member_email: string;
+  member_id: string;
   address: string;
   category: string;
   hasChildren?: boolean;
@@ -160,15 +161,13 @@ export type UserAccounts = {
   count: number;
 };
 
-
 export type LocationAbbreviation =
-  | "PLN"  // Palanit
-  | "SJ"   // San Juan
-  | "SLV"  // Salvacion
-  | "ALG"  // Alegria
-  | "SI"   // San Isidro
-  | "VIC"  // Victoria
-  | "ALN"  // Allen
-  | "LPT"  // Lipata
+  | "PLN" // Palanit
+  | "SJ" // San Juan
+  | "SLV" // Salvacion
+  | "ALG" // Alegria
+  | "SI" // San Isidro
+  | "VIC" // Victoria
+  | "ALN" // Allen
+  | "LPT" // Lipata
   | "CBC"; // Cabacungan
-

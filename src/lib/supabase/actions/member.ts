@@ -1,11 +1,11 @@
 import { Member } from "@/global/type";
 
 import { InsertActivity } from "@/lib/utils/activity";
+import { parseAgeToYears } from "@/lib/utils/age";
 import { ResendEmail } from "@/lib/utils/resend";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
-import { parseAgeToYears } from "@/lib/utils/age";
 
 export async function ApplyForMembership(
   data: Omit<
@@ -53,13 +53,13 @@ export async function ApplyForMembership(
     };
   }
 
- const Category = {
-  CHILDREN: "CHILDREN",
-  CYF: "CYF",
-  CYAF: "CYAF",
-  CWA: "CWA",
-  UCM: "UCM",
-} as const;
+  const Category = {
+    CHILDREN: "CHILDREN",
+    CYF: "CYF",
+    CYAF: "CYAF",
+    CWA: "CWA",
+    UCM: "UCM",
+  } as const;
 
   let category = "";
   const ageInYears = parseAgeToYears(age);
@@ -457,7 +457,7 @@ export async function GetMemberByID(MemberID: string) {
     const { data: baptism_record, error: baptismError } = await supabase
       .from("baptismal_record")
       .select("baptism_date , officiant")
-      .eq("member_id", MemberID)
+      .eq("member_id", data.member_id)
       .maybeSingle();
 
     if (baptismError) throw baptismError;
@@ -512,7 +512,7 @@ export async function UpdateMemberByID(
       .update(memberUpdate)
       .eq("id", memberID)
       .eq("church_id", admin.church_id)
-      .select("id, firstName, lastName") // fetch for logging
+      .select("id, firstName, lastName , member_id") 
       .single();
 
     if (updateError) throw updateError;
@@ -521,7 +521,7 @@ export async function UpdateMemberByID(
     const { data: baptismExists, error: baptismCheckError } = await supabase
       .from("baptismal_record")
       .select("id")
-      .eq("member_id", memberID)
+      .eq("member_id", updatedMember.member_id)
       .eq("church_id", admin.church_id)
       .maybeSingle();
 
@@ -536,16 +536,17 @@ export async function UpdateMemberByID(
           baptism_date: updatedData.baptism_date || null,
           officiant: updatedData.officiant || null,
         })
-        .eq("member_id", memberID)
+        .eq("member_id", updatedMember.member_id)
         .eq("church_id", admin.church_id);
 
       if (baptismUpdateError) throw baptismUpdateError;
+      
     } else if (updatedData.baptism_date || updatedData.officiant) {
       // Insert baptismal record
       const { error: baptismInsertError } = await supabase
         .from("baptismal_record")
         .insert({
-          member_id: memberID,
+          member_id: updatedMember.member_id,
           fullName: `${updatedMember.lastName} ${updatedMember.firstName}`,
           baptism_date: updatedData.baptism_date || null,
           officiant: updatedData.officiant || null,
@@ -559,7 +560,7 @@ export async function UpdateMemberByID(
     await InsertActivity({
       action: "Updated Member",
       metadata: {
-        memberId: updatedMember.id,
+        memberId: updatedMember.member_id,
         memberName: `${updatedMember.firstName} ${updatedMember.lastName}`,
         prevData: prevState,
         newData: updatedData,
@@ -605,7 +606,7 @@ export async function GetMemberByIDBySuperAdmin(memberID: string) {
       const { data: baptism_record, error: baptismError } = await supabase
         .from("baptismal_record")
         .select("baptism_date, officiant")
-        .eq("member_id", memberID)
+        .eq("member_id", data.member_id)
         .maybeSingle();
 
       if (baptismError) throw baptismError;
