@@ -71,7 +71,7 @@ export async function ApplyForMembership(
   } else if (ageInYears < 60) {
     category = Category.CYAF;
   } else {
-    category = gender === "female" ? Category.CWA : Category.UCM;
+    category = gender === "Female" ? Category.CWA : Category.UCM;
   }
 
   try {
@@ -512,7 +512,7 @@ export async function UpdateMemberByID(
       .update(memberUpdate)
       .eq("id", memberID)
       .eq("church_id", admin.church_id)
-      .select("id, firstName, lastName , member_id") 
+      .select("id, firstName, lastName , member_id")
       .single();
 
     if (updateError) throw updateError;
@@ -540,7 +540,6 @@ export async function UpdateMemberByID(
         .eq("church_id", admin.church_id);
 
       if (baptismUpdateError) throw baptismUpdateError;
-      
     } else if (updatedData.baptism_date || updatedData.officiant) {
       // Insert baptismal record
       const { error: baptismInsertError } = await supabase
