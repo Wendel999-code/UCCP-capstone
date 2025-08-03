@@ -2,7 +2,8 @@ import { Member } from "@/global/type";
 
 import { InsertActivity } from "@/lib/utils/activity";
 import { parseAgeToYears } from "@/lib/utils/age";
-import { ResendEmail } from "@/lib/utils/resend";
+import { generateMemberID } from "@/lib/utils/member";
+import { NewMemberEmail } from "@/lib/utils/resend";
 import supabase from "../client";
 import { memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
@@ -162,53 +163,6 @@ export async function GetNewMemberID(applicationId: string) {
   }
 }
 
-// export async function GetMembersByChurchId(
-//   page: number,
-//   pageSize: number,
-//   search: string,
-//   sortBy: string,
-//   sortOrder: "asc" | "desc",
-//   category: string
-// ) {
-//   try {
-//     const { churchAdmin: admin } = await getChurchAdmin();
-
-//     const from = (page - 1) * pageSize;
-//     const to = from + pageSize - 1;
-
-//     let query = supabase
-//       .from("member")
-//       .select("*, Church:church_id(brgy)", { count: "exact" })
-//       .eq("church_id", admin.church_id)
-//       .neq("activeStatus", "pending");
-
-//     if (search) {
-//       query = query.or(
-//         `firstName.ilike.%${search}%,lastName.ilike.%${search}%`
-//       );
-//     }
-
-//     if (category) {
-//       query = query.eq("category", category);
-//     }
-
-//     if (sortBy) {
-//       query = query.order(sortBy, { ascending: sortOrder === "asc" });
-//     } else {
-//       query = query.order("created_at", { ascending: true });
-//     }
-
-//     const { data, error, count } = await query.range(from, to);
-
-//     if (error) throw error;
-
-//     return { success: true, data, count: count ?? 0 };
-//   } catch (error) {
-//     console.error("GetMembersByChurchId error:", error);
-//     return { success: false, data: [], count: 0 };
-//   }
-// }
-
 export async function GetAllCountMembersByChurchId() {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
@@ -360,7 +314,7 @@ export async function ApproveMembership(
       member_email: updatedMember.member_email,
     };
 
-    await ResendEmail(member);
+    await NewMemberEmail(member);
 
     await InsertActivity({
       action: "Approved Membership",
@@ -684,9 +638,11 @@ export async function addMemberAction(
   };
 
   const parsed = memberSchema.safeParse(raw);
-
   if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten().fieldErrors };
+    return {
+      success: false,
+      errors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+    };
   }
 
   const {
@@ -706,11 +662,12 @@ export async function addMemberAction(
   } = parsed.data;
 
   try {
-    const { churchAdmin: admin } = await getChurchAdmin();
+    const { churchAdmin: admin, church } = await getChurchAdmin();
 
-    const { data: memberData, error: memberError } = await supabase
-      .from("member")
-      .insert({
+    const newMemberID = generateMemberID(church.brgy);
+
+    const { error } = await supabase.rpc("add_full_member", {
+      _member: {
         firstName,
         lastName,
         age,
@@ -719,45 +676,46 @@ export async function addMemberAction(
         category,
         address,
         church_id,
-        activeStatus: "active",
-        baptism_status: "Baptized",
-        marital_status,
         member_email,
-      })
-      .select("id")
-      .single();
-
-    if (memberError) throw memberError;
-
-    const { error: CertError } = await supabase
-      .from("baptismal_record")
-      .insert({
-        member_id: memberData.id,
+        marital_status,
+        member_id: newMemberID,
+      },
+      _baptism: {
+        member_id: newMemberID,
         church_id: admin.church_id,
         circuit,
         baptism_date: baptismDate,
         officiant,
-        fullName: `${lastName}  ${firstName}`,
-      })
-
-      .single();
-
-    if (CertError) throw CertError;
-
-    await InsertActivity({
-      action: "Add Member",
-      metadata: {
-        member_id: memberData.id,
-        church_id: admin.church_id,
-        firstName,
-        lastName,
+        fullName: `${lastName} ${firstName}`,
       },
+      _activity: {
+        action: "Add Member",
+        metadata: {
+          member_id: newMemberID,
+          firstName,
+          lastName,
+        },
+        church_id: admin.church_id,
+      },
+    });
+
+    if (error) throw error;
+
+    await NewMemberEmail({
+      firstName,
+      lastName,
+      church: church.brgy,
+      memberID: newMemberID,
+      member_email,
     });
 
     return { success: true };
   } catch (error) {
-    console.log("error in add member action", error);
-    return;
+    console.error("❌ Error in addMemberAction:", error);
+    return {
+      success: false,
+      errors: { global: ["Server error, please try again."] },
+    };
   }
 }
 
@@ -861,7 +819,3 @@ export async function GetAllMemberPerChurchCount() {
     };
   }
 }
-
-
-
-

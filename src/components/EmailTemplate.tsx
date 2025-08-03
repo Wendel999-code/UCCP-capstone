@@ -1,4 +1,4 @@
-export function EmailTemplate(
+export function NewMember(
   firstName: string,
   lastName: string,
   church: string,

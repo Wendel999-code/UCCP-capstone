@@ -1,7 +1,7 @@
 "use server";
 
 import {
-  EmailTemplate,
+  NewMember,
   SendID,
   UpdatesCertificate,
 } from "@/components/EmailTemplate";
@@ -10,7 +10,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function ResendEmail({
+export async function NewMemberEmail({
   firstName,
   lastName,
   church,
@@ -25,13 +25,11 @@ export async function ResendEmail({
     };
   }
 
- 
-
   const { error: resendError } = await resend.emails.send({
     from: "UCCP <support@wndl.dev>",
     to: [member_email],
     subject: `Welcome, ${firstName}! Your UCCP Membership Details`,
-    react: EmailTemplate(firstName, lastName, church, memberID),
+    react: NewMember(firstName, lastName, church, memberID),
   });
 
   if (resendError) {
