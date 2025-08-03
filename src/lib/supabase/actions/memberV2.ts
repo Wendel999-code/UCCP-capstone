@@ -2,18 +2,15 @@ import supabase from "../client";
 import { getChurchAdmin, SuperAdmin } from "./dal";
 
 export async function GetMembersByChurchId(
-  page: number,
-  pageSize: number,
-  search: string,
-  sortBy: string,
-  sortOrder: "asc" | "desc",
-  category: string
+  page?: number,
+  pageSize?: number,
+  search?: string,
+  sortBy?: string,
+  sortOrder: "asc" | "desc" = "asc",
+  category?: string
 ) {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
-
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
 
     let query = supabase
       .from("member")
@@ -34,10 +31,16 @@ export async function GetMembersByChurchId(
     if (sortBy) {
       query = query.order(sortBy, { ascending: sortOrder === "asc" });
     } else {
-      query = query.order("created_at", { ascending: true });
+      query = query.order("created_at", { ascending: false });
     }
 
-    const { data, error, count } = await query.range(from, to);
+    if (page !== undefined && pageSize !== undefined) {
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+      query = query.range(from, to);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
 

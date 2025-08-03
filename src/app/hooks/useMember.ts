@@ -65,12 +65,12 @@ export const useApproveMember = () => {
 };
 
 export const useGetMembersByChurchId = (
-  page: number,
-  pageSize: number,
-  search: string,
-  sortBy: string,
-  sortOrder: "asc" | "desc",
-  category: string
+  page?: number,        // Make optional
+  pageSize?: number,    // Make optional
+  search?: string,
+  sortBy?: string,
+  sortOrder: "asc" | "desc" = "asc",
+  category?: string
 ) =>
   useQuery<MemberQueryResponse, Error>({
     queryKey: [

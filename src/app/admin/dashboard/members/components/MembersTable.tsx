@@ -30,10 +30,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-import { ChevronDown, Download, Filter, Plus, Search } from "lucide-react";
+import {
+  ChevronDown,
+  Download,
+  Filter,
+  Loader,
+  Plus,
+  Search,
+} from "lucide-react";
 
 import { useSidebarData } from "@/app/hooks/useSideBar";
 import DebouncedSearchInput from "@/components/DebounceInput";
+import { GetMembersByChurchId } from "@/lib/supabase/actions/memberV2";
 import { exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -63,12 +71,53 @@ export default function MembersTable() {
     if (isLoading || isLoadingTable) return;
 
     try {
-      exportToPDF(table, {
+      // Fetch ALL data without pagination for export
+      const allMembersResponse = await GetMembersByChurchId(
+        undefined, // no page limit
+        undefined, // no pageSize limit
+        globalFilter.search, // current search filter
+        "lastName", // sortBy
+        "asc", // sortOrder
+        globalFilter.category // current category filter
+      );
+
+      if (!allMembersResponse.success) {
+        throw new Error("Failed to fetch all members for export");
+      }
+
+      // Helper function to get nested values
+      const getNestedValue = (obj: any, path: string) => {
+        return path.split(".").reduce((current, key) => {
+          return current && current[key] !== undefined ? current[key] : "";
+        }, obj);
+      };
+
+      // Create a temporary table-like object with all the data
+      const exportData = {
+        getVisibleLeafColumns: () => table.getVisibleLeafColumns(),
+        getRowModel: () => ({
+          rows: allMembersResponse.data.map((member, index) => ({
+            getValue: (columnId: string) => {
+              const col = table
+                .getVisibleLeafColumns()
+                .find((c) => c.id === columnId);
+              if (col?.accessorFn) return col.accessorFn(member, index);
+              return getNestedValue(member, columnId);
+            },
+            original: member,
+            index,
+          })),
+        }),
+      };
+
+      exportToPDF(exportData as any, {
         title: `${data?.church?.brgy} Local Church Members`,
         filename: `${data?.church?.brgy} Local Church.pdf`,
       });
 
-      toast.success("PDF exported successfully");
+      toast.success(
+        `PDF exported successfully (${allMembersResponse.data.length} records)`
+      );
     } catch (error) {
       console.log("Error exporting PDF:", error);
       toast.error("Error exporting PDF");
@@ -170,15 +219,18 @@ export default function MembersTable() {
                     ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
               <Button
                 disabled={isExporting}
                 onClick={handleExportPDF}
-                variant={"ghost"}
-                className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
+                variant="ghost"
+                className="h-7 px-3 text-xs font-medium border rounded-md cursor-pointer flex items-center transition-all duration-200 hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400 dark:hover:border-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Download className="mr-1 h-2.5 w-2.5 " />
-                {isExporting ? "Exporting..." : "Export "}
+                {isExporting ? (
+                  <Loader className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <Download className="mr-1 h-3 w-3" />
+                )}
+                {isExporting ? "Exporting..." : "Export"}
               </Button>
             </div>
           </div>
