@@ -1,7 +1,7 @@
 "use client";
 
 import { flexRender } from "@tanstack/react-table";
-import { ChevronDown, Download, Filter, Search } from "lucide-react";
+import { ChevronDown, Download, Filter, Loader, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +37,8 @@ import {
 import { useGetAllChurches } from "@/app/hooks/useChurch";
 import DebouncedSearchInput from "@/components/DebounceInput";
 import { Skeleton } from "@/components/ui/skeleton";
-import { exportToPDF } from "@/lib/utils/exportPDF";
+import { GetAllMembersBySuperAdmin } from "@/lib/supabase/actions/memberV2";
+import { createExportTable, exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "./SuperAdminPagination";
@@ -65,12 +66,30 @@ export default function SuperAdminMembersTable() {
     if (isLoading || isLoadingTable) return;
 
     try {
-      exportToPDF(table, {
+      const allMembersResponse = await GetAllMembersBySuperAdmin(
+        undefined,
+        undefined,
+        globalFilter.search,
+        "lastName",
+        "asc",
+        globalFilter.category
+      );
+
+      if (!allMembersResponse.success) {
+        throw new Error("Failed to fetch all members for export");
+      }
+
+      // Create a temporary table-like object with all the data
+      const exportData = createExportTable(allMembersResponse.data, table);
+
+      exportToPDF(exportData as any, {
         title: "Cana Circuit Members",
         filename: "Cana Circuit Members.pdf",
       });
 
-      toast.success("PDF exported successfully");
+      toast.success(
+        `PDF exported successfully (${allMembersResponse.data.length} records)`
+      );
     } catch (error) {
       console.log("Error exporting PDF:", error);
       toast.error("Error exporting PDF");
@@ -199,11 +218,15 @@ export default function SuperAdminMembersTable() {
               <Button
                 disabled={isExporting}
                 onClick={handleExportPDF}
-                variant={"ghost"}
-                className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
+                variant="ghost"
+                className="h-7 px-3 text-xs font-medium border rounded-md cursor-pointer flex items-center transition-all duration-200 hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400 dark:hover:border-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Download className="mr-1 h-2.5 w-2.5 " />
-                {isExporting ? "Exporting..." : "Export "}
+                {isExporting ? (
+                  <Loader className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <Download className="mr-1 h-3 w-3" />
+                )}
+                {isExporting ? "Exporting..." : "Export"}
               </Button>
             </div>
           </div>
@@ -282,7 +305,11 @@ export default function SuperAdminMembersTable() {
           </div>
 
           {/* Pagination */}
-          <Pagination table={table} totalMember={totalMember} />
+          <Pagination
+            table={table}
+            totalMember={totalMember}
+            isLoading={isLoadingTable}
+          />
         </CardContent>
       </Card>
     </div>

@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Member } from "@/global/type";
 import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -13,15 +14,24 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const SuperAdminPagination = ({
   table,
   totalMember,
+  isLoading,
 }: {
   table: Table<Member>;
   totalMember: number;
+  isLoading: boolean;
 }) => {
   return (
     <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
       <div className="flex-1 text-[12px] text-muted-foreground">
-        <div className="flex-1 text-[12px] text-muted-foreground">
-          Total members: {totalMember}
+        <div className="flex-1 text-[12px] text-muted-foreground flex items-center gap-1">
+          Total members : {""}
+          {isLoading ? (
+            <Skeleton className="h-4 w-4 rounded-xl" />
+          ) : (
+            <span className="dark:text-yellow-500 text-black font-medium font-sans ">
+              {totalMember}
+            </span>
+          )}
         </div>
       </div>
 

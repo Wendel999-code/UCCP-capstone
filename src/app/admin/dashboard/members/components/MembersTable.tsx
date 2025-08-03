@@ -42,7 +42,7 @@ import {
 import { useSidebarData } from "@/app/hooks/useSideBar";
 import DebouncedSearchInput from "@/components/DebounceInput";
 import { GetMembersByChurchId } from "@/lib/supabase/actions/memberV2";
-import { exportToPDF } from "@/lib/utils/exportPDF";
+import { createExportTable, exportToPDF } from "@/lib/utils/exportPDF";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import AddMemberModal from "./AddMemberModal";
@@ -71,44 +71,21 @@ export default function MembersTable() {
     if (isLoading || isLoadingTable) return;
 
     try {
-      // Fetch ALL data without pagination for export
       const allMembersResponse = await GetMembersByChurchId(
-        undefined, // no page limit
-        undefined, // no pageSize limit
-        globalFilter.search, // current search filter
-        "lastName", // sortBy
-        "asc", // sortOrder
-        globalFilter.category // current category filter
+        undefined,
+        undefined,
+        globalFilter.search,
+        "lastName",
+        "asc",
+        globalFilter.category
       );
 
       if (!allMembersResponse.success) {
         throw new Error("Failed to fetch all members for export");
       }
 
-      // Helper function to get nested values
-      const getNestedValue = (obj: any, path: string) => {
-        return path.split(".").reduce((current, key) => {
-          return current && current[key] !== undefined ? current[key] : "";
-        }, obj);
-      };
-
       // Create a temporary table-like object with all the data
-      const exportData = {
-        getVisibleLeafColumns: () => table.getVisibleLeafColumns(),
-        getRowModel: () => ({
-          rows: allMembersResponse.data.map((member, index) => ({
-            getValue: (columnId: string) => {
-              const col = table
-                .getVisibleLeafColumns()
-                .find((c) => c.id === columnId);
-              if (col?.accessorFn) return col.accessorFn(member, index);
-              return getNestedValue(member, columnId);
-            },
-            original: member,
-            index,
-          })),
-        }),
-      };
+      const exportData = createExportTable(allMembersResponse.data, table);
 
       exportToPDF(exportData as any, {
         title: `${data?.church?.brgy} Local Church Members`,

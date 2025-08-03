@@ -52,13 +52,12 @@ export async function GetMembersByChurchId(
 }
 
 export async function GetAllMembersBySuperAdmin(
-  page: number,
-  pageSize: number,
-  search: string,
-  sortBy: string,
-  sortOrder: "asc" | "desc",
-  category: string,
-  circuit: string
+  page?: number,
+  pageSize?: number,
+  search?: string,
+  sortBy?: string,
+  sortOrder: "asc" | "desc" = "asc",
+  category?: string
 ) {
   try {
     const admin = await SuperAdmin();
@@ -66,9 +65,6 @@ export async function GetAllMembersBySuperAdmin(
     if (admin.role !== "super_admin") {
       return { success: false, data: [], count: 0 };
     }
-
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
 
     let query = supabase
       .from("member")
@@ -85,17 +81,19 @@ export async function GetAllMembersBySuperAdmin(
       query = query.eq("category", category);
     }
 
-    if (circuit) {
-      query = query.eq("church_id", circuit);
-    }
-
     if (sortBy) {
       query = query.order(sortBy, { ascending: sortOrder === "asc" });
     } else {
-      query = query.order("created_at", { ascending: true });
+      query = query.order("created_at", { ascending: false });
     }
 
-    const { data, error, count } = await query.range(from, to);
+    if (page !== undefined && pageSize !== undefined) {
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+      query = query.range(from, to);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
 

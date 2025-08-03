@@ -65,8 +65,8 @@ export const useApproveMember = () => {
 };
 
 export const useGetMembersByChurchId = (
-  page?: number,        // Make optional
-  pageSize?: number,    // Make optional
+  page?: number, // Make optional
+  pageSize?: number, // Make optional
   search?: string,
   sortBy?: string,
   sortOrder: "asc" | "desc" = "asc",
@@ -138,27 +138,6 @@ export const useDeleteMember = () => {
   });
 };
 
-// export const useDeleteMemberBySuperAdmin = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: async (memberID: string) => {
-//       const res = await DeleteMemberBySuperAdmin(memberID);
-//       if (!res.success) throw new Error(res.message);
-//       return res;
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
-//       queryClient.invalidateQueries({ queryKey: ["sidebar-data"] });
-//       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
-//       queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
-//       queryClient.invalidateQueries({
-//         queryKey: ["count-members-per-church-admin"],
-//       });
-//     },
-//   });
-// };
-
 export const useMemberDetails = (memberID: string, open: boolean) =>
   useQuery<Member>({
     queryKey: ["member-details", memberID],
@@ -190,28 +169,13 @@ export const useMemberDetailsBySuperAdmin = (memberID: string, open: boolean) =>
     retry: 1,
   });
 
-// export const useGetAllmemberBySuperAdmin = () =>
-//   useQuery<Member[]>({
-//     queryKey: ["membersBySuperAdmin"],
-//     queryFn: async () => {
-//       const res = await GetAllMembersBySuperAdmin();
-//       if (!res.success) throw new Error(res.message);
-//       return res.data;
-//     },
-//     staleTime: 5 * 60 * 1000,
-//     gcTime: 30 * 60 * 1000,
-//     retry: 1,
-//     refetchOnWindowFocus: true,
-//   });
-
 export const useGetAllmemberBySuperAdmin = (
-  page: number,
-  pageSize: number,
-  search: string,
-  sortBy: string,
-  sortOrder: "asc" | "desc",
-  category: string,
-  circuit: string
+  page?: number, // Make optional
+  pageSize?: number, // Make optional
+  search?: string,
+  sortBy?: string,
+  sortOrder: "asc" | "desc" = "asc",
+  category?: string
 ) =>
   useQuery<MemberQueryResponse, Error>({
     queryKey: [
@@ -222,7 +186,6 @@ export const useGetAllmemberBySuperAdmin = (
       sortBy,
       sortOrder,
       category,
-      circuit,
     ],
     queryFn: async (): Promise<MemberQueryResponse> => {
       const res = await GetAllMembersBySuperAdmin(
@@ -231,8 +194,7 @@ export const useGetAllmemberBySuperAdmin = (
         search,
         sortBy,
         sortOrder,
-        category,
-        circuit
+        category
       );
       if (!res.success) throw new Error("Failed to fetch members");
       return { data: res.data, count: res.count ?? 0 };
@@ -242,7 +204,6 @@ export const useGetAllmemberBySuperAdmin = (
     refetchOnMount: false,
     refetchOnWindowFocus: true,
     retry: 1,
-    // placeholderData:(data)=>  data
   });
 
 export const useCountMemPerChurch = () =>

@@ -69,3 +69,30 @@ export const exportToPDF = (
     console.error("Error exporting PDF:", error);
   }
 };
+
+type NestedValueGetter = (obj: any, path: string) => any;
+
+const getNestedValue: NestedValueGetter = (obj, path) => {
+  return path.split(".").reduce((current, key) => {
+    return current && current[key] !== undefined ? current[key] : "";
+  }, obj);
+};
+
+export const createExportTable = <T>(data: T[], table: any) => {
+  return {
+    getVisibleLeafColumns: () => table.getVisibleLeafColumns(),
+    getRowModel: () => ({
+      rows: data.map((item, index) => ({
+        getValue: (columnId: string) => {
+          const col = table
+            .getVisibleLeafColumns()
+            .find((c: any) => c.id === columnId);
+          if (col?.accessorFn) return col.accessorFn(item, index);
+          return getNestedValue(item, columnId);
+        },
+        original: item,
+        index,
+      })),
+    }),
+  };
+};

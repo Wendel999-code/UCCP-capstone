@@ -76,11 +76,8 @@ export function SuperAdminTablesData() {
     globalFilter.search,
     sortBy,
     sortOrder,
-    globalFilter.category,
-    circuit
+    globalFilter.category
   );
-
- 
 
   useEffect(() => {
     const channel = supabase
