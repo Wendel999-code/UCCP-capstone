@@ -246,18 +246,6 @@ export async function ApproveMembership(
     };
   }
 
-  const churches = [
-    { name: "palanit", abbr: "PLN" },
-    { name: "san Juan", abbr: "SJ" },
-    { name: "salvacion", abbr: "SLV" },
-    { name: "alegria", abbr: "ALG" },
-    { name: "san Isidro", abbr: "SI" },
-    { name: "victoria", abbr: "VIC" },
-    { name: "allen", abbr: "ALN" },
-    { name: "lipata", abbr: "LPT" },
-    { name: "cabacungan", abbr: "CBC" },
-  ];
-
   try {
     const { churchAdmin, church } = await getChurchAdmin();
 
@@ -267,13 +255,7 @@ export async function ApproveMembership(
         message: "Unauthorized access",
       };
 
-    const brgy = churches.find(
-      (c) => c.name.toLowerCase() === church.brgy.toLowerCase()
-    );
-
-    const randomSuffix = Math.floor(100000 + Math.random() * 900000);
-
-    const newMemberID = `${brgy?.abbr}-${randomSuffix}`;
+    const newMemberID = generateMemberID(church.brgy);
 
     const { data: updatedMember, error } = await supabase
       .from("member")

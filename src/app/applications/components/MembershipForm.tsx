@@ -22,7 +22,6 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState<string | "">("");
   const [gender, setGender] = useState("");
-  // const [hasChildren, setHasChildren] = useState(false);
   const [address, setAddress] = useState("");
   const [date_of_birth, setDateOfBirth] = useState("");
   const [member_email, setMemberEmail] = useState("");

@@ -63,7 +63,7 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuContent align="end">
           <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 

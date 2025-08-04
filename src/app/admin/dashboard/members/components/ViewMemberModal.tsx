@@ -65,7 +65,7 @@ export function ViewMemberModal({
   const handleSendMemberID = async () => {
     setLoading(true);
     try {
-      const res = await SendMemberID({ email, memberID });
+      const res = await SendMemberID({ email, memberID: member_id });
 
       if (!res.success) {
         toast.error(res.message);

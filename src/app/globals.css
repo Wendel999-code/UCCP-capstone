@@ -129,7 +129,7 @@ html {
 
 /* For Chrome, Edge, and Safari */
 ::-webkit-scrollbar {
-  width: 2px; /* adjust as needed */
+  width: 0.5px; /* adjust as needed */
 }
 
 ::-webkit-scrollbar-track {
@@ -143,7 +143,7 @@ html {
 
 /* For Firefox */
 html {
-  scrollbar-width:2px;
+  scrollbar-width:0.5px;
   scrollbar-color: rgb(59, 2, 2) rgb(63, 63, 5); /* fallback, gradient is not fully supported in Firefox */
 }
 

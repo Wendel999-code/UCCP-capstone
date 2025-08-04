@@ -39,7 +39,7 @@ const Visits = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="inline-flex items-center justify-center text-center gap-2 text-amber-500 rounded-full border   px-4 py-1 dark:text-amber-500 dark:border-yellow-500 dark:bg-yellow-900/20  text-sm font-medium shadow-sm mt-4"
+          className="inline-flex items-center justify-center text-center gap-2 text-amber-500 rounded-full border   px-4 py-1 dark:text-amber-500 dark:border-yellow-500 dark:bg-yellow-900/20  text-sm font-medium shadow-sm "
         >
           <Eye className="h-4 w-4 text-center" />
           {count?.toLocaleString()} visitors

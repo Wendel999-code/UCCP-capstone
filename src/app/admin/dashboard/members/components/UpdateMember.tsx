@@ -22,7 +22,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 interface EditMemberModalProps {
   open: boolean;
@@ -84,11 +83,7 @@ export function UpdateMember({
         { memberID, updatedData: formData },
         {
           onSuccess: () => {
-            toast.success("Member updated successfully.");
             setOpen(false);
-          },
-          onError: (error) => {
-            toast.error(error?.message ?? "Failed to update member.");
           },
         }
       );

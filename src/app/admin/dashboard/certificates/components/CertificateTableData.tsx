@@ -96,7 +96,7 @@ export function CertificateTableData({
     },
     {
       accessorKey: "email",
-      header: "Email",
+      header: "Email Address",
       cell: ({ row }) => <p className="">{row.getValue("email")}</p>,
     },
 

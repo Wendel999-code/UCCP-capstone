@@ -131,7 +131,7 @@ export function ApplicationTableData({
     },
     {
       accessorKey: "gender",
-      header: "gender",
+      header: "Gender",
       cell: ({ row }) => <div>{row.getValue("gender")}</div>,
     },
     {

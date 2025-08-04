@@ -20,6 +20,7 @@ import {
   GetMembersByChurchId,
 } from "@/lib/supabase/actions/memberV2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export const usePendingMembers = () =>
   useQuery<Member[]>({
@@ -244,6 +245,10 @@ export const useUpdateMember = () => {
       queryClient.invalidateQueries({
         queryKey: ["member-details", variables.memberID],
       });
+      toast.success("Member updated successfully.");
+    },
+    onError: (error) => {
+      toast.error(error?.message ?? "Failed to update member.");
     },
   });
 };
