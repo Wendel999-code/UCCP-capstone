@@ -179,7 +179,6 @@ export default function SignupForm() {
               {loading ? (
                 <div className="flex items-center gap-2">
                   <Loader className="animate-spin w-5 h-5" />
-                  <span>Signing Up...</span>
                 </div>
               ) : (
                 "Sign Up"

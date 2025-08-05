@@ -158,12 +158,11 @@ export default function LoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="w-full h-12 text-lg cursor-pointer bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 "
             >
               {loading ? (
                 <div className="flex items-center gap-2">
                   <Loader className="animate-spin w-5 h-5" />
-                  <span>Signing In...</span>
                 </div>
               ) : (
                 "Sign In"
