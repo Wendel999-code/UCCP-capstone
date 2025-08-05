@@ -1,5 +1,7 @@
 import {
+  Calendar,
   ChevronUp,
+  Church,
   ExternalLink,
   Heart,
   Mail,
@@ -82,26 +84,34 @@ function Footer() {
 
               {/* Quick contact highlight */}
               <div
-                className={`p-4 rounded-lg border backdrop-blur-sm ${
-                  isDark
-                    ? "bg-gray-800/50 border-gray-700/50"
-                    : "bg-white/50 border-gray-200/50 shadow-sm"
-                }`}
+                className={`relative p-6 rounded-2xl backdrop-blur-sm border transition-all duration-300
+        ${isDark ? "bg-gray-800/50 border-gray-700/50" : "bg-white/50 border-amber-200/50 shadow-lg"}
+        group hover:shadow-xl hover:scale-[1.02]`}
               >
-                <p
-                  className={`text-sm mb-2 ${
-                    isDark ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  Join us for worship
-                </p>
-                <p
-                  className={`font-medium ${
-                    isDark ? "text-white" : "text-gray-800"
-                  }`}
-                >
-                  Sundays at 9:00 AM
-                </p>
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 rounded-2xl opacity-10" />
+                <div className="absolute top-3 left-3 h-3 w-3 bg-yellow-400 rounded-full animate-pulse" />
+
+                <div className="flex items-center gap-2 mb-2">
+                  <Church
+                    className={`h-4 w-4 ${isDark ? "text-amber-400" : "text-yellow-600"}`}
+                  />
+                  <p
+                    className={`text-sm font-medium tracking-wide ${isDark ? "text-amber-400" : "text-yellow-600"}`}
+                  >
+                    Join us for worship
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Calendar
+                    className={`h-5 w-5 ${isDark ? "text-white" : "text-gray-900"}`}
+                  />
+                  <p
+                    className={`text-xl font-semibold ${isDark ? "text-white" : "text-gray-900"}`}
+                  >
+                    Sundays at 9:00 AM
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -67,10 +67,10 @@ function About() {
     {
       icon: Church,
       label: "Ministries",
-      value: "12+",
+      value: "4+",
       color: "text-purple-500",
     },
-    { icon: Heart, label: "Communities", value: "4", color: "text-red-500" },
+    { icon: Heart, label: "Communities", value: "9", color: "text-red-500" },
   ];
 
   const milestones = [

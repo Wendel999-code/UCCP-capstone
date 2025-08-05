@@ -153,7 +153,7 @@ function Hero() {
               asChild
               className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white px-8 py-6 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
             >
-              <Link href="/join">Join Our Circuit</Link>
+              <Link href="/applications">Join Our Circuit</Link>
             </Button>
 
             <Visits />

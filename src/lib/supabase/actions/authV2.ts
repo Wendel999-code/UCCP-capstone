@@ -303,7 +303,7 @@ export async function ToggleBlock(userId: string, isBlock: boolean) {
       throw new Error(`Database update failed: ${updateError.message}`);
     }
 
-    //TODO SIGNOUT USER UPON BLOCKING kay pwede pag block mo naka login pa siya
+    // TODO SIGNOUT USER UPON BLOCKING kay pwede pag block mo naka login pa siya
     if (isBlock) {
       await supabase.auth.admin.signOut(userId).catch(() => {});
     }

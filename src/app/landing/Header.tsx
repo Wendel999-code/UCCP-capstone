@@ -261,7 +261,7 @@ function Header() {
                 ))}
 
                 {/* Mobile Auth Section */}
-                <div className="mt-8 pt-6 border-t border-amber-200/50 dark:border-amber-800/30">
+                <div className="mt-8 pt-6 px-2 border-t border-amber-200/50 dark:border-amber-800/30">
                   {loading ? (
                     <Skeleton className="h-12 w-full rounded-xl" />
                   ) : user ? (
@@ -275,7 +275,7 @@ function Header() {
                     </Button>
                   ) : (
                     <Link href="/auth/login" onClick={() => setOpen(false)}>
-                      <Button className="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl shadow-lg group">
+                      <Button className="w-full  h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl shadow-lg group">
                         <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
                         <span>Sign In</span>
                       </Button>

@@ -211,9 +211,9 @@ function Testimonials() {
             <Star className="h-4 w-4 fill-current" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Hearts
-            <span className="bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent ml-3">
+            <span className="bg-gradient-to-r  from-amber-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent ml-3">
               Transformed
             </span>
           </h2>
@@ -282,14 +282,14 @@ function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-16"
+          className="text-center mt-16 px-4"
         >
-          <div className="inline-flex items-center gap-4 px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full shadow-lg">
-            <span className="text-gray-600 dark:text-gray-300">
+          <div className="inline-flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-4 sm:py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl max-w-md mx-auto">
+            <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
               Want to share your story?
             </span>
-            <Link href={"/applications"}>
-              <button className="px-4 py-2 bg-gradient-to-r cursor-pointer from-amber-400 to-yellow-500 text-white rounded-full font-medium hover:from-amber-500 hover:to-yellow-600 transition-all duration-300 hover:scale-105 shadow-md">
+            <Link href="/applications" passHref>
+              <button className="w-full sm:w-auto px-4 py-2 text-sm sm:text-base bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                 Join Our Family
               </button>
             </Link>
