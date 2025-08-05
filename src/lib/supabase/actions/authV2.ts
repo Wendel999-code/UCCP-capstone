@@ -100,7 +100,7 @@ export const fetchCurrentUserV2 = async () => {
       .from("User")
       .select("id, role, email")
       .eq("id", authUser.id)
-      .single();
+      .maybeSingle();
 
     if (roleError) throw new Error(roleError.message);
 

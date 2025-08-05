@@ -46,6 +46,10 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const isEmailValid = emailRegex.test(member_email);
+
   const router = useRouter();
 
   const steps = [
@@ -308,8 +312,12 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                           onChange={(e) => {
                             const dob = e.target.value;
                             setDateOfBirth(dob);
-                            const computedAge = calculateAge(dob);
-                            setAge(computedAge as string);
+                            if (dob) {
+                              const computedAge = calculateAge(dob);
+                              setAge(computedAge ? String(computedAge) : "");
+                            } else {
+                              setAge("");
+                            }
                           }}
                           className="h-12 border-gray-300 dark:border-gray-600 focus:border-amber-400 focus:ring-amber-400 rounded-xl"
                           required
@@ -402,6 +410,11 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                           placeholder="your.email@example.com"
                           required
                         />
+                        {member_email && !isEmailValid && (
+                          <p className="text-sm mt-3 text-red-500">
+                            Invalid email format
+                          </p>
+                        )}
                       </div>
 
                       <div className="space-y-2">
@@ -463,7 +476,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                         Review Your Application
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-300">
+                      <p className="text-gray-600 text-sm dark:text-gray-300">
                         Please review your information before submitting
                       </p>
                     </div>
@@ -484,8 +497,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                             {date_of_birth}
                           </p>
                           <p>
-                            <span className="font-medium">Age:</span> {age}{" "}
-                        
+                            <span className="font-medium">Age:</span> {age}
                           </p>
                           <p>
                             <span className="font-medium">Gender:</span>{" "}
@@ -509,7 +521,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                             {member_email}
                           </p>
                           <p>
-                            <span className="font-medium">Church:</span>{" "}
+                            <span className="font-medium">Local Church:</span>{" "}
                             {churches.find((c) => c.id === church_id)?.brgy ||
                               "Not selected"}
                           </p>
@@ -574,9 +586,10 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     onClick={nextStep}
                     disabled={
                       (currentStep === 1 && !validateStep1()) ||
-                      (currentStep === 2 && !validateStep2())
+                      (currentStep === 2 && !validateStep2()) ||
+                      (currentStep === 2 && !isEmailValid)
                     }
-                    className="px-8 py-3 ..."
+                    className={`px-8 py-3 ... cursor-pointer  ${!isEmailValid ? "disabled:cursor-not-allowed disabled:opacity-50 " : ""}`}
                   >
                     Next Step
                   </Button>
@@ -596,7 +609,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     ) : (
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4" />
-                        Submit Membership
+                        Submit
                       </div>
                     )}
                   </Button>

@@ -5,7 +5,7 @@ import { parseAgeToYears } from "@/lib/utils/age";
 import { generateMemberID } from "@/lib/utils/member";
 import { NewMemberEmail } from "@/lib/utils/resend";
 import supabase from "../client";
-import { memberSchema } from "../validation/member";
+import { ApplySchema, memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
 
 export async function ApplyForMembership(
@@ -19,6 +19,16 @@ export async function ApplyForMembership(
     | "category"
   >
 ) {
+  const parseResult = ApplySchema.safeParse(data);
+
+  if (!parseResult.success) {
+    const issues = parseResult.error.issues.map((i) => i.path.join("."));
+    return {
+      success: false,
+      message: `Please fill out: ${issues.join(", ")}`,
+    };
+  }
+
   const {
     firstName,
     lastName,
@@ -29,31 +39,7 @@ export async function ApplyForMembership(
     church_id,
     date_of_birth,
     marital_status,
-  } = data;
-
-  const requiredFields = {
-    firstName,
-    lastName,
-    date_of_birth,
-    age,
-    address,
-    gender,
-    church_id,
-    member_email,
-    marital_status,
-  };
-
-  const missingFields = Object.entries(requiredFields)
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
-
-  if (missingFields.length > 0) {
-    return {
-      success: false,
-      message: `Please fill out: ${missingFields.join(", ")}`,
-    };
-  }
-
+  } = parseResult.data;
   const Category = {
     CHILDREN: "CHILDREN",
     CYF: "CYF",

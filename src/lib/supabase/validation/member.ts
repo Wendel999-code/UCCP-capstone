@@ -18,3 +18,15 @@ export const memberSchema = z.object({
     .min(1, "Member email is required")
     .email("Invalid email address"),
 });
+
+export const ApplySchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  date_of_birth: z.string().min(1),
+  age: z.string().min(1),
+  address: z.string().min(1),
+  gender: z.enum(["Male", "Female"]),
+  member_email: z.string().email(),
+  church_id: z.string().min(1),
+  marital_status: z.string().min(1),
+});
