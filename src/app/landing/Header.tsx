@@ -123,7 +123,7 @@ function Header() {
                 `}
               >
                 <span className="flex items-center gap-2">
-                  <span className="text-sm">{icon}</span>
+                  {/* <span className="text-sm">{icon}</span> */}
                   {label}
                 </span>
                 <motion.div
@@ -253,7 +253,7 @@ function Header() {
                       onClick={() => setOpen(false)}
                       className="group flex items-center gap-3 p-4 rounded-xl hover:bg-amber-100/50 dark:hover:bg-amber-900/30 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 transition-all duration-300"
                     >
-                      <span className="text-lg">{icon}</span>
+                      {/* <span className="text-lg">{icon}</span> */}
                       <span className="font-medium">{label}</span>
                       <ArrowRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
                     </Link>
