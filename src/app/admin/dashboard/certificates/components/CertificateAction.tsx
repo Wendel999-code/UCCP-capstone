@@ -21,7 +21,13 @@ import { toast } from "react-toastify";
 import CertificatePreview from "./CertificatePreview";
 import DeleteDialog from "./DeleteDialog";
 
-const CertificateAction = ({ reqID }: { reqID: string }) => {
+const CertificateAction = ({
+  reqID,
+  member_id,
+}: {
+  reqID: string;
+  member_id: string;
+}) => {
   const [openCertPreview, setOpenCertPreview] = useState(false);
   const queryClient = useQueryClient();
   const [openDelete, setOpenDelete] = useState(false);
@@ -44,7 +50,7 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
     queryClient.prefetchQuery({
       queryKey: ["req-certificate-ByID", reqID],
       queryFn: async () => {
-        const res = await GetReqCertificateByID(reqID);
+        const res = await GetReqCertificateByID(reqID, member_id);
         if (!res.success || !res.data) {
           throw new Error(res.error || "No certificate data found.");
         }
@@ -94,6 +100,7 @@ const CertificateAction = ({ reqID }: { reqID: string }) => {
 
       <CertificatePreview
         reqID={reqID}
+        member_id={member_id}
         openCertPreview={openCertPreview}
         setOpenCertPreview={setOpenCertPreview}
       />

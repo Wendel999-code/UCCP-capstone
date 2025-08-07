@@ -20,11 +20,15 @@ export const useGetReqCertificate = () =>
     refetchOnWindowFocus: true,
   });
 
-export const useGetReqCertificateByID = (reqID: string, open: boolean) =>
+export const useGetReqCertificateByID = (
+  reqID: string,
+  member_id: string,
+  open: boolean
+) =>
   useQuery<CertificateDetails>({
     queryKey: ["req-certificate-ByID", reqID],
     queryFn: async () => {
-      const res = await GetReqCertificateByID(reqID);
+      const res = await GetReqCertificateByID(reqID, member_id);
       if (!res.success || !res.data) {
         throw new Error(res.error || "Failed to fetch certificate.");
       }

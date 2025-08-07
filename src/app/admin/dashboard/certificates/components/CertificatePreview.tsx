@@ -24,14 +24,20 @@ interface CertMemberModalProps {
   openCertPreview: boolean;
   setOpenCertPreview: (value: boolean) => void;
   reqID: string;
+  member_id: string;
 }
 
 const CertificatePreview = ({
   reqID,
+  member_id,
   openCertPreview,
   setOpenCertPreview,
 }: CertMemberModalProps) => {
-  const { data, isLoading } = useGetReqCertificateByID(reqID, openCertPreview);
+  const { data, isLoading } = useGetReqCertificateByID(
+    reqID,
+    member_id,
+    openCertPreview
+  );
 
   const queryClient = useQueryClient();
 

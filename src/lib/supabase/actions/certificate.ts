@@ -74,8 +74,6 @@ export async function RequestCertificate(
   }
 }
 
-
-//TODO fix SAME MEMBER ID when fetched not found 
 export async function GetReqCertificate() {
   try {
     const { churchAdmin: admin } = await getChurchAdmin();
@@ -104,7 +102,10 @@ export async function GetReqCertificate() {
   }
 }
 
+//TODO fix SAME MEMBER ID when fetched not found
+
 export async function GetReqCertificateByID(
+  reqID: string,
   member_id: string
 ): Promise<GetReqCertificateResponse> {
   if (!member_id) {
@@ -117,7 +118,7 @@ export async function GetReqCertificateByID(
     const { data: certificate, error: certError } = await supabase
       .from("req_certificate")
       .select("member_id, father_fn, mother_fn")
-      .eq("member_id", member_id)
+      .eq("id", reqID)
       .eq("church_id", admin.church_id)
       .maybeSingle();
 
@@ -219,7 +220,7 @@ export async function GeneratedCertificate(reqID: string) {
     const { data: certificate, error: certError } = await supabase
       .from("req_certificate")
       .update({ status: "Completed" })
-      .eq("member_id", reqID)
+      .eq("id", reqID)
       .eq("church_id", admin.church_id)
       .select("email,firstName,lastName, member_id ")
       .single();
@@ -238,7 +239,6 @@ export async function GeneratedCertificate(reqID: string) {
       .select("circuit")
       .eq("member_id", certificate.member_id)
       .eq("church_id", admin.church_id)
-
       .single();
 
     if (baptismalError) {

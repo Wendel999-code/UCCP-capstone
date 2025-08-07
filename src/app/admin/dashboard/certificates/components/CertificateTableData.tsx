@@ -149,7 +149,7 @@ export function CertificateTableData({
       cell: ({ row }) => {
         const req = row.original;
 
-        return <CertificateAction reqID={req.member_id} />;
+        return <CertificateAction reqID={req.id} member_id={req.member_id} />;
       },
     },
   ];
