@@ -4,7 +4,7 @@ import Welcome from "./components/welcome";
 
 const Dashboard = () => {
   return (
-    <div className="items-start">
+    <div className="items-center">
       <Welcome />
     </div>
   );

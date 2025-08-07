@@ -98,7 +98,7 @@ function Header() {
                 alt="CANA Circuit Logo"
                 width={48}
                 height={48}
-                className="relative rounded-full object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                className="relative  w-[38px] md:w-[48px] rounded-full object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-300"
                 priority
               />
             </div>

@@ -44,25 +44,25 @@ const RequestPage = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="p-4 md:p-6 max-w-5xl mx-auto"
+      transition={{ duration: 0.5 }}
+      className="p-4 md:p-8 max-w-6xl mx-auto"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm border border-amber-100 dark:border-amber-800/30 p-6 md:p-10 rounded-2xl shadow-lg">
         {/* Left: Certificate Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="flex justify-center items-center"
         >
-          <div className="w-52 sm:w-64 md:w-72 lg:w-80 xl:w-96 transition-transform hover:scale-105">
+          <div className="w-52 sm:w-64 md:w-72 lg:w-80 xl:w-96 transition-transform hover:scale-105 hover:rotate-[-0.5deg] duration-300">
             <Image
               src="/cert.png"
               alt="Sample Baptism Certificate"
               width={500}
               height={420}
               priority
-              className="rounded-md shadow-md dark:shadow-amber-500/20 w-full h-auto object-cover"
+              className="rounded-xl shadow-md dark:shadow-amber-500/30 w-full h-auto object-cover"
             />
           </div>
         </motion.div>
@@ -71,9 +71,10 @@ const RequestPage = () => {
         <form
           ref={formRef}
           action={formAction}
-          className="space-y-4 flex flex-col justify-center"
+          className="space-y-5 flex flex-col justify-center"
         >
-          <fieldset disabled={pending}>
+          <fieldset disabled={pending} className="space-y-4">
+            {/* Name Inputs */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputBlock
                 name="firstName"
@@ -87,25 +88,23 @@ const RequestPage = () => {
               />
             </div>
 
+            {/* Other Fields */}
             <InputBlock
               name="date_of_birth"
               label="Date of Birth"
               type="date"
               error={state?.errors?.date_of_birth}
             />
-
             <InputBlock
               name="father_fn"
               label="Father's Full Name"
               error={state?.errors?.father_fn}
             />
-
             <InputBlock
               name="mother_fn"
               label="Mother's Full Name"
               error={state?.errors?.mother_fn}
             />
-
             <InputBlock
               name="email"
               label="Email"
@@ -113,13 +112,16 @@ const RequestPage = () => {
               error={state?.errors?.email}
             />
 
-            {/* Church Selection */}
-            <div>
-              <Label htmlFor="church_id" className="text-xs mt-1 text-gray-600">
+            {/* Church Dropdown */}
+            <div className="space-y-1">
+              <Label
+                htmlFor="church_id"
+                className="text-xs text-gray-600 dark:text-gray-400"
+              >
                 Select Church
               </Label>
               {isChurchLoading ? (
-                <Skeleton className="h-10 w-full mt-1 rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md" />
               ) : (
                 <Select name="church_id" required>
                   <SelectTrigger className="mt-1">
@@ -153,11 +155,12 @@ const RequestPage = () => {
             <Button
               type="submit"
               disabled={pending}
-              className="w-full bg-amber-600 hover:bg-amber-700 cursor-pointer text-white mt-5"
+              className="w-full bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600 text-white font-semibold py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {pending ? (
                 <>
-                  <Loader className="animate-spin mr-2 h-4 w-4" /> Submitting...
+                  <Loader className="animate-spin mr-2 h-4 w-4" />
+                  Submitting...
                 </>
               ) : (
                 "Submit Request"

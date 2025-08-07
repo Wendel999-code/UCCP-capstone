@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 const navItems = [
   {
     href: "/member/dashboard",
-    label: "Dashboard",
+    label: "Home",
     icon: <Home className="h-4 w-4" />,
   },
   {
@@ -74,16 +74,32 @@ const Nav = () => {
       className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex md:h-20 h-15 items-center px-4 justify-between ">
-        <Link href="/member/dashboard" className="flex items-center">
-          <div className="p-2  md:px-22">
-            <Image
-              src="/uccp.jpg"
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full h-10 w-10 object-cover"
-            />
-          </div>
+        <Link href="/member/dashboard" className="group">
+          <motion.div
+            className="flex items-center gap-3 md:px-22"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="relative">
+              <motion.div
+                animate={{ rotate: [0, 5, 0] }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -inset-2 bg-gradient-to-r from-amber-400/20 to-orange-400/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300"
+              />
+              <Image
+                src="/uccp.jpg"
+                alt="CANA Circuit Logo"
+                width={48}
+                height={48}
+                className="relative  w-[38px] md:w-[48px] rounded-full object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                priority
+              />
+            </div>
+          </motion.div>
         </Link>
 
         <div className="flex gap-2">

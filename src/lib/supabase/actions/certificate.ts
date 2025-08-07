@@ -137,12 +137,13 @@ export async function GetReqCertificateByID(
 
     const { data: member, error: memberError } = await supabase
       .from("member")
-      .select("firstName, lastName, date_of_birth,gender")
+      .select("firstName, lastName, date_of_birth, gender")
       .eq("member_id", certificate.member_id)
+      .eq("church_id", admin.church_id)
       .single();
 
     if (memberError) {
-      console.error("Error fetching member:", memberError);
+      console.error("Error fetching member :", memberError);
       return { success: false, error: memberError.message, data: null };
     }
 
@@ -150,6 +151,7 @@ export async function GetReqCertificateByID(
       .from("baptismal_record")
       .select("baptism_date, officiant, circuit")
       .eq("member_id", certificate.member_id)
+      .eq("church_id", admin.church_id)
       .maybeSingle();
 
     if (baptismalError) {
@@ -191,7 +193,7 @@ export async function DeleteReqCertificate(reqId: string) {
     const { error } = await supabase
       .from("req_certificate")
       .delete()
-      .eq("member_id", reqId)
+      .eq("id", reqId)
       .eq("church_id", admin.church_id)
       .single();
 

@@ -46,7 +46,7 @@ const SideBar = () => {
         {[
           {
             href: "/member/dashboard",
-            label: "Dashboard",
+            label: "Home",
             icon: <Home className="h-4 w-4" />,
           },
 

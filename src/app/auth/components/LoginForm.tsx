@@ -207,13 +207,16 @@ export default function LoginForm() {
                 className="relative inline-block"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-full blur-lg scale-150" />
-                <Image
-                  src="/uccp.jpg"
-                  alt="CANA Circuit"
-                  width={70}
-                  height={70}
-                  className="relative mx-auto rounded-full object-cover border-3 border-amber-500 shadow-xl"
-                />
+                <Link href={"/"}>
+                  {" "}
+                  <Image
+                    src="/uccp.jpg"
+                    alt="CANA Circuit"
+                    width={70}
+                    height={70}
+                    className="relative mx-auto rounded-full object-cover border-3 border-amber-500 shadow-xl"
+                  />
+                </Link>
               </motion.div>
               <div>
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent">

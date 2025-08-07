@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/table";
 import { ActivityLog } from "@/global/type";
 import supabase from "@/lib/supabase/client";
-import { exportToPDF } from "@/lib/utils/exportPDF";
 import {
   ColumnDef,
   flexRender,
@@ -29,9 +28,8 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Download } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useMemo } from "react";
 
 function ReportsTable() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -46,7 +44,7 @@ function ReportsTable() {
     refetch,
   } = useGetAllActivity(pagination.pageIndex + 1, pagination.pageSize);
 
-  const [exporting, setExporting] = useState(false);
+  // const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     const channel = supabase
@@ -115,25 +113,26 @@ function ReportsTable() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleExportPDF = async () => {
-    setExporting(true);
+  // const handleExportPDF = async () => {
+  //   setExporting(true);
 
-    if (isLoading) return;
+  //   if (isLoading) return;
 
-    try {
-      exportToPDF(table, {
-        title: `Cana Circuit Event Logs`,
-        filename: `Cana Circuit Event Logs.pdf`,
-      });
+  //   try {
+  //     exportToPDF(table, {
+  //       title: `Cana Circuit Event Logs`,
+  //       filename: `Cana Circuit Event Logs.pdf`,
+  //     });
 
-      toast.success("PDF exported successfully");
-    } catch (error) {
-      console.log("Error exporting PDF:", error);
-      toast.error("Error exporting PDF");
-    } finally {
-      setExporting(false);
-    }
-  };
+  //     toast.success("PDF exported successfully");
+  //   } catch (error) {
+  //     console.log("Error exporting PDF:", error);
+  //     toast.error("Error exporting PDF");
+  //   } finally {
+  //     setExporting(false);
+  //   }
+  // };
+
   if (isError) {
     return (
       <div className="p-4 text-sm text-red-500">Error: {error.message}</div>
@@ -146,14 +145,14 @@ function ReportsTable() {
         <CardTitle className="ml-90  text-xl text-red-900 dark:text-yellow-500">
           Log Events for All Churches
         </CardTitle>
-        <Button
+        {/* <Button
           onClick={handleExportPDF}
           variant={"ghost"}
           className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
         >
           <Download className="mr-1 h-2.5 w-2.5 " />
           {exporting ? "Exporting..." : "Export "}
-        </Button>
+        </Button> */}
       </CardHeader>
       <CardContent className="mt-5">
         <Table>
