@@ -49,6 +49,7 @@ export interface CertificateRequest {
   member_id: string;
   date_of_birth: string;
   created_at?: string;
+  updated_at?: string;
   church_id?: string;
   status?: "Pending" | "Declined" | "Completed";
   Church?: {

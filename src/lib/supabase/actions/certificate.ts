@@ -80,7 +80,7 @@ export async function GetReqCertificate() {
 
     const { data, error } = await supabase
       .from("req_certificate")
-      .select("*, Church:church_id(brgy)")
+      .select("*")
       .eq("church_id", admin.church_id)
       .eq("status", "Pending")
       .order("created_at", { ascending: false });
@@ -320,6 +320,31 @@ export async function GetReqCertCount() {
     return {
       success: false,
       count: 0,
+    };
+  }
+}
+
+export async function GetReqCertificateByUserID(user_id: string) {
+  try {
+    const { data, error } = await supabase
+      .from("req_certificate")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      message: "Requests fetched successfully",
+      data,
+    };
+  } catch (error) {
+    console.error("Error in get req certificate by user ID:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve certificate requests  history",
+      data: [],
     };
   }
 }
