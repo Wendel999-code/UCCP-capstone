@@ -22,7 +22,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import { ArrowRight, File, Home, Menu, UserIcon } from "lucide-react";
+import { ArrowRight, File, History, Home, Menu, UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -39,6 +39,11 @@ const navItems = [
     href: "/member/dashboard/request",
     label: "Certificates",
     icon: <File className="h-4 w-4" />,
+  },
+  {
+    href: "/member/dashboard/history",
+    label: "History",
+    icon: <History className="h-4 w-4" />,
   },
 ];
 const Nav = () => {

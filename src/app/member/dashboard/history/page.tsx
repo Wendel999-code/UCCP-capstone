@@ -52,7 +52,7 @@ const RequestHistoryPage = () => {
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
               Request History
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mt-1">
+            <p className="text-gray-600 text-xs md:text-md dark:text-gray-400 mt-1">
               Track all your certificate requests and their current status
             </p>
           </div>

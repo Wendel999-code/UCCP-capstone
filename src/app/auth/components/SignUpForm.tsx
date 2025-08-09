@@ -294,7 +294,7 @@ export default function SignupForm() {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Mail
-                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
+                    className={`absolute z-10 left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
                       emailFocused ? "text-emerald-500" : "text-gray-400"
                     }`}
                   />
@@ -332,7 +332,7 @@ export default function SignupForm() {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Lock
-                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
+                    className={`absolute z-10 left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
                       passwordFocused ? "text-emerald-500" : "text-gray-400"
                     }`}
                   />
@@ -408,7 +408,7 @@ export default function SignupForm() {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Shield
-                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
+                    className={`absolute z-10 left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${
                       confirmFocused ? "text-emerald-500" : "text-gray-400"
                     }`}
                   />

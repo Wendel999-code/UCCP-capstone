@@ -16,6 +16,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { clsx } from "clsx";
 
 interface RequestHistoryProps {
   userID: string;
@@ -161,10 +162,10 @@ const RequestHistory = ({ userID }: RequestHistoryProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-6">
-        <FileText className="h-5 w-5 text-amber-600" />
+        {/* <FileText className="h-5 w-5 text-amber-600" />
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
           Request History
-        </h2>
+        </h2> */}
         <Badge variant="secondary" className="ml-auto text-xs">
           {requests.length} {requests.length === 1 ? "request" : "requests"}
         </Badge>
@@ -187,7 +188,7 @@ const RequestHistory = ({ userID }: RequestHistoryProps) => {
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                    <CardTitle className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                       Certificate Request #{request.id.slice(-6)}
                     </CardTitle>
                     <Badge
@@ -203,7 +204,7 @@ const RequestHistory = ({ userID }: RequestHistoryProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                       <Calendar className="h-4 w-4" />
-                      <span>
+                      <span className="text-xs md:text-md">
                         Submitted: {formatDate(request?.created_at ?? "")}
                       </span>
                     </div>
@@ -220,20 +221,20 @@ const RequestHistory = ({ userID }: RequestHistoryProps) => {
                   </div>
 
                   <div className="pt-2 border-t border-amber-200/50 dark:border-amber-800/30">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-2 gap-18  text-sm">
                       <div>
-                        <span className="text-gray-500 dark:text-gray-400">
+                        <span className="text-gray-500 text-xs md:text-md dark:text-gray-400">
                           Name:
                         </span>
-                        <p className="font-medium text-gray-800 dark:text-gray-200">
+                        <p className="font-medium text-xs md:text-md text-gray-800 dark:text-gray-200">
                           {request.firstName} {request.lastName}
                         </p>
                       </div>
                       <div>
-                        <span className="text-gray-500 dark:text-gray-400">
+                        <span className="text-gray-500 text-xs md:text-md dark:text-gray-400">
                           Member ID:
                         </span>
-                        <p className="font-medium text-gray-800 dark:text-gray-200">
+                        <p className="font-medium text-gray-800 text-xs md:text-md dark:text-gray-200">
                           {request.member_id}
                         </p>
                       </div>

@@ -10,19 +10,20 @@ const CertificatePreview = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6 }}
       className="
-        bg-white
-        p-6
-        rounded-xl
-        h-[600px]
-        w-full
-        max-w-[500px]
-        aspect-[0.707]
-        flex flex-col justify-between
-        border-2 border-amber-200
-        shadow-2xl
-        relative
-        overflow-hidden
-      "
+      bg-white
+      p-6
+      rounded-xl
+      w-full
+      max-w-[500px]
+      flex flex-col justify-between
+      border-2 border-amber-200
+      shadow-2xl
+      relative
+      overflow-hidden
+      sm:aspect-[0.707] sm:h-[600px]
+      h-auto
+    "
+    
       style={{ aspectRatio: "1 / 1.414" }}
     >
       {/* Background decoration */}

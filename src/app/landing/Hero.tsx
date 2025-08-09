@@ -136,7 +136,7 @@ function Hero() {
 
             <motion.p
               variants={itemVariants}
-              className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
+              className="text-md md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
             >
               Join us in our spiritual journey as we transform lives through
               faith, fellowship, and the power of God's word. Experience the
@@ -151,15 +151,32 @@ function Hero() {
           >
             <Button
               asChild
-              className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white px-8 py-6 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
+              className="relative overflow-hidden bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white px-8 py-6 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
             >
-              <Link href="/applications">Join Our Circuit</Link>
+              <Link
+                href="/applications"
+                className="relative inline-flex items-center justify-center"
+              >
+                <span className="relative z-10">Join Our Circuit</span>
+                <motion.span
+                  aria-hidden
+                  initial={{ x: "-120%", opacity: 0 }}
+                  animate={{ x: "120%", opacity: [0, 0.4, 0] }}
+                  transition={{
+                    duration: 1.8,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 0.3,
+                  }}
+                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent mix-blend-screen"
+                />
+              </Link>
             </Button>
 
             <Visits />
           </motion.div>
 
-          {/* Location Tags with Glow Effect */}
+          {/* Location Tags with Glassy Style + Continuous Shimmer Sweep */}
           <motion.div
             variants={containerVariants}
             className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto pt-8"
@@ -175,9 +192,26 @@ function Hero() {
                   transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative px-4 py-1.5 rounded-xl text-white font-medium text-xs md:text-sm bg-red-600 shadow-[0_0_10px_rgba(255,100,100,0.6)] hover:shadow-[0_0_14px_rgba(255,120,120,0.9)] transition-all duration-300 transform  border border-white/10"
+                className={`relative overflow-hidden px-4 py-1.5 rounded-xl text-white font-medium text-xs md:text-sm transition-all duration-300 transform 
+                  backdrop-blur-sm bg-white/10 dark:bg-white/5 
+                  border border-amber-500/30 dark:border-amber-400/20 
+                  shadow-[0_0_8px_rgba(251,191,36,0.25)] hover:shadow-[0_0_12px_rgba(251,146,60,0.45)]`}
               >
                 <span className="relative z-10">{location}</span>
+                <motion.div
+                  initial={{ x: "-120%", opacity: 0 }}
+                  animate={{ x: "120%", opacity: [0, 0.35, 0] }}
+                  transition={{
+                    duration: 2.6,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 0.6,
+                    delay: index * 0.12,
+                  }}
+                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 
+                    bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-400/20 to-transparent 
+                    mix-blend-screen"
+                />
               </motion.div>
             ))}
           </motion.div>

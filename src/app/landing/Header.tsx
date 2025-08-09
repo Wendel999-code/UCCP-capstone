@@ -115,7 +115,7 @@ function Header() {
               transition={{ delay: index * 0.1, duration: 0.5 }}
             >
               <Link
-                href={label === "Home" ? "/" : `#${slug}`}
+                href={label === "Home" ? "/" : `/#${slug}`}
                 className={`
                   group relative px-4 py-2 rounded-xl font-medium transition-all duration-300
                   
@@ -249,7 +249,7 @@ function Header() {
                     transition={{ delay: index * 0.1, duration: 0.3 }}
                   >
                     <Link
-                      href={label === "Home" ? "/" : `#${slug}`}
+                      href={label === "Home" ? "/" : `/#${slug}`}
                       onClick={() => setOpen(false)}
                       className="group flex items-center gap-3 p-4 rounded-xl hover:bg-amber-100/50 dark:hover:bg-amber-900/30 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 transition-all duration-300"
                     >
