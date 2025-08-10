@@ -158,17 +158,41 @@ function Hero() {
                 className="relative inline-flex items-center justify-center"
               >
                 <span className="relative z-10">Join Our Circuit</span>
-                <motion.span
+                {/* Enhanced Shimmer Effect for Button */}
+                <motion.div
+                  aria-hidden
+                  initial={{ x: "-120%", opacity: 0 }}
+                  animate={{ x: "120%", opacity: [0, 0.8, 0] }}
+                  transition={{
+                    duration: 2.2,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 0.8,
+                  }}
+                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 
+                    bg-gradient-to-r from-transparent 
+                    via-white/60 dark:via-white/40 
+                    to-transparent 
+                    mix-blend-screen
+                    shadow-[0_0_20px_rgba(255,255,255,0.6)] dark:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                />
+                {/* Secondary shimmer for extra visibility */}
+                <motion.div
                   aria-hidden
                   initial={{ x: "-120%", opacity: 0 }}
                   animate={{ x: "120%", opacity: [0, 0.4, 0] }}
                   transition={{
-                    duration: 1.8,
+                    duration: 2.2,
                     ease: "easeInOut",
                     repeat: Infinity,
-                    repeatDelay: 0.3,
+                    repeatDelay: 0.8,
+                    delay: 0.3,
                   }}
-                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent mix-blend-screen"
+                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/3 
+                    bg-gradient-to-r from-transparent 
+                    via-amber-200/50 dark:via-amber-300/30 
+                    to-transparent 
+                    mix-blend-overlay"
                 />
               </Link>
             </Button>
@@ -176,10 +200,10 @@ function Hero() {
             <Visits />
           </motion.div>
 
-          {/* Location Tags with Glassy Style + Continuous Shimmer Sweep */}
+          {/* Enhanced Location Tags with Glassy Style + Continuous Shimmer Sweep */}
           <motion.div
             variants={containerVariants}
-            className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto pt-8"
+            className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto pt-8"
           >
             {locations.map((location, index) => (
               <motion.div
@@ -192,25 +216,65 @@ function Hero() {
                   transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
                 whileTap={{ scale: 0.95 }}
-                className={`relative overflow-hidden px-4 py-1.5 rounded-xl text-white font-medium text-xs md:text-sm transition-all duration-300 transform 
-                  backdrop-blur-sm bg-white/10 dark:bg-white/5 
-                  border border-amber-500/30 dark:border-amber-400/20 
-                  shadow-[0_0_8px_rgba(251,191,36,0.25)] hover:shadow-[0_0_12px_rgba(251,146,60,0.45)]`}
+                className={`relative overflow-hidden px-4 py-2 rounded-xl text-white font-medium text-xs md:text-sm transition-all duration-300 transform 
+                  backdrop-blur-md bg-white/15 dark:bg-white/8 
+                  border border-amber-500/40 dark:border-amber-400/30 
+                  shadow-[0_0_12px_rgba(251,191,36,0.3)] hover:shadow-[0_0_20px_rgba(251,146,60,0.5)]
+                  hover:bg-white/20 dark:hover:bg-white/12`}
               >
-                <span className="relative z-10">{location}</span>
+                <span className="relative z-10 text-red-900 dark:text-white">{location}</span>
+
+                {/* Primary Shimmer Effect */}
                 <motion.div
                   initial={{ x: "-120%", opacity: 0 }}
-                  animate={{ x: "120%", opacity: [0, 0.35, 0] }}
+                  animate={{ x: "120%", opacity: [0, 0.9, 0] }}
                   transition={{
-                    duration: 2.6,
+                    duration: 2.8,
                     ease: "easeInOut",
                     repeat: Infinity,
-                    repeatDelay: 0.6,
-                    delay: index * 0.12,
+                    repeatDelay: 1.2,
+                    delay: index * 0.15,
                   }}
                   className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 
-                    bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-400/20 to-transparent 
-                    mix-blend-screen"
+                    bg-gradient-to-r from-transparent 
+                    via-amber-200/70 dark:via-amber-300/50 
+                    to-transparent 
+                    mix-blend-screen
+                    shadow-[0_0_15px_rgba(251,191,36,0.6)] dark:shadow-[0_0_15px_rgba(251,191,36,0.4)]"
+                />
+
+                {/* Secondary Shimmer for Enhanced Visibility */}
+                <motion.div
+                  initial={{ x: "-120%", opacity: 0 }}
+                  animate={{ x: "120%", opacity: [0, 0.6, 0] }}
+                  transition={{
+                    duration: 2.8,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 1.2,
+                    delay: index * 0.15 + 0.4,
+                  }}
+                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/3 
+                    bg-gradient-to-r from-transparent 
+                    via-white/50 dark:via-white/30 
+                    to-transparent 
+                    mix-blend-overlay"
+                />
+
+                {/* Subtle Glow Effect */}
+                <motion.div
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 0.2,
+                  }}
+                  className="absolute inset-0 rounded-xl 
+                    bg-gradient-to-r from-amber-400/10 via-transparent to-orange-400/10 
+                    dark:from-amber-400/5 dark:via-transparent dark:to-orange-400/5"
                 />
               </motion.div>
             ))}

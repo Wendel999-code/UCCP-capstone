@@ -9,7 +9,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex  min-h-screen w-full">
-      <main className="flex-1 rounded-md px-4 py-6 lg:px-6 lg:py-8 bg-muted/50 overflow-y-auto">
+      <main className="flex-1 rounded-md px-4 py-6 lg:px-6 lg:py-8 bg-muted/50 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-600 hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full">
         {/* Header */}
         <div className="mb-6 flex flex-col items-center text-center space-y-2">
           {isLoading ? (

@@ -787,3 +787,45 @@ export async function GetAllMemberPerChurchCount() {
     };
   }
 }
+
+export async function LinkMember(memberID: string) {
+  try {
+    if (!memberID) {
+      return {
+        success: false,
+        message: "Member ID is required",
+        data: null,
+      };
+    }
+
+    const { data: member, error } = await supabase
+      .from("member")
+      .select("*,  Church:church_id(brgy)")
+      .eq("member_id", memberID)
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        return {
+          success: false,
+          message: "Member not found with the provided Member ID",
+          data: null,
+        };
+      }
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: "Member found successfully",
+      data: member,
+    };
+  } catch (error) {
+    console.error("Error in LinkMember:", error);
+    return {
+      success: false,
+      message: "Failed to retrieve member details in LinkMember",
+      data: null,
+    };
+  }
+}

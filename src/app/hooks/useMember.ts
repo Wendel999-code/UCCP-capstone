@@ -13,6 +13,7 @@ import {
   GetMemberByID,
   GetMemberByIDBySuperAdmin,
   GetPendingApplication,
+  LinkMember,
   UpdateMemberByID,
 } from "@/lib/supabase/actions/member";
 import {
@@ -269,4 +270,19 @@ export const useCountMemPerChurchAdmin = () =>
 
       return count;
     },
+  });
+
+export const useLinkMember = (memberID: string, enabled: boolean = false) =>
+  useQuery<Member>({
+    queryKey: ["linked-member", memberID],
+    queryFn: async () => {
+      const res = await LinkMember(memberID);
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+    enabled: enabled && !!memberID,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   });

@@ -127,23 +127,91 @@ html {
   scrollbar-width: thin;
 }
 
-/* For Chrome, Edge, and Safari */
+/* Enhanced Modern Scrollbars */
 ::-webkit-scrollbar {
-  width: 0.5px; /* adjust as needed */
+  width: 6px; /* Thin scrollbar */
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* or any fallback color */
+  background: transparent;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(rgb(61, 2, 2), rgb(146, 146, 32));
-  border-radius: 6px;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #d97706, #dc2626);
+  transform: scale(1.1);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(135deg, #b45309, #b91c1c);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* For Firefox */
 html {
-  scrollbar-width:0.5px;
-  scrollbar-color: rgb(59, 2, 2) rgb(63, 63, 5); /* fallback, gradient is not fully supported in Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b transparent;
+}
+
+/* Custom Scrollbar Utility Classes */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-amber-300::-webkit-scrollbar-thumb {
+  background: #fcd34d;
+}
+
+.scrollbar-thumb-amber-400::-webkit-scrollbar-thumb {
+  background: #fbbf24;
+}
+
+.scrollbar-thumb-amber-500::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+}
+
+.scrollbar-thumb-amber-600::-webkit-scrollbar-thumb {
+  background: #d97706;
+}
+
+.scrollbar-thumb-rounded-full::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+}
+
+/* Dark mode scrollbar variants */
+.dark .scrollbar-thumb-amber-300::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+}
+
+.dark .scrollbar-thumb-amber-400::-webkit-scrollbar-thumb {
+  background: #d97706;
+}
+
+.dark .scrollbar-thumb-amber-500::-webkit-scrollbar-thumb {
+  background: #b45309;
+}
+
+.dark .scrollbar-thumb-amber-600::-webkit-scrollbar-thumb {
+  background: #92400e;
 }
 
