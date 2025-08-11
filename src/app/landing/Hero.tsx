@@ -7,18 +7,6 @@ import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 
-const locations = [
-  "Palanit",
-  "San Juan",
-  "Salvacion",
-  "Alegria",
-  "San Isidro",
-  "Victoria",
-  "Allen",
-  "Lipata",
-  "Cabacungan",
-];
-
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -198,86 +186,6 @@ function Hero() {
             </Button>
 
             <Visits />
-          </motion.div>
-
-          {/* Enhanced Location Tags with Glassy Style + Continuous Shimmer Sweep */}
-          <motion.div
-            variants={containerVariants}
-            className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto pt-8"
-          >
-            {locations.map((location, index) => (
-              <motion.div
-                key={location}
-                variants={tagVariants}
-                custom={index}
-                whileHover={{
-                  scale: 1.05,
-                  y: -2,
-                  transition: { type: "spring", stiffness: 400, damping: 10 },
-                }}
-                whileTap={{ scale: 0.95 }}
-                className={`relative overflow-hidden px-4 py-2 rounded-xl text-white font-medium text-xs md:text-sm transition-all duration-300 transform 
-                  backdrop-blur-md bg-white/15 dark:bg-white/8 
-                  border border-amber-500/40 dark:border-amber-400/30 
-                  shadow-[0_0_12px_rgba(251,191,36,0.3)] hover:shadow-[0_0_20px_rgba(251,146,60,0.5)]
-                  hover:bg-white/20 dark:hover:bg-white/12`}
-              >
-                <span className="relative z-10 text-red-900 dark:text-white">{location}</span>
-
-                {/* Primary Shimmer Effect */}
-                <motion.div
-                  initial={{ x: "-120%", opacity: 0 }}
-                  animate={{ x: "120%", opacity: [0, 0.9, 0] }}
-                  transition={{
-                    duration: 2.8,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatDelay: 1.2,
-                    delay: index * 0.15,
-                  }}
-                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/2 
-                    bg-gradient-to-r from-transparent 
-                    via-amber-200/70 dark:via-amber-300/50 
-                    to-transparent 
-                    mix-blend-screen
-                    shadow-[0_0_15px_rgba(251,191,36,0.6)] dark:shadow-[0_0_15px_rgba(251,191,36,0.4)]"
-                />
-
-                {/* Secondary Shimmer for Enhanced Visibility */}
-                <motion.div
-                  initial={{ x: "-120%", opacity: 0 }}
-                  animate={{ x: "120%", opacity: [0, 0.6, 0] }}
-                  transition={{
-                    duration: 2.8,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatDelay: 1.2,
-                    delay: index * 0.15 + 0.4,
-                  }}
-                  className="pointer-events-none absolute inset-y-0 -left-1 w-1/3 
-                    bg-gradient-to-r from-transparent 
-                    via-white/50 dark:via-white/30 
-                    to-transparent 
-                    mix-blend-overlay"
-                />
-
-                {/* Subtle Glow Effect */}
-                <motion.div
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 0.2,
-                  }}
-                  className="absolute inset-0 rounded-xl 
-                    bg-gradient-to-r from-amber-400/10 via-transparent to-orange-400/10 
-                    dark:from-amber-400/5 dark:via-transparent dark:to-orange-400/5"
-                />
-              </motion.div>
-            ))}
           </motion.div>
         </motion.div>
       </div>

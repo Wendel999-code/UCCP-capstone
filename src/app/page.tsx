@@ -8,6 +8,7 @@ import About from "./landing/About";
 import Footer from "./landing/Footer";
 import Header from "./landing/Header";
 import Hero from "./landing/Hero";
+import Locations from "./landing/Locations";
 import Testimonials from "./landing/Testimonials";
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
         <Hero />
         <About />
         <Testimonials />
+        <Locations />
       </main>
       <Footer />
     </div>
