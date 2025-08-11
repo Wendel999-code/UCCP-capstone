@@ -13,7 +13,7 @@ import {
 const locations = [
   {
     name: "Cabacungan",
-    x: 5,
+    x: 10,
     y: 85,
     href: "https://www.google.com/maps/place/Cabacungan,+Allen,+Northern+Samar/@12.5693817,124.2677816,15z/data=!3m1!4b1!4m6!3m5!1s0x33a0b3b7b3a6756b:0xcbcc69ec4a91e685!8m2!3d12.5685175!4d124.2782765!16s%2Fg%2F11fyxbs4qp?entry=ttu&g_ep=EgoyMDI1MDgwNi4wIKXMDSoASAFQAw%3D%3D",
   },
@@ -25,7 +25,7 @@ const locations = [
   },
   {
     name: "Allen",
-    x: 25,
+    x: 30,
     y: 80,
     href: "https://www.google.com/maps/dir/12.3200235,124.3449745/Allen+Northern+Samar,+Allen,+Northern+Samar/@12.4308132,124.2464458,13z/data=!4m17!1m7!3m6!1s0x33a74d004d8b21bd:0x5b8c04d1a7a5a563!2sAllen+Northern+Samar!8m2!3d12.5033683!4d124.287538!16s%2Fg%2F11wy7kv42f!4m8!1m1!4e1!1m5!1m1!1s0x33a74d004d8b21bd:0x5b8c04d1a7a5a563!2m2!1d124.287538!2d12.5033683?entry=ttu&g_ep=EgoyMDI1MDgwNi4wIKXMDSoASAFQAw%3D%3D",
   },
@@ -49,7 +49,7 @@ const locations = [
   },
   {
     name: "Salvacion",
-    x: 55,
+    x: 59,
     y: 40,
     href: "https://www.google.com/maps/place/Salvacion,+San+Isidro,+Northern+Samar/@12.3628452,124.3337067,15z/data=!3m1!4b1!4m6!3m5!1s0x33a75017b971dc79:0x67763894bccc3573!8m2!3d12.3627523!4d124.3463031!16s%2Fg%2F11fyxb62t8?entry=ttu&g_ep=EgoyMDI1MDgwNi4wIKXMDSoASAFQAw%3D%3D",
   },
@@ -102,12 +102,6 @@ const pinVariants = {
       damping: 20,
     },
   }),
-  hover: {
-    scale: 1.15,
-    y: -6,
-    transition: { type: "spring", stiffness: 400, damping: 15 },
-  },
-  tap: { scale: 0.95 },
 };
 
 const flippedLocations = locations.map((loc) => ({
@@ -208,7 +202,7 @@ function Locations() {
                 </svg>
 
                 {/* Central Header - Northern Samar Philippines */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-sm font-bold text-blue-700 dark:text-blue-300 bg-white/95 dark:bg-gray-800/95 px-4 py-2 rounded-full backdrop-blur-sm shadow-lg border border-blue-200/60 dark:border-blue-700/40">
+                <div className="absolute top-2 left-1/2 ml-3 transform -translate-x-1/2 md:text-sm text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-white/95 dark:bg-gray-800/95 px-2 py-1 md:px-4 md:py-2 rounded-full backdrop-blur-sm shadow-lg border border-blue-200/60 dark:border-blue-700/40">
                   Northern Samar Philippines
                 </div>
 
@@ -217,10 +211,6 @@ function Locations() {
                   {flippedLocations.map((location, index) => (
                     <motion.div
                       key={location.name}
-                      variants={pinVariants}
-                      custom={index}
-                      whileHover="hover"
-                      whileTap="tap"
                       className="absolute group cursor-pointer"
                       style={{
                         left: `${location.x}%`,
@@ -241,7 +231,7 @@ function Locations() {
                               <div className="absolute inset-0 w-8 h-8 bg-black/20 rounded-full blur-sm transform translate-y-1"></div>
 
                               {/* Pin Body */}
-                              <div className="relative w-8 h-8 bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-500 rounded-full shadow-lg border-2 border-white dark:border-gray-800 transform transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-amber-500/50">
+                              <div className="relative w-8 h-8 bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-500 rounded-full shadow-lg border-2 border-white dark:border-gray-800">
                                 <MapPin className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                               </div>
 
@@ -260,29 +250,24 @@ function Locations() {
                                 className="absolute inset-0 w-8 h-8 bg-amber-400 rounded-full"
                               />
 
-                              {/* Hover Glow Effect */}
-                              <motion.div
-                                initial={{ opacity: 0, scale: 1 }}
-                                whileHover={{ opacity: 1, scale: 1.5 }}
-                                transition={{ duration: 0.3 }}
-                                className="absolute inset-0 w-8 h-8 bg-amber-400/30 rounded-full blur-md"
-                              />
+                              {/* Subtle Glow Effect (always visible on desktop, no hover trigger) */}
+                              <div className="absolute inset-0 w-8 h-8 bg-amber-400/30 rounded-full blur-md" />
                             </div>
 
                             {/* Always show name on mobile */}
-                            <span className="block mt-1 text-[10px] font-medium text-gray-600 dark:text-gray400 sm:hidden">
+                            <span className="block mt-1 text-[10px] font-medium text-gray-600 dark:text-gray-400 sm:hidden">
                               {location.name}
                             </span>
                           </a>
                         </TooltipTrigger>
 
-                        {/* Tooltip still works for desktop */}
+                        {/* Tooltip for desktop */}
                         <TooltipContent
                           side="top"
                           className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 shadow-xl hidden sm:block"
                         >
                           <div className="text-center space-y-1">
-                            <p className="font-semibold text-gray-600 dark:text-gray-400  text-sm">
+                            <p className="font-semibold text-gray-600 dark:text-gray-400 text-sm">
                               {location.name}
                             </p>
                           </div>
