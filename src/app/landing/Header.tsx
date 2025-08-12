@@ -51,9 +51,6 @@ function Header() {
 
   return (
     <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
       className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-500
         ${
@@ -107,30 +104,50 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center ml-42 gap-8">
-          {navItems.map(({ label, slug, icon }, index) => (
+          {navItems.map(({ label, slug }, index) => (
             <motion.div
               key={label}
               initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  delay: index * 0.1,
+                  duration: 0.6,
+                  type: "spring",
+                  stiffness: 80,
+                  damping: 12,
+                },
+              }}
             >
               <Link
                 href={label === "Home" ? "/" : `/#${slug}`}
                 className={`
-                  group relative px-4 py-2 rounded-xl font-medium transition-all duration-300
-                  
-                  text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400
-                `}
+      group relative px-4 py-2 rounded-xl font-medium transition-all duration-300
+      text-gray-700 dark:text-gray-300
+      hover:text-amber-600 dark:hover:text-amber-400
+    `}
               >
-                <span className="flex items-center gap-2">
-                  {/* <span className="text-sm">{icon}</span> */}
+                <motion.span
+                  className="flex items-center gap-2"
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { type: "spring", stiffness: 300, damping: 20 },
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   {label}
-                </span>
+                </motion.span>
+
                 <motion.div
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ scaleX: 0, y: 4 }}
+                  whileHover={{
+                    scaleX: 1,
+                    y: 0,
+                    transition: { duration: 0.4, ease: "easeOut" },
+                  }}
+                  style={{ originX: 0 }}
                 />
               </Link>
             </motion.div>
@@ -241,7 +258,7 @@ function Header() {
 
               {/* Mobile Navigation */}
               <nav className="flex flex-col gap-2 mt-8">
-                {navItems.map(({ label, slug, icon }, index) => (
+                {navItems.map(({ label, slug }, index) => (
                   <motion.div
                     key={label}
                     initial={{ opacity: 0, x: -20 }}

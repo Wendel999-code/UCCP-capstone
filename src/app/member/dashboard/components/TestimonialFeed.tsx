@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Testimonial } from "@/global/type";
+import { FormattedDate } from "@/lib/utils/dateHelper";
 import { Calendar, Heart } from "lucide-react";
 import React from "react";
 
@@ -104,7 +105,10 @@ const TestimonialFeed: React.FC<TestimonialFeedProps> = ({
 
                   <div className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400 mt-1">
                     <Calendar className="h-3 w-3" />
-                    <span className="">Just now</span>
+                    <span className="">
+                      {" "}
+                      {FormattedDate(t?.created_at ?? "")}{" "}
+                    </span>
                   </div>
                 </div>
               </div>

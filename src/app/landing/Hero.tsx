@@ -97,7 +97,7 @@ function Hero() {
           className="text-center space-y-12"
         >
           {/* Title & Description */}
-          <div className="space-y-8 mt-32">
+          <div className="space-y-8 ">
             <motion.div variants={itemVariants} className="space-y-6">
               <motion.h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-gray-900 dark:text-white">
                 <span className="bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent">

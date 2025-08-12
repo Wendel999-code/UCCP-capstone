@@ -123,6 +123,7 @@ export type Testimonial = {
   id: string;
   fullName?: string;
   description?: string;
+  created_at?: string;
 };
 
 export type ActivityLogPayload = {
