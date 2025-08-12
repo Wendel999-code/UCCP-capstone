@@ -4,7 +4,7 @@ import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import { File, History, Home, Loader, LogOut } from "lucide-react";
+import { File, History, Home, Loader, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -59,6 +59,11 @@ const SideBar = () => {
             href: "/member/dashboard/history",
             label: "History",
             icon: <History className="h-4 w-4" />,
+          },
+          {
+            href: "/member/dashboard/linked-member",
+            label: "Linked Member",
+            icon: <Users className="h-4 w-4" />,
           },
           // {
           //   href: "/admin/dashboard/events",

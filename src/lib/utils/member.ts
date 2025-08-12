@@ -22,3 +22,16 @@ export function generateMemberID(brgy: string): string {
   const randomSuffix = Math.floor(100000 + Math.random() * 900000);
   return `${matched.abbr}-${randomSuffix}`;
 }
+
+// Extract first name from email for greeting
+export const getFirstName = (email: string) => {
+  return (
+    email.split("@")[0].split(".")[0].charAt(0).toUpperCase() +
+    email.split("@")[0].split(".")[0].slice(1)
+  );
+};
+
+// Get first letter of email for avatar placeholder
+export const getInitial = (email: string) => {
+  return email.charAt(0).toUpperCase();
+};

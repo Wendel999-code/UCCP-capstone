@@ -9,11 +9,11 @@ export default function DashboardLayout({
 }) {
   return (
     <MemberLayoutGuard>
-      <div className="flex flex-col ">
+      <div className="flex flex-col  ">
         <Nav />
         <div className="flex p-4 w-full">
           <Sidebar />
-          <main className="flex-1 ">{children}</main>
+          <main className="flex-1  ">{children}</main>
         </div>
       </div>
     </MemberLayoutGuard>
