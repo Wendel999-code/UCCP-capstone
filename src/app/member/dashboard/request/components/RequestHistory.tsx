@@ -4,6 +4,7 @@ import { useGetReqCertificateByMemberID } from "@/app/hooks/useCertificate";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import supabase from "@/lib/supabase/client";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import {
@@ -16,7 +17,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { clsx } from "clsx";
 
 interface RequestHistoryProps {
   userID: string;
@@ -25,8 +25,33 @@ interface RequestHistoryProps {
 const RequestHistory = ({ userID }: RequestHistoryProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data: requests, isLoading: isDataLoading } =
-    useGetReqCertificateByMemberID(userID);
+  const {
+    data: requests,
+    isLoading: isDataLoading,
+    refetch,
+  } = useGetReqCertificateByMemberID(userID);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("update-req-certificate")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "req_certificate",
+        },
+        () => {
+          refetch();
+        }
+      )
+
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [refetch]);
 
   useEffect(() => {
     // Simulate loading state for better UX

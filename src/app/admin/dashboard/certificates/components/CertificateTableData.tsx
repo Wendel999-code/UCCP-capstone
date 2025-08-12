@@ -45,7 +45,9 @@ export function CertificateTableData({
       },
       cell: ({ row }) => {
         return (
-          <div className="font-medium ml-3">{row.getValue("firstName")}</div>
+          <div className="font-medium ml-3 capitalize">
+            {row.getValue("firstName")}
+          </div>
         );
       },
     },
@@ -64,7 +66,7 @@ export function CertificateTableData({
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase ml-3 ">{row.getValue("lastName")}</div>
+        <div className="capitalize ml-3 ">{row.getValue("lastName")}</div>
       ),
     },
     {

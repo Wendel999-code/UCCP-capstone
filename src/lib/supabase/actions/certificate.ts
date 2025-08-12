@@ -103,7 +103,6 @@ export async function GetReqCertificate() {
 }
 
 //TODO fix SAME MEMBER ID when fetched not found
-
 export async function GetReqCertificateByID(
   reqID: string,
   member_id: string
@@ -172,6 +171,7 @@ export async function GetReqCertificateByID(
     };
 
     return { success: true, data: responseData, error: null };
+    
   } catch (error) {
     console.error("Unhandled error in GetReqCertificateByID:", error);
     return {
