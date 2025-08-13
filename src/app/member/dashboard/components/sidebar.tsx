@@ -49,6 +49,11 @@ const SideBar = () => {
             label: "Home",
             icon: <Home className="h-4 w-4" />,
           },
+          {
+            href: "/member/dashboard/linked-member",
+            label: "Linked Member",
+            icon: <Users className="h-4 w-4" />,
+          },
 
           {
             href: "/member/dashboard/request",
@@ -60,11 +65,7 @@ const SideBar = () => {
             label: "History",
             icon: <History className="h-4 w-4" />,
           },
-          {
-            href: "/member/dashboard/linked-member",
-            label: "Linked Member",
-            icon: <Users className="h-4 w-4" />,
-          },
+
           // {
           //   href: "/admin/dashboard/events",
           //   label: "Events",

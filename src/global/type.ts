@@ -124,6 +124,7 @@ export type Testimonial = {
   fullName?: string;
   description?: string;
   created_at?: string;
+  liked_user?: string[];
 };
 
 export type ActivityLogPayload = {

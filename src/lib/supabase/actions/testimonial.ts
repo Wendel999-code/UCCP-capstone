@@ -32,7 +32,7 @@ export async function GetTestimonial() {
   try {
     const { data, error } = await supabase
       .from("testimonial")
-      .select("id,fullName, description, created_at")
+      .select("id,fullName, description, created_at, liked_user")
       .order("created_at", { ascending: false });
 
     if (error) {
