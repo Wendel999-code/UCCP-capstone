@@ -177,7 +177,8 @@ export const useGetAllmemberBySuperAdmin = (
   search?: string,
   sortBy?: string,
   sortOrder: "asc" | "desc" = "asc",
-  category?: string
+  category?: string,
+  circuit?: string
 ) =>
   useQuery<MemberQueryResponse, Error>({
     queryKey: [
@@ -188,6 +189,7 @@ export const useGetAllmemberBySuperAdmin = (
       sortBy,
       sortOrder,
       category,
+      circuit,
     ],
     queryFn: async (): Promise<MemberQueryResponse> => {
       const res = await GetAllMembersBySuperAdmin(
@@ -196,7 +198,8 @@ export const useGetAllmemberBySuperAdmin = (
         search,
         sortBy,
         sortOrder,
-        category
+        category,
+        circuit
       );
       if (!res.success) throw new Error("Failed to fetch members");
       return { data: res.data, count: res.count ?? 0 };

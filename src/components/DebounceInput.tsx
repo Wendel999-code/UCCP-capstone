@@ -18,13 +18,13 @@ export default function DebouncedSearchInput({
   const debounced = useDebouncedCallback(
     async (inputValue: string) => {
       try {
-        await searchMember(inputValue);
+        searchMember(inputValue.toUpperCase());
       } catch (error) {
         console.error("Error searching member:", error);
       }
     },
     2000,
-    { maxWait: 5000 }
+    { maxWait: 3000 }
   );
 
   useEffect(() => {

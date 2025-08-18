@@ -57,7 +57,8 @@ export async function GetAllMembersBySuperAdmin(
   search?: string,
   sortBy?: string,
   sortOrder: "asc" | "desc" = "asc",
-  category?: string
+  category?: string,
+  circuit?: string
 ) {
   try {
     const admin = await SuperAdmin();
@@ -79,6 +80,10 @@ export async function GetAllMembersBySuperAdmin(
 
     if (category) {
       query = query.eq("category", category);
+    }
+
+    if (circuit) {
+      query = query.eq("church_id", circuit);
     }
 
     if (sortBy) {

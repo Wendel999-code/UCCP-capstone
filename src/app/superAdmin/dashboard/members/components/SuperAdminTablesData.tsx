@@ -76,7 +76,8 @@ export function SuperAdminTablesData() {
     globalFilter.search,
     sortBy,
     sortOrder,
-    globalFilter.category
+    globalFilter.category,
+    circuit
   );
 
   useEffect(() => {
