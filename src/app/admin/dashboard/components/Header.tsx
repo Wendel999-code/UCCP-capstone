@@ -12,18 +12,35 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LogoutV2 } from "@/lib/supabase/actions/authV2";
+import { getFirstName, getInitial } from "@/lib/utils/member";
 import { motion } from "framer-motion";
 import { User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const { user, loading } = useUser();
   const [profileOpen, setProfileOpen] = useState(false);
 
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const res = await LogoutV2();
+      toast[res.success ? "success" : "error"](res.message);
+
+      if (res.success) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("An unexpected error occurred during logout.");
+    }
+  };
 
   return (
     <motion.header
@@ -72,61 +89,107 @@ const Header = () => {
               <Skeleton className="h-7 w-7 rounded-full" />
             ) : user ? (
               <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+                {/* Small Profile Button */}
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="group h-7 border transition-colors hover:bg-yellow-500   border-yellow-500 dark:hover:border-yellow-500 px-3 text-xs cursor-pointer "
+                    className="group h-7 border border-yellow-500     
+                               px-3 text-xs transition-colors cursor-pointer"
                   >
-                    <UserIcon className=" h-4 w-5 hover:bg-yellow-500" />
+                    <UserIcon className="h-4 w-5 text-yellow-600 hover:border-yellow-500    dark:text-yellow-400 group-hover:text-white" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-xs rounded-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-red-900 dark:text-yellow-500 text-2xl">
+
+                {/* Profile Dialog Content */}
+                <DialogContent className="max-w-lg rounded-2xl p-8 bg-white dark:bg-gray-900 shadow-2xl border border-gray-100 dark:border-gray-700">
+                  <DialogHeader className="text-center">
+                    <DialogTitle className="text-2xl font-extrabold text-gray-900 dark:text-yellow-500">
                       Profile
                     </DialogTitle>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Manage your account details
+                    </p>
                   </DialogHeader>
-                  <div className="flex flex-col gap-4 text-start">
-                    <div className="flex flex-col gap-1">
-                      <label
-                        className="text-xs text-gray-800 dark:text-gray-400 "
-                        htmlFor="email"
-                      >
-                        Email
-                      </label>
-                      <Input
-                        id="email"
-                        value={user.email}
-                        disabled
-                        className=" text-black font-bold dark:text-white cursor-not-allowed border-amber-500  ring-amber-400 "
-                      />
-                    </div>
 
-                    <div className="flex flex-col gap-1">
-                      <label
-                        className="text-xs text-gray-800 dark:text-gray-400  "
-                        htmlFor="role"
-                      >
-                        Role
-                      </label>
-                      <Input
-                        id="role"
-                        value={user.role}
-                        disabled
-                        className=" text-black font-bold dark:text-white ring-amber-400 border-amber-500 cursor-not-allowed  "
-                      />
+                  {/* Avatar */}
+                  <div className="flex justify-center mb-4">
+                    <div
+                      className="w-20 h-20 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
+                                 flex items-center justify-center text-white text-3xl font-bold shadow-lg
+                                 ring-4 ring-amber-200 dark:ring-amber-700"
+                    >
+                      {getInitial(user.email)}
                     </div>
+                  </div>
 
-                    <div>
-                      <Button
-                        onClick={() => router.push("/auth/reset-password")}
-                        size={"sm"}
-                        className="cursor-pointer  text-black text-xs "
-                      >
-                        Change Password
-                      </Button>
+                  {/* Greeting */}
+                  <div className="text-center mb-6">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Hi, {getFirstName(user.email)}
+                    </p>
+                  </div>
+
+                  {/* Account Information */}
+                  <div className="space-y-4 mb-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-amber-200 dark:border-amber-800 pb-2">
+                      Account Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Email */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Email
+                        </label>
+                        <Input
+                          value={user.email}
+                          disabled
+                          className="text-gray-900 font-medium dark:text-white 
+                                     border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
+                                     cursor-not-allowed"
+                        />
+                      </div>
+
+                      {/* Role */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Role
+                        </label>
+                        <Input
+                          value={user.role}
+                          disabled
+                          className="text-gray-900 font-medium dark:text-white 
+                                     border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
+                                     cursor-not-allowed"
+                        />
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="space-y-3">
+                    <Button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        router.push("/auth/reset-password");
+                      }}
+                      className="w-full h-10 bg-gradient-to-r from-amber-500 to-orange-500 
+                                 hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl 
+                                 shadow-md hover:shadow-lg transition-all duration-300"
+                    >
+                      Change Password
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full h-10 bg-gradient-to-r from-red-500 to-red-600 
+                                 hover:from-red-600 hover:to-red-700 text-white border-0 rounded-xl 
+                                 shadow-md hover:shadow-lg transition-all duration-300"
+                    >
+                      Sign Out
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>
