@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -22,6 +23,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { getFirstName, getInitial } from "@/lib/utils/member";
+import { set } from "date-fns";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -66,9 +68,9 @@ const Nav = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const [profileOpen, setProfileOpen] = useState(false);
 
-  // Linked-member search and linking are now handled in /member/dashboard/linked-member
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -83,8 +85,6 @@ const Nav = () => {
       toast.error("An unexpected error occurred during logout.");
     }
   };
-
-  // Local unlink/list removed from nav; managed in dedicated page
 
   if (loading) return <Skeleton className="h-10 w-full" />;
 
@@ -152,16 +152,16 @@ const Nav = () => {
                     {/* Profile Dialog Content */}
                     <DialogContent className="max-w-lg rounded-2xl p-8 bg-white dark:bg-gray-900 shadow-2xl border border-gray-100 dark:border-gray-700">
                       <DialogHeader className="text-center">
-                        <DialogTitle className="text-2xl font-extrabold text-gray-900 dark:text-yellow-500">
+                        <DialogTitle className="text-2xl text-center font-extrabold text-gray-900 dark:text-yellow-500">
                           Profile
                         </DialogTitle>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-center text-gray-500 dark:text-gray-400">
                           Manage your account details
                         </p>
                       </DialogHeader>
 
                       {/* Avatar */}
-                      <div className="flex justify-center mb-4">
+                      <div className="flex justify-center mb-4 mt-3">
                         <div
                           className="w-20 h-20 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
                    flex items-center justify-center text-white text-3xl font-bold shadow-lg
@@ -180,10 +180,7 @@ const Nav = () => {
 
                       {/* Account Information */}
                       <div className="space-y-4 mb-6">
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-amber-200 dark:border-amber-800 pb-2">
-                          Account Information
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1  gap-4">
                           {/* Email */}
                           <div className="flex flex-col gap-1">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -192,7 +189,7 @@ const Nav = () => {
                             <Input
                               value={user.email}
                               disabled
-                              className="text-gray-900 font-medium dark:text-white 
+                              className="text-gray-900  dark:text-white 
                        border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
                        cursor-not-allowed"
                             />
@@ -206,7 +203,7 @@ const Nav = () => {
                             <Input
                               value={user.role}
                               disabled
-                              className="text-gray-900 font-medium dark:text-white 
+                              className="text-gray-900  dark:text-white 
                        border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
                        cursor-not-allowed"
                             />
@@ -215,7 +212,7 @@ const Nav = () => {
                       </div>
 
                       {/* Actions */}
-                      <div className="space-y-3">
+                      <div className="space-y-3 grid grid-cols-2 gap-2">
                         <Button
                           onClick={() => {
                             setProfileOpen(false);
@@ -247,8 +244,8 @@ const Nav = () => {
               )}
             </motion.div>
           </nav>
-          {/* mobile nav */}
-          <div className="md:hidden  flex">
+          {/* Mobile Sheet */}
+          <div className="md:hidden flex">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger className="mr-2">
                 <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
@@ -256,171 +253,48 @@ const Nav = () => {
               <SheetContent className="h-[400px] w-[280px] rounded-md">
                 <SheetHeader>
                   <SheetTitle className="text-center">
-                    {" "}
                     <p className="text-xl font-bold tracking-tighter">
                       <span className="text-red-900">CANA</span>{" "}
                       <span className="text-amber-500">Circuit</span>
                     </p>
                   </SheetTitle>
                 </SheetHeader>
+
                 <nav className="flex flex-col md:hidden gap-3 items-start ml-4">
-                  <>
-                    {navItems.map(({ href, label, icon }) => {
-                      const isActive = pathname === href;
-                      return (
-                        <Link
-                          key={href}
-                          href={href}
-                          onClick={() => setOpen(false)}
-                          className={cn(
-                            "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                            isActive
-                              ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
-                              : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
-                          )}
-                        >
-                          {icon}
-                          {label}
-                        </Link>
-                      );
-                    })}
-                  </>
+                  {navItems.map(({ href, label, icon }) => {
+                    const isActive = pathname === href;
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
+                            : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
+                        )}
+                      >
+                        {icon}
+                        {label}
+                      </Link>
+                    );
+                  })}
 
                   {loading ? (
                     <Skeleton className="h-5 w-12 rounded-md" />
                   ) : user ? (
-                    <>
-                      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
-                        {/* Small Profile Button */}
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="group h-7 px-3 transition-colors cursor-pointer text-gray-600 text-sm dark:text-gray-400"
-                          >
-                            <UserIcon className="h-4 w-5" /> Profile
-                          </Button>
-                        </DialogTrigger>
-
-                        {/* Profile Dialog Content */}
-                        <DialogContent className="max-w-lg w-full sm:rounded-2xl rounded-lg sm:p-8 p-5 bg-white dark:bg-gray-900 shadow-2xl border border-gray-100 dark:border-gray-700">
-                          <DialogHeader className="text-center mb-4">
-                            <DialogTitle className="sm:text-2xl text-xl font-extrabold text-gray-900 dark:text-yellow-500">
-                              Profile
-                            </DialogTitle>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              Manage your account details
-                            </p>
-                          </DialogHeader>
-
-                          {/* Avatar */}
-                          <motion.div
-                            className="flex justify-center mb-3"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 300,
-                              damping: 20,
-                            }}
-                          >
-                            <div
-                              className="sm:w-20 sm:h-20 w-16 h-16 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
-                   flex items-center justify-center text-white sm:text-3xl text-2xl font-bold shadow-lg
-                   ring-4 ring-amber-200 dark:ring-amber-700"
-                            >
-                              {getInitial(user.email)}
-                            </div>
-                          </motion.div>
-
-                          {/* Greeting */}
-                          <motion.div
-                            className="text-center mb-5"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.3 }}
-                          >
-                            <p className="sm:text-lg text-base font-semibold text-gray-900 dark:text-white">
-                              Hi, {getFirstName(user.email)}
-                            </p>
-                          </motion.div>
-
-                          {/* Account Information */}
-                          <motion.div
-                            className="space-y-4 mb-6"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.3 }}
-                          >
-                            <h3 className="sm:text-lg text-base font-semibold text-gray-800 dark:text-gray-200 border-b border-amber-200 dark:border-amber-800 pb-2">
-                              Account Information
-                            </h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {/* Email */}
-                              <div className="flex flex-col gap-1">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Email
-                                </label>
-                                <Input
-                                  value={user.email}
-                                  disabled
-                                  className="text-gray-900 font-medium dark:text-white 
-                       border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
-                       cursor-not-allowed text-sm"
-                                />
-                              </div>
-
-                              {/* Role */}
-                              <div className="flex flex-col gap-1">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Role
-                                </label>
-                                <Input
-                                  value={user.role}
-                                  disabled
-                                  className="text-gray-900 font-medium dark:text-white 
-                       border-amber-500 ring-amber-400 bg-amber-50/50 dark:bg-amber-950/20
-                       cursor-not-allowed text-sm"
-                                />
-                              </div>
-                            </div>
-                          </motion.div>
-
-                          {/* Actions */}
-                          <motion.div
-                            className="space-y-3"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.3 }}
-                          >
-                            <Button
-                              onClick={() => {
-                                setProfileOpen(false);
-                                router.push("/auth/reset-password");
-                              }}
-                              className="w-full h-10 bg-gradient-to-r from-amber-500 to-orange-500 
-                   hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl 
-                   shadow-md hover:shadow-lg transition-transform duration-300 
-                   hover:scale-105 active:scale-95 text-sm sm:text-base"
-                            >
-                              Change Password
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                setProfileOpen(false);
-                                handleLogout();
-                              }}
-                              className="w-full h-10 bg-gradient-to-r from-red-500 to-red-600 
-                   hover:from-red-600 hover:to-red-700 text-white border-0 rounded-xl 
-                   shadow-md hover:shadow-lg transition-transform duration-300 
-                   hover:scale-105 active:scale-95 text-sm sm:text-base"
-                            >
-                              Sign Out
-                            </Button>
-                          </motion.div>
-                        </DialogContent>
-                      </Dialog>
-                    </>
+                    <Button
+                      onClick={() => {
+                        setOpen(false); // close the sheet
+                        setMobileProfileOpen(true); // open the profile dialog
+                      }}
+                      variant="ghost"
+                      size="sm"
+                      className="group h-7 px-3 transition-colors cursor-pointer text-gray-600 text-sm dark:text-gray-400"
+                    >
+                      <UserIcon className="h-4 w-5" /> Profile
+                    </Button>
                   ) : (
                     <Link href="/auth/login">
                       <Button
@@ -437,6 +311,128 @@ const Nav = () => {
               </SheetContent>
             </Sheet>
           </div>
+          {/* Profile Dialog OUTSIDE of the Sheet */}
+          <Dialog open={mobileProfileOpen} onOpenChange={setMobileProfileOpen}>
+            <DialogContent
+              className="max-w-sm w-full sm:rounded-2xl rounded-lg 
+               p-4 bg-white dark:bg-gray-900 shadow-2xl 
+               border border-gray-100 dark:border-gray-700 
+               max-h-[90vh] overflow-y-auto"
+            >
+              <DialogHeader className="text-center mb-3">
+                <DialogTitle className="sm:text-xl text-lg font-extrabold text-gray-900 dark:text-yellow-500">
+                  Profile
+                </DialogTitle>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Manage your account details
+                </p>
+              </DialogHeader>
+
+              {/* Avatar + Greeting */}
+              {user && (
+                <>
+                  <motion.div
+                    className="flex justify-center mb-2"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <div
+                      className="w-16 h-16 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
+                       flex items-center justify-center text-white text-2xl font-bold shadow-md
+                       ring-2 ring-amber-200 dark:ring-amber-700"
+                    >
+                      {getInitial(user?.email)}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="text-center mb-3"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1, duration: 0.3 }}
+                  >
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">
+                      Hi, {getFirstName(user?.email)}
+                    </p>
+                  </motion.div>
+                </>
+              )}
+
+              <Separator className="my-3" />
+
+              {/* Account Info */}
+              <motion.div
+                className="space-y-3 mb-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
+                <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                  Account Information
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                      Email
+                    </label>
+                    <Input
+                      value={user?.email}
+                      disabled
+                      className="text-gray-900 dark:text-white border border-amber-500 
+                       bg-amber-50/50 dark:bg-amber-950/20 cursor-not-allowed text-xs truncate"
+                      title={user?.email}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                      Role
+                    </label>
+                    <Input
+                      value={user?.role}
+                      disabled
+                      className="text-gray-900 capitalize dark:text-white border border-amber-500 
+                       bg-amber-50/50 dark:bg-amber-950/20 cursor-not-allowed text-xs"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              <Separator className="my-3" />
+
+              {/* Actions */}
+              <motion.div
+                className="grid grid-cols-2 gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+              >
+                <Button
+                  onClick={() => {
+                    setMobileProfileOpen(false);
+                    router.push("/auth/reset-password");
+                  }}
+                  className="w-full h-9 bg-gradient-to-r from-amber-500 to-orange-500 
+                   hover:from-amber-600 hover:to-orange-600 text-white 
+                   rounded-lg shadow-md hover:shadow-lg text-xs"
+                >
+                  Change Password
+                </Button>
+                <Button
+                  onClick={() => {
+                    setMobileProfileOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full h-9 bg-gradient-to-r from-red-500 to-red-600 
+                   hover:from-red-600 hover:to-red-700 text-white 
+                   rounded-lg shadow-md hover:shadow-lg text-xs"
+                >
+                  Sign Out
+                </Button>
+              </motion.div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </motion.header>
