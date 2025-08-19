@@ -94,7 +94,7 @@ export default function LinkedMembersPage() {
   }
 
   return (
-    <div className="container mx-2  px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border rounded-md shadow-md  ">
+    <div className="container mx-2 min-h-screen px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border rounded-md shadow-md  ">
       <div className="mb-6 sm:mb-8">
         <motion.h1
           initial={{ opacity: 0, y: 10 }}

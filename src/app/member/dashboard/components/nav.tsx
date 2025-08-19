@@ -93,7 +93,7 @@ const Nav = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0   bg-white dark:bg-gray-900 shadow-sm    border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex md:h-20 h-15 items-center px-4 justify-between ">
         <Link href="/member/dashboard" className="group">
@@ -250,17 +250,25 @@ const Nav = () => {
               <SheetTrigger className="mr-2">
                 <Menu className="hover:text-amber-500 transition-colors cursor-pointer" />
               </SheetTrigger>
-              <SheetContent className="h-[400px] w-[280px] rounded-md">
+
+              <SheetContent
+                side="right"
+                className="h-[100vh] w-[280px] rounded-r-2xl p-4 
+      bg-white dark:bg-gray-900 shadow-2xl 
+      border-r border-gray-100 dark:border-gray-700"
+              >
+                {/* Brand Header */}
                 <SheetHeader>
-                  <SheetTitle className="text-center">
-                    <p className="text-xl font-bold tracking-tighter">
+                  <SheetTitle className="text-center border-b border-amber-200/30 dark:border-amber-800/30 pb-3">
+                    <p className="text-xl font-bold tracking-tight">
                       <span className="text-red-900">CANA</span>{" "}
                       <span className="text-amber-500">Circuit</span>
                     </p>
                   </SheetTitle>
                 </SheetHeader>
 
-                <nav className="flex flex-col md:hidden gap-3 items-start ml-4">
+                {/* Navigation */}
+                <nav className="flex flex-col gap-2 mt-6">
                   {navItems.map(({ href, label, icon }) => {
                     const isActive = pathname === href;
                     return (
@@ -269,10 +277,10 @@ const Nav = () => {
                         href={href}
                         onClick={() => setOpen(false)}
                         className={cn(
-                          "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                          "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg border-l-4 transition-all duration-200",
                           isActive
-                            ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
-                            : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
+                            ? "bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-amber-500"
+                            : "text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
                         )}
                       >
                         {icon}
@@ -281,29 +289,31 @@ const Nav = () => {
                     );
                   })}
 
+                  {/* Profile / Sign in */}
                   {loading ? (
-                    <Skeleton className="h-5 w-12 rounded-md" />
+                    <Skeleton className="h-5 w-20 rounded-md ml-2" />
                   ) : user ? (
-                    <Button
+                    <button
                       onClick={() => {
-                        setOpen(false); // close the sheet
-                        setMobileProfileOpen(true); // open the profile dialog
+                        setOpen(false);
+                        setMobileProfileOpen(true);
                       }}
-                      variant="ghost"
-                      size="sm"
-                      className="group h-7 px-3 transition-colors cursor-pointer text-gray-600 text-sm dark:text-gray-400"
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg border-l-4 transition-all duration-200 
+              text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
                     >
-                      <UserIcon className="h-4 w-5" /> Profile
-                    </Button>
+                      <UserIcon className="h-4 w-4" /> Profile
+                    </button>
                   ) : (
-                    <Link href="/auth/login">
+                    <Link href="/auth/login" className="mt-3">
                       <Button
                         variant="outline"
                         size="sm"
-                        className="group h-[30px] ml-4 dark:bg-amber-700 dark:hover:bg-amber-600 bg-amber-500 hover:bg-amber-600"
+                        className="w-full h-10 text-sm font-semibold 
+              bg-amber-500 hover:bg-amber-600 text-white 
+              dark:bg-amber-700 dark:hover:bg-amber-600 rounded-lg"
                       >
                         Sign in
-                        <ArrowRight className="ml-2 h-2 w-2 group-hover:translate-x-1" />
+                        <ArrowRight className="ml-2 h-3 w-3" />
                       </Button>
                     </Link>
                   )}
