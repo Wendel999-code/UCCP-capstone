@@ -482,7 +482,7 @@ export default function SignupForm() {
                 transition={{ duration: 0.6, delay: 0.8 }}
                 className="text-center"
               >
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600 text-[10px] dark:text-gray-300">
                   Already have an account?{" "}
                   <Link
                     href="/auth/login"
