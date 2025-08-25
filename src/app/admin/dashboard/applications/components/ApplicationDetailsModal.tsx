@@ -76,7 +76,7 @@ export default function ApplicationDetailsModal({
       {isFetching ? (
         <Skeleton className="h-9 mt-1 rounded-md" />
       ) : (
-        <Input readOnly value={String(value) ?? ""} />
+        <Input className="text-pretty" readOnly value={String(value) ?? ""} />
       )}
     </div>
   );
@@ -105,6 +105,10 @@ export default function ApplicationDetailsModal({
           <RenderField label="Age" value={member?.age ?? ""} />
           <RenderField label="Gender" value={member?.gender ?? ""} />
           <RenderField label="Category" value={member?.category ?? ""} />
+          <RenderField
+            label="Email Address"
+            value={member?.member_email ?? ""}
+          />
 
           <div className="sm:col-span-2">
             <Label className="text-xs text-gray-600">Address</Label>

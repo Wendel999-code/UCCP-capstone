@@ -39,7 +39,6 @@ export default function SignupForm() {
 
   const { loading: userLoading, user } = useRedirectIfAuthenticated();
 
-  // Animated background particles
   const [particles, setParticles] = useState<
     Array<{ id: number; x: number; y: number }>
   >([]);
@@ -80,6 +79,7 @@ export default function SignupForm() {
       return toast.error("Password must be at least 6 characters.");
 
     setLoading(true);
+
     try {
       const res = await SignUpV2(email, password);
       if (!res.success) return toast.error(res.message);

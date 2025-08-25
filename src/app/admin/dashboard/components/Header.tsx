@@ -113,7 +113,7 @@ const Header = () => {
                   </DialogHeader>
 
                   {/* Avatar */}
-                  <div className="flex justify-center mb-4">
+                  <div className="flex justify-center mb-4 mt-6">
                     <div
                       className="w-20 h-20 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
                                  flex items-center justify-center text-white text-3xl font-bold shadow-lg
@@ -167,7 +167,7 @@ const Header = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 grid grid-cols-2 gap-2 ">
                     <Button
                       onClick={() => {
                         setProfileOpen(false);

@@ -143,7 +143,7 @@ function ReportsTable() {
     <Card>
       <CardHeader className="flex items-center justify-between gap-2">
         <CardTitle className="ml-90  text-xl text-red-900 dark:text-yellow-500">
-          Log Events for All Churches
+          Operational Reports For All Churches
         </CardTitle>
         {/* <Button
           onClick={handleExportPDF}
