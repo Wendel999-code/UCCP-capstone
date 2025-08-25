@@ -155,7 +155,7 @@ export async function SignUpV2(email: string, password: string) {
       email,
       password,
       options: {
-        emailRedirectTo: "https://uccp.wndl.dev/",
+        emailRedirectTo: "https://uccp.wndl.dev/auth/login",
       },
     });
 
