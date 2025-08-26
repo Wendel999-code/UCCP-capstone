@@ -46,6 +46,8 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
     if (state?.success) {
       toast.success("Member added successfully!");
       queryClient.invalidateQueries({ queryKey: ["membersByChurchId"] });
+      queryClient.invalidateQueries({ queryKey: ["count-members-per-church"] });
+
       queryClient.invalidateQueries({ queryKey: ["membersBySuperAdmin"] });
       setOpen(false);
     } else if (state?.errors) {
@@ -63,7 +65,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="overflow-auto   max-h-[85vh] pr-2 ">
+        <div className="overflow-auto   max-h-[85vh]  ">
           <form
             action={formAction}
             className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"
@@ -230,12 +232,12 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
             <Button
               type="submit"
               disabled={pending}
-              className="sm:col-span-2 cursor-pointer mt-2 bg-amber-800 text-white hover:bg-amber-600"
+              className="sm:col-span-2 h-11 text-base font-semibold bg-gradient-to-r from-amber-500 to-orange-500 
+                     hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl 
+                     shadow-md hover:shadow-lg transition-all duration-300"
             >
               {pending ? (
-                <>
-                  <Loader className="animate-spin" />
-                </>
+                <Loader className="animate-spin h-5 w-5" />
               ) : (
                 "Add Member"
               )}

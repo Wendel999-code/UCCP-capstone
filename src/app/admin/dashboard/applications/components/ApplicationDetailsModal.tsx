@@ -177,15 +177,15 @@ export default function ApplicationDetailsModal({
         </div>
 
         {/* Approve Button */}
+
         <Button
           onClick={handleApprove}
           disabled={isPending}
-          className="w-full mt-4 text-medium text-white cursor-pointer bg-amber-800 hover:bg-amber-600"
+          className="h-11 text-base font-semibold bg-gradient-to-r from-amber-500 to-orange-500  hover:from-amber-600 hover:to-orange-600 text-white border-0 rounded-xl 
+            shadow-md hover:shadow-lg transition-all duration-300"
         >
           {isPending ? (
-            <span className="flex items-center gap-1">
-              <Loader className="h-3 w-3 animate-spin" />
-            </span>
+            <Loader className="animate-spin h-5 w-5" />
           ) : (
             "Approve Membership"
           )}

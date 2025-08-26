@@ -48,7 +48,7 @@ export default function ApplicationTable({
   const { table, columns } = ApplicationTableData({ pendingMember });
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full min-h-screen">
       <Card className="border border-gray-200 dark:border-gray-800 shadow-sm rounded-2xl dark:bg-black">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">

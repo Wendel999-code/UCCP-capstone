@@ -116,10 +116,13 @@ export default function MembersTable() {
             </div>
             <Button
               onClick={() => setAddModalOpen(true)}
-              size={"sm"}
-              className="h-7 px-3 text-[12px] cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black "
+              size="sm"
+              className="h-8 px-4 rounded-2xl flex items-center text-black font-semibold gap-2 text-sm font-medium 
+             bg-gradient-to-r from-yellow-400 to-yellow-500 
+             hover:from-yellow-500 hover:to-yellow-600 
+              shadow-sm hover:shadow-md transition-all"
             >
-              <Plus className="mr-1 h-3 w-3" />
+              <Plus className="h-4 w-4" />
               Add Member
             </Button>
           </div>
