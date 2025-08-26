@@ -156,7 +156,11 @@ function UserAccounts() {
   }
 
   return (
-    <Card>
+    <Card
+      className="border border-gray-200 dark:border-gray-800
+    shadow-xl bg-gradient-to-b from-white to-amber-50 
+    dark:from-gray-950 dark:to-gray-900"
+    >
       <CardHeader className="flex items-center justify-between gap-2">
         <CardTitle className="ml-90  text-xl text-red-900 dark:text-yellow-500">
           User Account Management

@@ -58,7 +58,7 @@ const AddMemberModal = ({ open, setOpen }: AddMemberModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-lg w-full max-h-[100vh] bg-amber-50 dark:bg-zinc-900 rounded-xl overflow-hidden">
+      <DialogContent className="max-w-lg w-full max-h-[100vh] bg-card rounded-xl overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-red-900  dark:text-amber-400 text-2xl font-bold text-center">
             Add New Member

@@ -104,8 +104,8 @@ export default function MembersTable() {
   };
 
   return (
-    <div className="space-y-2 w-full">
-      <Card className="dark:bg-black">
+    <div className="space-y-2 w-full bg-card">
+      <Card className="">
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>

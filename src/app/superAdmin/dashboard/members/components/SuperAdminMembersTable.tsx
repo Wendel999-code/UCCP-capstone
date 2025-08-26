@@ -100,7 +100,11 @@ export default function SuperAdminMembersTable() {
 
   return (
     <div className="space-y-2 w-full">
-      <Card className="dark:bg-black">
+      <Card
+        className="border border-gray-200 dark:border-gray-800
+    shadow-xl bg-gradient-to-b from-white to-amber-50 
+    dark:from-gray-950 dark:to-gray-900"
+      >
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>

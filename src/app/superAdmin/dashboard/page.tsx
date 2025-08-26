@@ -2,7 +2,7 @@ import { Analytics } from "./components/Analytics";
 
 const page = () => {
   return (
-    <div>
+    <div className="min-h-screen">
       <Analytics />
     </div>
   );

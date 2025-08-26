@@ -92,7 +92,7 @@ export default function ApplicationDetailsModal({
           <Eye className="text-white mr-2" /> View
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-full bg-amber-50 dark:bg-zinc-900 rounded-xl">
+      <DialogContent className="max-w-lg w-full bg-card">
         <DialogHeader>
           <DialogTitle className="text-red-900 dark:text-amber-400 text-2xl font-bold text-center">
             Cana Circuit Applicant

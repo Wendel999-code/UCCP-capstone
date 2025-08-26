@@ -63,14 +63,20 @@ const SuperAdminSideBar = () => {
     <motion.nav
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="hidden md:flex flex-col sticky top-20 px-4 py-5 w-56 h-fit max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-600 hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full bg-white dark:bg-muted border rounded-xl shadow-md space-y-6"
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="hidden md:flex flex-col sticky top-20 px-5 py-6 w-60 h-fit max-h-[85vh] 
+    overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-700 
+    hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-600 scrollbar-thumb-rounded-full
+    bg-gradient-to-b from-white to-amber-50 dark:from-gray-950 dark:to-gray-900/40 
+    border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg space-y-6"
     >
-      <h1 className="text-2xl font-bold text-center text-amber-900 dark:text-yellow-400">
+      {/* Sidebar Title */}
+      <h1 className="text-xl font-extrabold tracking-wide text-center text-amber-900 dark:text-amber-400">
         Cana Circuit
       </h1>
 
-      <ul className="space-y-1">
+      {/* Navigation Links */}
+      <ul className="space-y-1.5">
         {links.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
@@ -78,39 +84,32 @@ const SuperAdminSideBar = () => {
               <Link
                 href={href}
                 className={cn(
-                  "flex items-center justify-between w-full rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 w-full rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 border-l-4",
                   isActive
-                    ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
-                    : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
+                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100 border-amber-500 shadow-sm"
+                    : "text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:text-amber-100 dark:hover:border-amber-600"
                 )}
               >
-                <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4" />
-                  {label}
-                </div>
-                {/* {badge && (
-                  <span className="ml-auto h-5 w-5 text-xs font-semibold text-yellow-900 bg-yellow-200 dark:bg-yellow-400/80 dark:text-yellow-900 flex items-center justify-center rounded-full">
-                    {badge}
-                  </span>
-                )} */}
+                <Icon className="h-4 w-4 shrink-0" />
+                <span>{label}</span>
               </Link>
             </li>
           );
         })}
       </ul>
 
+      {/* Logout Button */}
       <Button
         onClick={handleLogout}
         size="sm"
-        className="mt-auto h-9 text-sm font-semibold bg-red-900 text-white hover:bg-red-500 cursor-pointer"
+        className="mt-auto h-10 text-sm font-semibold rounded-lg shadow-md
+      bg-red-600 hover:bg-red-500 dark:bg-red-800 dark:hover:bg-red-600 
+      text-white flex items-center justify-center transition-colors duration-200"
       >
         {isLoading ? (
-          <>
-            <Loader className="mr-2 h-4 w-4 animate-spin" />
-          </>
+          <Loader className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <>
-            {" "}
             Logout
             <LogOut className="ml-2 h-4 w-4" />
           </>

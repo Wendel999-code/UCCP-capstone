@@ -4,17 +4,7 @@ import { cn } from "@/app/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
 import { motion } from "framer-motion";
-import {
-  ChartAreaIcon,
-  File,
-  History,
-  Home,
-  Inbox,
-  Loader,
-  LogOut,
-  MessageCircle,
-  Users,
-} from "lucide-react";
+import { File, History, Home, Loader, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -46,10 +36,9 @@ const SideBar = () => {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="hidden sticky top-24 md:flex flex-col px-4 py-6 w-60 h-fit max-h-[85vh] overflow-y-auto 
-    scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-600 
-    hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full
-    rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 
-    bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-amber-900/10"
+             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-600 
+             hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full
+             bg-card"
     >
       {/* Sidebar Title */}
       <h1 className="text-lg font-bold tracking-wide text-center text-amber-900 dark:text-amber-400 pb-4 border-b border-amber-200/30 dark:border-amber-800/30">

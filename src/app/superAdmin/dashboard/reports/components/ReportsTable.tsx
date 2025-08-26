@@ -140,121 +140,144 @@ function ReportsTable() {
   }
 
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between gap-2">
-        <CardTitle className="ml-90  text-xl text-red-900 dark:text-yellow-500">
-          Operational Reports For All Churches
+    <Card
+      className="border border-gray-200 dark:border-gray-800
+    shadow-xl bg-gradient-to-b from-white to-amber-50 
+    dark:from-gray-950 dark:to-gray-900"
+    >
+      {/* Header */}
+      <CardHeader className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b pb-3">
+        <CardTitle className="text-lg sm:text-xl font-bold text-amber-900 dark:text-yellow-400 tracking-wide text-center sm:text-left">
+          Operational Reports for All Churches
         </CardTitle>
+
+        {/* Future Export Button (hidden for now) */}
         {/* <Button
-          onClick={handleExportPDF}
-          variant={"ghost"}
-          className="h-7 px-2 text-xs cursor-pointer border hover:text-red-900 hover:border-red-900 dark:hover:text-yellow-400  dark:hover:border-yellow-400 transition-all  "
-        >
-          <Download className="mr-1 h-2.5 w-2.5 " />
-          {exporting ? "Exporting..." : "Export "}
-        </Button> */}
+      onClick={handleExportPDF}
+      variant="ghost"
+      className="h-8 px-3 text-xs cursor-pointer border rounded-lg 
+                 hover:text-amber-900 hover:border-amber-900 
+                 dark:hover:text-yellow-400 dark:hover:border-yellow-400 
+                 transition-all flex items-center gap-1"
+    >
+      <Download className="h-3.5 w-3.5" />
+      {exporting ? "Exporting..." : "Export"}
+    </Button> */}
       </CardHeader>
-      <CardContent className="mt-5">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="text-xs font-semibold text-amber-600"
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading
-              ? Array.from({ length: 10 }).map((_, i) => (
-                  <TableRow key={i}>
-                    {columns.map((_, j) => (
-                      <TableCell key={j}>
-                        <Skeleton className="h-4 w-full" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              : table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className="font-sans text-xs text-muted-foreground"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
 
-        <div className="flex items-center justify-between gap-2 py-4 flex-wrap">
-          <div className="flex-1 text-[12px] text-muted-foreground">
-            <div className="flex-1 text-[12px] text-muted-foreground">
-              Total Logs : {membersData?.count ?? 0}
+      {/* Content */}
+      <CardContent className="mt-4">
+        {/* Table */}
+        <div className="rounded-lg border overflow-hidden">
+          <Table>
+            <TableHeader className="bg-amber-100/50 dark:bg-zinc-800">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      className="text-[11px] sm:text-xs font-semibold tracking-wide text-amber-700 dark:text-yellow-400 px-3 py-2"
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {isLoading
+                ? Array.from({ length: 10 }).map((_, i) => (
+                    <TableRow key={i}>
+                      {columns.map((_, j) => (
+                        <TableCell key={j} className="px-3 py-2">
+                          <Skeleton className="h-4 w-full rounded" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                : table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      className="hover:bg-amber-50/40 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="font-sans text-[11px] sm:text-xs text-gray-600 dark:text-gray-300 px-3 py-2"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Footer Controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-4 text-xs">
+          {/* Total Logs */}
+          <div className="text-muted-foreground">
+            Total Logs:{" "}
+            <span className="font-semibold text-amber-800 dark:text-yellow-300">
+              {membersData?.count ?? 0}
+            </span>
+          </div>
+
+          {/* Pagination + Rows per Page */}
+          <div className="flex items-center gap-4">
+            {/* Rows per page */}
+            <div className="flex items-center gap-2">
+              <p className="text-muted-foreground">Rows per page</p>
+              <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => table.setPageSize(Number(value))}
+              >
+                <SelectTrigger className="h-6 text-xs rounded-lg px-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                    <SelectItem
+                      key={pageSize}
+                      value={`${pageSize}`}
+                      className="text-xs"
+                    >
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </div>
 
-          {/* Rows per page */}
-          <div className="flex items-center gap-2">
-            <p className="text-[12px] font-medium text-muted-foreground">
-              Rows per page
-            </p>
-            <Select
-              value={`${table.getState().pagination.pageSize}`}
-              onValueChange={(value) => table.setPageSize(Number(value))}
-            >
-              <SelectTrigger className="h-5 text-[10px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <SelectItem
-                    key={pageSize}
-                    value={`${pageSize}`}
-                    className="text-[10px]"
-                  >
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Pagination controls */}
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="h-7 px-2 cursor-pointer disabled:cursor-not-allowed  border hover:border-red-900  dark:hover:border-yellow-400"
-            >
-              <ChevronLeft className="h-7 w-7" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="h-7 px-2 cursor-pointer border hover:border-red-900  dark:hover:border-yellow-400"
-            >
-              <ChevronRight className="h-7 w-7" />
-            </Button>
+            {/* Pagination controls */}
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="h-7 w-7 p-0 flex items-center justify-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:border-amber-800 dark:hover:border-yellow-400"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="h-7 w-7 p-0 flex items-center justify-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:border-amber-800 dark:hover:border-yellow-400"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>

@@ -11,10 +11,9 @@ const AdminDashboard = () => {
     <div className="flex min-h-screen w-full">
       <main
         className="flex-1 rounded-md px-4 py-6 lg:px-8 lg:py-10 
-        bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-amber-900/10 
         overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 
         dark:scrollbar-thumb-amber-600 hover:scrollbar-thumb-amber-400 
-        dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full shadow-inner"
+        dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full shadow-inner bg-card"
       >
         {/* Header */}
         <div className="mb-8 flex flex-col items-center text-center space-y-3 pb-6 border-b border-amber-200/30 dark:border-amber-800/30">

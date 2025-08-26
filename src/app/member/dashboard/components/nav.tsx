@@ -93,7 +93,7 @@ const Nav = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="sticky top-0   bg-white dark:bg-gray-900 shadow-sm   border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0  bg-white dark:bg-gray-900 shadow-sm   border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex md:h-20 h-15 items-center px-4 justify-between ">
         <Link href="/member/dashboard" className="group">

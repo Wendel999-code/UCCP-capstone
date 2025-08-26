@@ -51,10 +51,7 @@ function Analytics() {
   if (memberCount !== undefined) chartData[0].value = memberCount;
 
   return (
-    <Card
-      className="rounded-2xl shadow-xl border border-amber-200/40 dark:border-amber-800/30 
-      bg-white dark:bg-gray-900/80 backdrop-blur"
-    >
+    <Card className="">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg font-bold text-amber-900 dark:text-amber-400">
           Analytics

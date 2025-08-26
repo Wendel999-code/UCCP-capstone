@@ -49,7 +49,7 @@ const Header = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0  bg-white dark:bg-gray-900 shadow-sm   border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className=" flex h-18 items-center px-6 justify-between ">
         <Link href="/superAdmin/dashboard" className="group">
@@ -104,7 +104,11 @@ const Header = () => {
                 </DialogTrigger>
 
                 {/* Profile Dialog Content */}
-                <DialogContent className="max-w-lg rounded-2xl p-8 bg-white dark:bg-gray-900 shadow-2xl border border-gray-100 dark:border-gray-700">
+                <DialogContent
+                  className="max-w-lg border border-gray-200 dark:border-gray-800
+    shadow-xl bg-gradient-to-b from-white to-amber-50 
+    dark:from-gray-950 dark:to-gray-900"
+                >
                   <DialogHeader className="text-center">
                     <DialogTitle className="text-2xl font-extrabold text-gray-900 dark:text-yellow-500">
                       Profile

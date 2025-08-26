@@ -272,7 +272,7 @@ export default function LoginForm() {
                     onBlur={() => setEmailFocused(false)}
                     placeholder="you@example.com"
                     required
-                    className={`h-14 pl-12 pr-4 border-2 transition-all duration-200 rounded-xl text-gray-800 dark:text-white bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm ${
+                    className={`h-14 pl-12 pr-4 xs:placeholder:text-[10px] border-2 transition-all duration-200 rounded-xl text-gray-800 dark:text-white bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm ${
                       emailFocused
                         ? "border-amber-400 ring-2 ring-amber-400/20 shadow-lg"
                         : "border-gray-200 dark:border-gray-600 hover:border-amber-300 dark:hover:border-amber-400"
@@ -310,7 +310,7 @@ export default function LoginForm() {
                     onFocus={() => setPasswordFocused(true)}
                     onBlur={() => setPasswordFocused(false)}
                     required
-                    className={`h-14 pl-12 pr-12 border-2 transition-all duration-200 rounded-xl text-gray-800 dark:text-white bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm ${
+                    className={`h-14 pl-12 pr-12 border-2 xs:placeholder:text-[10px]  transition-all duration-200 rounded-xl text-gray-800 dark:text-white bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm ${
                       passwordFocused
                         ? "border-amber-400 ring-2 ring-amber-400/20 shadow-lg"
                         : "border-gray-200 dark:border-gray-600 hover:border-amber-300 dark:hover:border-amber-400"
@@ -371,7 +371,7 @@ export default function LoginForm() {
                 transition={{ duration: 0.6, delay: 0.7 }}
                 className="text-center"
               >
-                <p className="text-gray-600 text-[10px] dark:text-gray-300">
+                <p className="text-gray-600 xs:text-[10px] dark:text-gray-300">
                   Don't have an account?{" "}
                   <Link
                     href="/auth/signup"
