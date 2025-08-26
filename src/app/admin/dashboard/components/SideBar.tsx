@@ -15,9 +15,7 @@ import { toast } from "react-toastify";
 
 const SideBar = () => {
   const pathname = usePathname();
-
   const { data, isLoading, refetch } = useSidebarData();
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,29 +23,19 @@ const SideBar = () => {
       .channel("application-count & cert-count")
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "member",
-        },
+        { event: "*", schema: "public", table: "member" },
         () => {
           refetch();
         }
       )
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "req_certificate",
-        },
+        { event: "*", schema: "public", table: "req_certificate" },
         () => {
           refetch();
         }
       )
-
       .subscribe();
-
     return () => {
       channel.unsubscribe();
     };
@@ -57,7 +45,6 @@ const SideBar = () => {
     setLoading(true);
     try {
       const res = await LogoutV2();
-
       if (res.success) {
         toast.success("Logout successfully");
         window.location.href = "/";
@@ -74,17 +61,23 @@ const SideBar = () => {
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="hidden sticky top-20 md:grid px-4 py-5 w-56 h-fit max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 dark:scrollbar-thumb-amber-600 hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 scrollbar-thumb-rounded-full bg-white dark:bg-muted border rounded-xl shadow-md space-y-6"
+      className="hidden sticky top-20 md:flex flex-col px-4 py-6 w-60 h-fit max-h-[85vh] 
+        overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-amber-300 
+        dark:scrollbar-thumb-amber-600 hover:scrollbar-thumb-amber-400 dark:hover:scrollbar-thumb-amber-500 
+        scrollbar-thumb-rounded-full rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 
+        bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-amber-900/10"
     >
-      <h1 className="text-xl font-bold text-center text-amber-900 dark:text-yellow-400">
+      {/* Sidebar Title */}
+      <h1 className="text-lg font-bold tracking-wide text-center text-amber-900 dark:text-amber-400 pb-4 border-b border-amber-200/30 dark:border-amber-800/30">
         {isLoading ? (
           <Skeleton className="rounded-2xl bg-neutral-300 dark:bg-neutral-700 text-center w-[180px] h-[24px]" />
         ) : (
-          data?.church?.brgy
+          (data?.church?.brgy ?? "Admin Panel")
         )}
       </h1>
 
-      <ul className="space-y-1">
+      {/* Nav Items */}
+      <ul className="mt-4 space-y-1">
         {[
           {
             href: "/admin/dashboard",
@@ -101,7 +94,7 @@ const SideBar = () => {
             label: "Applications",
             icon: <UserCheck className="h-4 w-4" />,
             extra: (data?.pendingCount ?? 0) > 0 && (
-              <span className="ml-auto h-5 w-5 text-xs font-bold text-red-500">
+              <span className="ml-auto flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300">
                 {data?.pendingCount}
               </span>
             ),
@@ -111,28 +104,30 @@ const SideBar = () => {
             label: "Certificates",
             icon: <File className="h-4 w-4" />,
             extra: (data?.certCount ?? 0) > 0 && (
-              <span className="ml-auto h-5 w-5 text-xs font-bold text-red-500">
+              <span className="ml-auto flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300">
                 {data?.certCount}
               </span>
             ),
           },
         ].map(({ href, label, icon, extra }) => {
-          const isActive = pathname === href;
+          const isActive =
+            href === "/admin/dashboard"
+              ? pathname === "/admin/dashboard"
+              : pathname.startsWith(href);
+
           return (
             <li key={href}>
               <Link
                 href={href}
                 className={cn(
-                  "flex items-center justify-between w-full rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 border-l-4",
                   isActive
-                    ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-300/10 dark:text-yellow-300"
-                    : "text-muted-foreground hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-muted-foreground/10"
+                    ? "bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-amber-500"
+                    : "text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
                 )}
               >
-                <div className="flex items-center gap-2">
-                  {icon}
-                  {label}
-                </div>
+                {icon}
+                {label}
                 {extra}
               </Link>
             </li>
@@ -140,17 +135,19 @@ const SideBar = () => {
         })}
       </ul>
 
+      {/* Logout Button */}
       <Button
         disabled={loading}
         onClick={handleLogout}
         size="sm"
-        className="mt-auto disabled:cursor-not-allowed h-9 text-sm font-semibold bg-red-900 text-white hover:bg-red-500 cursor-pointer"
+        className="mt-6 w-full h-10 font-semibold rounded-lg shadow 
+          bg-red-600 hover:bg-red-500 text-white dark:bg-red-800 dark:hover:bg-red-600 
+          disabled:cursor-not-allowed"
       >
         {loading ? (
           <Loader className="animate-spin" />
         ) : (
           <>
-            {" "}
             <span>Logout</span>
             <LogOut className="ml-2 h-4 w-4" />
           </>

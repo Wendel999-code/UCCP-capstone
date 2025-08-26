@@ -31,7 +31,7 @@ function Certicates() {
   }, [refetch]);
 
   return (
-    <div>
+    <div className="min-h-screen ">
       <BaptismCertificateTable
         certificates={data || []}
         isLoading={isLoading}

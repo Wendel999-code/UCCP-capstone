@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Member } from "@/global/type";
 import {
@@ -14,23 +15,23 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
 import ApplicationAction from "./ApplicationAction";
-
 import { format } from "date-fns";
+import { cn } from "@/app/lib/utils";
 
 const getCategoryColor = (category: string) => {
   switch (category?.toUpperCase()) {
     case "UCM":
-      return " text-purple-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-purple-700";
     case "CWA":
-      return "text-pink-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-pink-700";
     case "CYAF":
-      return "text-blue-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-blue-700";
     case "CYF":
-      return " text-green-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-green-700";
     case "CHILDREN":
-      return " text-yellow-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-yellow-700";
     default:
-      return "text-gray-800 px-2 py-1 rounded-md font-medium w-auto";
+      return "text-gray-600";
   }
 };
 
@@ -39,7 +40,6 @@ export function ApplicationTableData({
 }: {
   pendingMember: Member[];
 }) {
-  
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -50,57 +50,51 @@ export function ApplicationTableData({
   const columns: ColumnDef<Member>[] = [
     {
       accessorKey: "firstName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 "
-          >
-            Firstname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <p className="font-medium ml-3 capitalize">{row.getValue("firstName")}</p>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 text-sm"
+        >
+          First Name
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <p className="font-medium ml-3  capitalize">
+          {row.getValue("firstName")}
+        </p>
+      ),
     },
     {
       accessorKey: "lastName",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Lastname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 text-sm"
+        >
+          Last Name
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      ),
       cell: ({ row }) => (
-        <p className="capitalize ml-3 ">{row.getValue("lastName")}</p>
+        <p className="capitalize ml-3">{row.getValue("lastName")}</p>
       ),
     },
     {
       accessorKey: "age",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Age
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => <p className="ml-3">{row.getValue("age")}</p>,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 text-sm"
+        >
+          Age
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      ),
+      cell: ({ row }) => <p>{row.getValue("age")}</p>,
     },
     {
       accessorKey: "date_of_birth",
@@ -108,10 +102,10 @@ export function ApplicationTableData({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-[12px] px-2"
+          className="h-8 text-sm"
         >
           Date of Birth
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-1 h-3 w-3" />
         </Button>
       ),
       cell: ({ row }) => {
@@ -126,13 +120,13 @@ export function ApplicationTableData({
             ? format(parsedDate, "MMMM d, yyyy")
             : "N/A";
 
-        return <p className="ml-3 text-[14px]">{formatted}</p>;
+        return <p className="text-sm">{formatted}</p>;
       },
     },
     {
       accessorKey: "gender",
       header: "Gender",
-      cell: ({ row }) => <div>{row.getValue("gender")}</div>,
+      cell: ({ row }) => <p className="capitalize">{row.getValue("gender")}</p>,
     },
     {
       accessorKey: "category",
@@ -140,9 +134,14 @@ export function ApplicationTableData({
       cell: ({ row }) => {
         const category = row.getValue("category") as string;
         return (
-          <p className={getCategoryColor(category)}>
-            {category?.toUpperCase() || "N/A"}
-          </p>
+          <span
+            className={cn(
+              "capitalize font-medium text-sm px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-900",
+              getCategoryColor(category)
+            )}
+          >
+            {category || "N/A"}
+          </span>
         );
       },
     },
@@ -152,51 +151,40 @@ export function ApplicationTableData({
       cell: ({ row }) => {
         const status = row.getValue("activeStatus") as string;
         return (
-          <p className="text-red-600">
+          <span
+            className={cn(
+              "text-sm font-medium",
+              status === "active" ? "text-green-600" : "text-red-600"
+            )}
+          >
             {status
               ? status.charAt(0).toUpperCase() + status.slice(1)
               : "Unknown"}
-          </p>
+          </span>
         );
       },
     },
-    {
-      accessorKey: "circuit",
-      header: "Local Church",
-      cell: ({ row }) => {
-        const circuit = row.original.Church?.brgy as string;
-        return <p className="text-amber-500"> {circuit}</p>;
-      },
-    },
-
     {
       accessorKey: "created_at",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
-          >
-            Applied Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 text-sm"
+        >
+          Applied Date
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("created_at"));
-        return <p className="text-xs ml-4">{date.toLocaleDateString()}</p>;
+        return <p className="text-sm">{date.toLocaleDateString()}</p>;
       },
     },
-
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => {
-        const member = row.original;
-
-        return <ApplicationAction memberID={member.id} />;
-      },
+      cell: ({ row }) => <ApplicationAction memberID={row.original.id} />,
     },
   ];
 

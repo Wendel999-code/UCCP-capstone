@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutV2 } from "@/lib/supabase/actions/authV2";
@@ -47,7 +48,7 @@ const Header = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0   bg-white dark:bg-gray-900 shadow-sm  border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className="flex h-18 items-center px-6 justify-between">
         <Link href="/admin/dashboard" className="group">

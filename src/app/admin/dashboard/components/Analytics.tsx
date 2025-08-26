@@ -27,9 +27,9 @@ import {
 } from "recharts";
 
 const chartData = [
-  { name: "Members", value: 0, fill: "#4ade80" },
-  { name: "Certificates", value: 0, fill: "#3b82f6" },
-  { name: "Visitors", value: 0, fill: "#facc15" },
+  { name: "Members", value: 0, fill: "#22c55e", labelColor: "#15803d" }, // green-500, label darker green
+  { name: "Certificates", value: 0, fill: "#3b82f6", labelColor: "#1e40af" }, // blue-500, label darker blue
+  { name: "Visitors", value: 0, fill: "#facc15", labelColor: "#ca8a04" }, // yellow-400, label darker yellow
 ];
 
 function Analytics() {
@@ -41,43 +41,43 @@ function Analytics() {
     isLoading,
     error,
   } = useCountCompletedReqCertificate();
-
-  if (completedCertificates !== undefined) {
+  if (completedCertificates !== undefined)
     chartData[1].value = completedCertificates;
-  }
 
   const { data: count } = useVisitCount();
-
-  if (count !== undefined) {
-    chartData[2].value = count;
-  }
+  if (count !== undefined) chartData[2].value = count;
 
   const { data: memberCount } = useCountMemPerChurchAdmin();
-
-  if (memberCount !== undefined) {
-    chartData[0].value = memberCount;
-  }
+  if (memberCount !== undefined) chartData[0].value = memberCount;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle> Analytics</CardTitle>
-        <CardDescription>
+    <Card
+      className="rounded-2xl shadow-xl border border-amber-200/40 dark:border-amber-800/30 
+      bg-white dark:bg-gray-900/80 backdrop-blur"
+    >
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-bold text-amber-900 dark:text-amber-400">
+          Analytics
+        </CardTitle>
+        <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
           Overview of members, certificates, and visits under your management.
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         {isLoading ? (
           <div className="grid grid-cols-8 gap-2 w-full h-60">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton
                 key={i}
-                className="w-full h-full rounded-sm animate-pulse"
+                className="w-full h-full rounded-md animate-pulse bg-amber-100/70 dark:bg-amber-900/20"
               />
             ))}
           </div>
         ) : error ? (
-          <p className="text-red-500">Error: {error.message}</p>
+          <p className="text-red-600 dark:text-red-400">
+            Error: {error.message}
+          </p>
         ) : (
           <div className="w-full overflow-x-auto">
             <ResponsiveContainer width="100%" height={300}>
@@ -89,7 +89,7 @@ function Analytics() {
                 <CartesianGrid
                   vertical={false}
                   strokeDasharray="3 3"
-                  stroke={isDark ? "#333" : "#ccc"}
+                  stroke={isDark ? "#444" : "#ddd"}
                 />
                 <XAxis
                   dataKey="name"
@@ -97,57 +97,73 @@ function Analytics() {
                   tickMargin={10}
                   axisLine={false}
                   interval={0}
-                  style={{ fontSize: "12px", fill: isDark ? "#ddd" : "#333" }}
+                  style={{ fontSize: "13px", fill: isDark ? "#eee" : "#333" }}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
                   width={40}
-                  style={{ fontSize: "12px", fill: isDark ? "#ddd" : "#333" }}
+                  style={{ fontSize: "12px", fill: isDark ? "#eee" : "#333" }}
                 />
                 <Tooltip
                   cursor={{ fill: "transparent" }}
                   content={({ active, payload }) =>
                     active && payload?.length ? (
-                      <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-2 rounded text-xs shadow">
-                        <p className="font-semibold">
+                      <div
+                        className="bg-white dark:bg-gray-800 border dark:border-gray-700 
+                        p-2 rounded-lg text-xs shadow-md"
+                      >
+                        <p className="font-semibold text-amber-700 dark:text-amber-300">
                           {payload[0].payload.name}: {payload[0].payload.value}
                         </p>
                       </div>
                     ) : null
                   }
                 />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={40}>
+                <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={50}>
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
-                  <LabelList
-                    dataKey="value"
-                    position="top"
-                    fill={isDark ? "#ddd" : "#111"}
-                    fontSize={12}
-                  />
+                  {chartData.map((entry, index) => (
+                    <LabelList
+                      key={`label-${index}`}
+                      dataKey="value"
+                      position="top"
+                      content={({ x, y, value }) =>
+                        value !== 0 ? (
+                          <text
+                            x={(x as number) + 20}
+                            y={(y as number) - 6}
+                            textAnchor="middle"
+                            fontSize={13}
+                            fontWeight={600}
+                            fill={entry.labelColor}
+                          >
+                            {value}
+                          </text>
+                        ) : null
+                      }
+                    />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium">
+
+      <CardFooter className="flex flex-col items-start gap-3 text-sm border-t border-amber-200/30 dark:border-amber-800/30 pt-4">
+        <div className="flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-300">
           Engagement Overview <TrendingUp className="h-4 w-4" />
         </div>
-        <div className="text-muted-foreground leading-none">
-          Live total of members, certificate requests, and page visits under
+        <p className="text-muted-foreground leading-snug">
+          Live totals of members, certificate requests, and page visits under
           your UCCP management.
-        </div>
-        <div className="flex items-center gap-2 font-medium mt-2">
-          <Users className="h-4 w-4 text-green-600 dark:text-green-400" />
-          Total Members:{" "}
-          <span className="font-semibold text-green-700 dark:text-green-300">
-            {memberCount}
-          </span>
+        </p>
+        <div className="flex items-center gap-2 font-medium mt-2 text-green-700 dark:text-green-300">
+          <Users className="h-4 w-4" />
+          Total Members: <span className="font-bold">{memberCount ?? 0}</span>
         </div>
       </CardFooter>
     </Card>

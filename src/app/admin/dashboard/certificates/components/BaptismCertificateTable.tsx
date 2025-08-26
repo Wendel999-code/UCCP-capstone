@@ -47,7 +47,7 @@ export default function BaptismCertificateTable({
         {/* Header */}
 
         {/* Filters and Actions */}
-        <Card className="dark:bg-black">
+        <Card className="dark:bg-black ">
           <CardHeader>
             <div className="flex items-center justify-between space-x-2">
               <div>
