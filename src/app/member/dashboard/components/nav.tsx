@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -93,7 +94,12 @@ const Nav = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="sticky top-0  bg-white dark:bg-gray-900 shadow-sm   border dark:border-gray-700  z-40 border-b  backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-40 
+  bg-gradient-to-b from-white/90 to-amber-50/80 
+  dark:from-gray-950/80 dark:to-gray-900/70
+  border-b border-amber-200/30 dark:border-amber-800/40
+  backdrop-blur-md supports-[backdrop-filter]:bg-background/60
+  shadow-sm"
     >
       <div className=" flex md:h-20 h-15 items-center px-4 justify-between ">
         <Link href="/member/dashboard" className="group">
@@ -253,15 +259,17 @@ const Nav = () => {
 
               <SheetContent
                 side="right"
-                className="h-[100vh] w-[280px] rounded-r-2xl p-4 
-      bg-white dark:bg-gray-900 shadow-2xl 
-      border-r border-gray-100 dark:border-gray-700"
+                className="h-[100vh] w-[280px] rounded-l-2xl p-4 
+                 bg-card shadow-xl border-l border-amber-200/30 
+                 dark:border-amber-800/30 transition-all duration-300"
               >
                 {/* Brand Header */}
                 <SheetHeader>
                   <SheetTitle className="text-center border-b border-amber-200/30 dark:border-amber-800/30 pb-3">
-                    <p className="text-xl font-bold tracking-tight">
-                      <span className="text-red-900">CANA</span>{" "}
+                    <p className="text-xl font-extrabold tracking-tight">
+                      <span className="text-red-900 dark:text-red-700">
+                        CANA
+                      </span>{" "}
                       <span className="text-amber-500">Circuit</span>
                     </p>
                   </SheetTitle>
@@ -279,7 +287,7 @@ const Nav = () => {
                         className={cn(
                           "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg border-l-4 transition-all duration-200",
                           isActive
-                            ? "bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-amber-500"
+                            ? "bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-amber-500 shadow-sm"
                             : "text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
                         )}
                       >
@@ -299,18 +307,19 @@ const Nav = () => {
                         setMobileProfileOpen(true);
                       }}
                       className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg border-l-4 transition-all duration-200 
-              text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
+                       text-gray-600 dark:text-gray-300 border-transparent hover:bg-amber-50 hover:border-amber-300 
+                       dark:hover:bg-amber-800/30 dark:hover:border-amber-600 hover:text-amber-900 dark:hover:text-amber-100"
                     >
                       <UserIcon className="h-4 w-4" /> Profile
                     </button>
                   ) : (
-                    <Link href="/auth/login" className="mt-3">
+                    <Link href="/auth/login" className="mt-4">
                       <Button
                         variant="outline"
                         size="sm"
                         className="w-full h-10 text-sm font-semibold 
-              bg-amber-500 hover:bg-amber-600 text-white 
-              dark:bg-amber-700 dark:hover:bg-amber-600 rounded-lg"
+                         bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 
+                         text-white rounded-lg shadow-md hover:shadow-lg"
                       >
                         Sign in
                         <ArrowRight className="ml-2 h-3 w-3" />
@@ -323,11 +332,18 @@ const Nav = () => {
           </div>
           {/* Profile Dialog OUTSIDE of the Sheet */}
           <Dialog open={mobileProfileOpen} onOpenChange={setMobileProfileOpen}>
+            {/* Overlay with blur + transparency */}
+            <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+
             <DialogContent
-              className="max-w-sm w-full sm:rounded-2xl rounded-lg 
-               p-4 bg-white dark:bg-gray-900 shadow-2xl 
-               border border-gray-100 dark:border-gray-700 
-               max-h-[90vh] overflow-y-auto"
+              className="w-full mt-3  max-w-sm sm:rounded-2xl rounded-t-2xl
+               sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2
+               sm:fixed sm:p-6 p-4
+               bg-card shadow-xl
+               max-h-[90vh] overflow-y-auto
+               transition-all duration-300
+               animate-in sm:animate-in
+               sm:zoom-in-90 slide-in-from-bottom-10 sm:slide-in-from-top-0"
             >
               <DialogHeader className="text-center mb-3">
                 <DialogTitle className="sm:text-xl text-lg font-extrabold text-gray-900 dark:text-yellow-500">

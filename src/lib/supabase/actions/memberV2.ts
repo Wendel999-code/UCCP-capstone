@@ -20,7 +20,7 @@ export async function GetMembersByChurchId(
 
     if (search) {
       query = query.or(
-        `firstName.ilike.%${search}%,lastName.ilike.%${search}%`
+        `firstName.ilike.%${search}%,lastName.ilike.%${search}%,concat_ws(' ', firstName, lastName).ilike.%${search}%`
       );
     }
 
@@ -72,9 +72,10 @@ export async function GetAllMembersBySuperAdmin(
       .select("*, Church:church_id(brgy)", { count: "exact" })
       .neq("activeStatus", "pending");
 
+    //firstname and  lastname search and full name search
     if (search) {
       query = query.or(
-        `firstName.ilike.%${search}%,lastName.ilike.%${search}%`
+        `firstName.ilike.%${search}%,lastName.ilike.%${search}%,concat_ws(' ', firstName, lastName).ilike.%${search}%`
       );
     }
 

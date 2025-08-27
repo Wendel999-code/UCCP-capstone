@@ -117,23 +117,35 @@ export default function LinkedMembersPage() {
             <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
               Member ID
             </label>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full">
+              {/* Input Field */}
               <Input
                 placeholder="Enter Member ID (e.g., PLN-123456)"
                 value={memberID}
                 onChange={(e) => setMemberID(e.target.value)}
-                className="flex-1 border-amber-500 ring-amber-400 placeholder:text-[10px] focus:ring-amber-500 bg-amber-50/50 dark:bg-amber-950/20"
                 onKeyDown={(e) => e.key === "Enter" && handleSearchMember()}
+                className="flex-1 min-w-[220px] rounded-xl border border-amber-400 
+               bg-white/80 dark:bg-gray-900/40 
+               focus:ring-2 focus:ring-amber-500 focus:border-amber-500 
+               placeholder:text-xs sm:placeholder:text-sm"
               />
+
+              {/* Search Button */}
               <Button
                 onClick={handleSearchMember}
                 disabled={!memberID.trim() || memberLoading}
-                className="bg-amber-500 hover:bg-amber-600 text-white"
+                className="flex items-center mt-3 md:mt-0 justify-center gap-2 rounded-xl 
+               bg-amber-500 hover:bg-amber-600 
+               dark:bg-amber-600 dark:hover:bg-amber-500 
+               text-white font-semibold transition-all w-full sm:w-auto"
               >
                 {memberLoading ? (
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 ) : (
-                  <Search className="h-4 w-4" />
+                  <>
+                    <Search className="h-4 w-4" />
+                    <span className="hidden sm:inline">Search</span>
+                  </>
                 )}
               </Button>
             </div>
