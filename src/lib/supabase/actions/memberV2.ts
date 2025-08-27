@@ -19,9 +19,15 @@ export async function GetMembersByChurchId(
       .neq("activeStatus", "pending");
 
     if (search) {
-      query = query.or(
-        `firstName.ilike.%${search}%,lastName.ilike.%${search}%,concat_ws(' ', firstName, lastName).ilike.%${search}%`
-      );
+      const terms = search.trim().split(/\s+/); // split by spaces
+      const conditions: string[] = [];
+
+      terms.forEach((term) => {
+        conditions.push(`firstName.ilike.%${term}%`);
+        conditions.push(`lastName.ilike.%${term}%`);
+      });
+
+      query = query.or(conditions.join(","));
     }
 
     if (category) {
@@ -72,11 +78,16 @@ export async function GetAllMembersBySuperAdmin(
       .select("*, Church:church_id(brgy)", { count: "exact" })
       .neq("activeStatus", "pending");
 
-    //firstname and  lastname search and full name search
     if (search) {
-      query = query.or(
-        `firstName.ilike.%${search}%,lastName.ilike.%${search}%,concat_ws(' ', firstName, lastName).ilike.%${search}%`
-      );
+      const terms = search.trim().split(/\s+/); // split by spaces
+      const conditions: string[] = [];
+
+      terms.forEach((term) => {
+        conditions.push(`firstName.ilike.%${term}%`);
+        conditions.push(`lastName.ilike.%${term}%`);
+      });
+
+      query = query.or(conditions.join(","));
     }
 
     if (category) {
