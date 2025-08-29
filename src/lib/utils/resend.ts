@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  MembershipRejected,
   NewMember,
   SendID,
   UpdatesCertificate,
@@ -117,5 +118,40 @@ export async function SendMemberID({
   return {
     success: true,
     message: "Member ID sent successfully.",
+  };
+}
+
+export async function MembershipRejectedEmail({
+  firstName,
+  lastName,
+  church,
+  member_email,
+}: Omit<MemberResend, "memberID">) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!member_email || !emailRegex.test(member_email)) {
+    return {
+      success: false,
+      message: "Invalid member email address provided.",
+    };
+  }
+
+  const { error: resendError } = await resend.emails.send({
+    from: "UCCP <support@wndl.dev>",
+    to: [member_email],
+    subject: `Membership Application Update – UCCP ${church}`,
+    react: MembershipRejected(firstName, lastName, church),
+  });
+
+  if (resendError) {
+    console.error("Failed to send rejection email:", resendError.message);
+    return {
+      success: false,
+      message: `Failed to send email: ${resendError.message}`,
+    };
+  }
+
+  return {
+    success: true,
+    message: "Rejection email sent successfully.",
   };
 }

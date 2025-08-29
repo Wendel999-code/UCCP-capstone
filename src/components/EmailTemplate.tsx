@@ -124,3 +124,43 @@ export function SendID(memberID: string) {
     </>
   );
 }
+
+
+export function MembershipRejected(
+  firstName: string,
+  lastName: string,
+  church: string
+) {
+  return (
+    <div className="font-sans leading-relaxed text-neutral-800 max-w-xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-5">
+        Dear {firstName} {lastName},
+      </h1>
+
+      <p className="text-base mb-4">
+        Thank you for your interest in becoming a member of{" "}
+        <strong>
+          United Church of Christ in the Philippines {church} Local Church
+        </strong>
+        .
+      </p>
+
+      <p className="text-base mb-4">
+        After careful review, we regret to inform you that your membership
+        application has not been approved at this time.
+      </p>
+
+      <p className="text-base mb-4">
+        We encourage you to continue joining us in worship and fellowship, and
+        we welcome you to reapply in the future should your circumstances
+        change.
+      </p>
+
+      <p className="text-base mt-8">
+        Blessings,
+        <br />
+        <strong>UCCP {church} Local Church</strong>
+      </p>
+    </div>
+  );
+}

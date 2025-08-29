@@ -79,7 +79,7 @@ export async function GetAllMembersBySuperAdmin(
       .neq("activeStatus", "pending");
 
     if (search) {
-      const terms = search.trim().split(/\s+/); // split by spaces
+      const terms = search.trim().split(/\s+/); // split 
       const conditions: string[] = [];
 
       terms.forEach((term) => {

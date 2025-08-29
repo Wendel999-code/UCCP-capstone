@@ -3,7 +3,7 @@ import { Member } from "@/global/type";
 import { InsertActivity } from "@/lib/utils/activity";
 import { parseAgeToYears } from "@/lib/utils/age";
 import { generateMemberID } from "@/lib/utils/member";
-import { NewMemberEmail } from "@/lib/utils/resend";
+import { MembershipRejectedEmail, NewMemberEmail } from "@/lib/utils/resend";
 import supabase from "../client";
 import { ApplySchema, memberSchema } from "../validation/member";
 import { getChurchAdmin, SuperAdmin } from "./dal";
@@ -317,7 +317,7 @@ export async function DeleteMember(memberID: string) {
   }
 
   try {
-    const { churchAdmin: admin } = await getChurchAdmin();
+    const { churchAdmin: admin, church } = await getChurchAdmin();
 
     if (admin.role === "church_admin") {
       const { data: deletedMember, error } = await supabase
@@ -325,12 +325,10 @@ export async function DeleteMember(memberID: string) {
         .delete()
         .eq("id", memberID)
         .eq("church_id", admin.church_id)
-        .select("id, firstName, lastName")
+        .select("id, firstName, lastName, member_email, Church:church_id(brgy)")
         .single();
 
       if (error) throw error;
-
-      console.log("Deleted member (church_admin):", deletedMember);
 
       await InsertActivity({
         action: "Deleted Member",
@@ -339,6 +337,13 @@ export async function DeleteMember(memberID: string) {
           memberName: `${deletedMember.firstName} ${deletedMember.lastName}`,
         },
       });
+      await MembershipRejectedEmail({
+        firstName: deletedMember.firstName,
+        lastName: deletedMember.lastName,
+        church: church.brgy,
+        member_email: deletedMember.member_email,
+      });
+
       return {
         success: true,
         message: "Member deleted successfully",

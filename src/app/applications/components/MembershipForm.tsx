@@ -604,6 +604,7 @@ const MembershipForm = ({ churches }: { churches: churchType[] }) => {
                     {loading ? (
                       <div className="flex items-center gap-2">
                         <Loader className="h-4 w-4 animate-spin" />
+                        Submiting...
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
